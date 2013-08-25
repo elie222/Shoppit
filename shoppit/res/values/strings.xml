@@ -11,11 +11,14 @@
     <string name="map">Map</string>
     <string name="barcode">Barcode</string>
     <string name="skip">Skip</string>
-    
+    <string name="action_search">Search</string>
+
     <string-array name="sort_options">
         <item>Cheapest</item>
         <item>Closest</item>
         <item>Newest</item>
     </string-array>
+
+    <string name="title_activity_main_activity_new">Welcome</string>
 
 </resources>
