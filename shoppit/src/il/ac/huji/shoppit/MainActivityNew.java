@@ -1,5 +1,6 @@
 package il.ac.huji.shoppit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -61,7 +62,7 @@ public class MainActivityNew extends ActionBarActivity {
 		
 		EditText usernameEdt = (EditText) findViewById(R.id.logInUsernameEdt);
 		EditText passwordEdt = (EditText) findViewById(R.id.logInPasswordEdt);
-
+		
 		String username = usernameEdt.getText().toString();
 		String password = passwordEdt.getText().toString();
 		
@@ -69,6 +70,8 @@ public class MainActivityNew extends ActionBarActivity {
 			  public void done(ParseUser user, ParseException e) {
 			    if (user != null) {
 			      // Hooray! The user is logged in.
+			    	Intent intent = new Intent(MainActivityNew.this, ParseTableActivity.class);
+			    	startActivity(intent);
 			    } else {
 			      // Signup failed. Look at the ParseException to see what happened.
 			    }
@@ -96,6 +99,8 @@ public class MainActivityNew extends ActionBarActivity {
 		  public void done(ParseException e) {
 		    if (e == null) {
 		      // Hooray! Let them use the app now.
+		    	Intent intent = new Intent(MainActivityNew.this, ParseTableActivity.class);
+		    	startActivity(intent);
 		    } else {
 		      // Sign up didn't succeed. Look at the ParseException
 		      // to figure out what went wrong
