@@ -28,7 +28,7 @@ public class ParseTableActivity extends Activity {
 		
 		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, "TestObject");
 		adapter.setTextKey("name");
-//		adapter.setImageKey("image");
+		adapter.setImageKey("photo");
 		 
 		ListView listView = (ListView) findViewById(R.id.homeListView);
 		listView.setAdapter(adapter);
