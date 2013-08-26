@@ -1,18 +1,16 @@
 package il.ac.huji.shoppit;
 
-import java.util.ArrayList;
-
-import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class SearchActivity extends Activity {
 
-	String[] categories = new String[] { "Children", "Clothes", "Cosmetics", "Electronics", "Food",
-			"Home", "Jewelry", "Office", "Pets", "Travel", "Vehicle", "Mics."};
+public class SearchActivity extends ActionBarActivity {
+
+	String[] categories = GeneralInfo.categories;
 
 
 	@Override
@@ -21,45 +19,19 @@ public class SearchActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 
-		//Create the category list (there are two lists)
+		//Create the category list
 
-		final ListView listview1 = (ListView) findViewById(R.id.list1),
-				listview2 = (ListView) findViewById(R.id.list2);
+		final ListView listview = (ListView) findViewById(R.id.categList);
 
-		final ArrayList<String> list1 = new ArrayList<String>(),
-				list2 = new ArrayList<String>();
-		for (int i = 0; i < categories.length; ++i) {
-			(i < categories.length/2 ? list1 : list2).add(categories[i]);
-		}
-
-		listview1.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, list1));
-		listview2.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, list2));
+		listview.setAdapter(new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, categories));
 
 		//Create on-click listeners
 
-		listview1.setOnItemClickListener(new OnItemClickListener() {
+		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				handleClick(position);
-			}
-		});
-
-		listview2.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				handleClick( categories.length/2 + position );
-			}
-		});
-
-		//Create on click listener for the Add button
-		((Button)findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), TakePictureActivity.class);
-				startActivity(intent);
 			}
 		});
 
@@ -69,7 +41,7 @@ public class SearchActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.search_activity_actions, menu);
 		return true;
 	}
 
@@ -80,6 +52,19 @@ public class SearchActivity extends Activity {
 	 */
 	private void handleClick(int pos) {
 		//TODO
+	}
+
+
+	//Clicking the action bar.
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_userinfo:
+			startActivity(new Intent(getBaseContext(), GeneralInfo.logged ? InfoActivity.class : LoginActivity.class));
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 }

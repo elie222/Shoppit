@@ -49,39 +49,12 @@
         android:layout_toRightOf="@+id/textView2" />
 
     <ListView
-        android:id="@+id/itemList"
+        android:id="@+id/homeListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/search"
         android:layout_below="@+id/textView2"
         android:layout_marginTop="18dp" >
 
     </ListView>
-
-    <Button
-        android:id="@+id/search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/itemList"
-        android:layout_alignParentBottom="true"
-        android:text="Search" />
-
-    <Button
-        android:id="@+id/add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/map"
-        android:layout_alignBottom="@+id/map"
-        android:layout_alignRight="@+id/itemList"
-        android:text="Add" />
-
-    <Button
-        android:id="@+id/map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/search"
-        android:layout_alignBottom="@+id/search"
-        android:layout_centerHorizontal="true"
-        android:text="Map" />
 
 </RelativeLayout>

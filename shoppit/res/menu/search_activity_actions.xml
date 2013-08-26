@@ -7,10 +7,5 @@
         android:icon="@drawable/user"
         android:title="@string/user_info"
         yourapp:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_search"
-        android:icon="@drawable/search"
-        android:title="@string/action_search"
-        yourapp:showAsAction="ifRoom"/>
 
 </menu>

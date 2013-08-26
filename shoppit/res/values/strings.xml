@@ -12,10 +12,13 @@
     <string name="barcode">Barcode</string>
     <string name="skip">Skip</string>
     <string name="action_search">Search</string>
+    <string name="user_info">User Information</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="signUp">Sign up</string>
     <string name="logIn">Log in</string>
+    <string name="info">Personal Information</string>
+    <string name="logout">Log Out</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
