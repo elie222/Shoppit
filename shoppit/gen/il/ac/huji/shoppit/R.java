@@ -1136,11 +1136,13 @@ containing a value of this type.
         public static final int activity_info=0x7f030018;
         public static final int activity_login=0x7f030019;
         public static final int activity_main=0x7f03001a;
-        public static final int add_item=0x7f03001b;
-        public static final int item_thumb=0x7f03001c;
-        public static final int search=0x7f03001d;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
-        public static final int take_picture=0x7f03001f;
+        public static final int activity_main_activity_new=0x7f03001b;
+        public static final int activity_parse_table=0x7f03001c;
+        public static final int add_item=0x7f03001d;
+        public static final int item_thumb=0x7f03001e;
+        public static final int search=0x7f03001f;
+        public static final int support_simple_spinner_dropdown_item=0x7f030020;
+        public static final int take_picture=0x7f030021;
     }
     public static final class menu {
         public static final int login=0x7f0d0000;
