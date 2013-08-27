@@ -27,7 +27,13 @@
         </activity>
         <activity
             android:name="il.ac.huji.shoppit.TakePictureActivity"
-            android:label="@string/search" >
+            android:label="@string/take_pic"
+            android:theme="@style/Theme.AppCompat.Light" >
+        </activity>
+        <activity
+            android:name="il.ac.huji.shoppit.AddItemActivity"
+            android:label="@string/item_info"
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
             android:name="il.ac.huji.shoppit.LoginActivity"
@@ -45,6 +51,7 @@
             android:theme="@style/Theme.AppCompat.Light" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

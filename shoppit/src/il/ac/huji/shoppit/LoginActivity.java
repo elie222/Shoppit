@@ -54,19 +54,8 @@ public class LoginActivity extends ActionBarActivity {
 				onSignUpButtonClicked();
 			}
 		});
-	}
 
-
-	//Clicking the action bar.
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_search:
-			startActivity(new Intent(getBaseContext(), SearchActivity.class));
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		((EditText)findViewById(R.id.logInUsernameEdt)).requestFocus();
 	}
 
 
@@ -84,7 +73,7 @@ public class LoginActivity extends ActionBarActivity {
 
 		final String username = usernameEdt.getText().toString();
 		final String password = passwordEdt.getText().toString();
-		
+
 		if (username.equals("") || password.equals("")) {
 			Toast.makeText(getApplicationContext(), "Please fill username and password", Toast.LENGTH_LONG).show();
 			return;
@@ -96,13 +85,14 @@ public class LoginActivity extends ActionBarActivity {
 					// Hooray! The user is logged in.
 					//Save the login data to the device.
 					writeLoginData(username, password);
+					setResult(RESULT_OK, getIntent());
 					finish();
 					Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();
 				} else {
 					// Signup failed. Look at the ParseException to see what happened.
 					Toast.makeText(getApplicationContext(), fixExceptionMessage(e), Toast.LENGTH_LONG).show();
 				}
-				
+
 			}
 		});
 	}
@@ -114,7 +104,7 @@ public class LoginActivity extends ActionBarActivity {
 
 		final String username = usernameEdt.getText().toString();
 		final String password = passwordEdt.getText().toString();
-		
+
 		if (username.equals("") || password.equals("")) {
 			Toast.makeText(getApplicationContext(), "Please fill username and password", Toast.LENGTH_LONG).show();
 			return;
@@ -133,6 +123,7 @@ public class LoginActivity extends ActionBarActivity {
 				if (e == null) {
 					// Hooray! Let them use the app now.
 					writeLoginData(username, password);
+					setResult(RESULT_OK, getIntent());
 					finish();
 					Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();
 				} else {
@@ -169,8 +160,8 @@ public class LoginActivity extends ActionBarActivity {
 		GeneralInfo.username = username;
 		writer.close();
 	}
-	
-	
+
+
 	/**
 	 * Make an exception message more readable.
 	 * Remove the "com.parse.parseException: " prefix and make it start with upper case.
@@ -183,6 +174,36 @@ public class LoginActivity extends ActionBarActivity {
 		message = message.substring("com.parse.parseException: ".length());
 		message = message.substring(0,1).toUpperCase() + message.substring(1);
 		return message;
+	}
+
+
+	//Clicking the action bar.
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_add:
+			addItemIfLoggedIn();
+			return true;
+		case R.id.action_search:
+			startActivity(new Intent(getBaseContext(), SearchActivity.class));
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	
+	private void addItemIfLoggedIn() {
+
+		//If user is logged in, continue to taking the item picture.
+		if (GeneralInfo.logged) {
+			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+			return;
+		}
+		
+		//Else, ask the user to log in.
+		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+		startActivityForResult(intent, 5000);
 	}
 
 }

@@ -28,12 +28,12 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+//		ParseObject.registerSubclass(Item.class);
+		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 
 		//Check if the user is logged in, connect to parse if so.
 		checkIfLoggedIn();
-
-		//		ParseObject.registerSubclass(Item.class);
-		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 
 		//creating some objects to test with and saving them to the server.
 		//		for (int i=0; i<20; i++) {
@@ -89,6 +89,7 @@ public class MainActivity extends ActionBarActivity {
 			try {
 				reader.close();
 			} catch (Exception e) {}
+			
 		}
 	}
 
@@ -97,6 +98,9 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_add:
+			addItemIfLoggedIn();
+			return true;
 		case R.id.action_search:
 			startActivity(new Intent(getBaseContext(), SearchActivity.class));
 			return true;
@@ -119,6 +123,30 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		public void onNothingSelected(AdapterView<?> parent) {}
+	}
+
+
+	private void addItemIfLoggedIn() {
+
+		//If user is logged in, continue to taking the item picture.
+		if (GeneralInfo.logged) {
+			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+			return;
+		}
+		
+		//Else, ask the user to log in.
+		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+		startActivityForResult(intent, 5000);
+	}
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		//If user logged in successfully, continue to taking the item picture.
+	    if (requestCode == 5000 && resultCode == RESULT_OK){
+	    	startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+		}
 	}
 
 }

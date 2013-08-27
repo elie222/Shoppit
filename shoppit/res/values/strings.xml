@@ -19,6 +19,10 @@
     <string name="logIn">Log in</string>
     <string name="info">Personal Information</string>
     <string name="logout">Log Out</string>
+    <string name="add">Add an Item</string>
+    <string name="take_pic">Item Picture</string>
+    <string name="item_info">Item Information</string>
+    <string name="done">Done</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>

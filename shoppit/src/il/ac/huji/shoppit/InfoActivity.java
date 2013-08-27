@@ -42,6 +42,9 @@ public class InfoActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_add:
+			addItemIfLoggedIn();
+			return true;
 		case R.id.action_search:
 			startActivity(new Intent(getBaseContext(), SearchActivity.class));
 			return true;
@@ -56,6 +59,20 @@ public class InfoActivity extends ActionBarActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login_activity_actions, menu);
 		return true;
+	}
+	
+	
+	private void addItemIfLoggedIn() {
+
+		//If user is logged in, continue to taking the item picture.
+		if (GeneralInfo.logged) {
+			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+			return;
+		}
+		
+		//Else, ask the user to log in.
+		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+		startActivityForResult(intent, 5000);
 	}
 
 }
