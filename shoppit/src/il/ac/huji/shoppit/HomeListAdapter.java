@@ -22,7 +22,7 @@ public class HomeListAdapter extends ParseQueryAdapter<ParseObject> {
 	@Override
 	public View getItemView(ParseObject object, View v, ViewGroup parent) {
 	  if (v == null) {
-	    v = View.inflate(getContext(), R.layout.adapter_item, null);
+	    v = View.inflate(getContext(), R.layout.activity_list_layout, null);
 	  }
 	 
 	  super.getItemView(object, v, parent);

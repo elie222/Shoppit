@@ -34,40 +34,33 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-//		ParseObject.registerSubclass(HomeListAdapter.class);
+		ParseObject.registerSubclass(Item.class);
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 
 		//Check if the user is logged in, connect to parse if so.
 		checkIfLoggedIn();
 
-		//creating some objects to test with and saving them to the server.
-		//		for (int i=0; i<20; i++) {
-		//			ParseObject testObject = new ParseObject("TestObject");
-		//			testObject.put("name", "bar " + i);
-		//			testObject.saveInBackground();
-		//		}	
-
-		//Fill the list of nearby items.
 		//TODO - not working yet
 		HomeListAdapter adapter = new HomeListAdapter(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
 			//		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
 			public ParseQuery<ParseObject> create() {
-
 				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Item");
 				// see https://parse.com/docs/android_guide#geo-classes
 				// ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
 				// query.whereNear("location", userLocation);
-
 				// query.orderByDescending("someField");
 				return query;
 			}
 		});
 
+		// temporarily commented out
 //		adapter.setTextKey("name");
 //		adapter.setImageKey("photo");
 //		ListView listView = (ListView) findViewById(R.id.homeListView);
 //		listView.setAdapter(adapter);
 
+		
+		// old code
 		//Create the sorter.
 		//		Spinner spinner = (Spinner) findViewById(R.id.sorter);
 		//		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
