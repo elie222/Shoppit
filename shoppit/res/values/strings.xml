@@ -32,5 +32,6 @@
 
     <string name="title_activity_main_activity_new">Welcome</string>
     <string name="title_activity_parse_table">ParseTableActivity</string>
+    <string name="search_hint">Search...</string>
 
 </resources>

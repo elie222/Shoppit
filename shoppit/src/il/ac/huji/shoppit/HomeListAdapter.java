@@ -3,7 +3,9 @@ package il.ac.huji.shoppit;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
 
@@ -11,11 +13,10 @@ import com.parse.ParseQueryAdapter;
 // are displayed.
 
 public class HomeListAdapter extends ParseQueryAdapter<ParseObject> {
-
+	
 	public HomeListAdapter(Context context,
 			com.parse.ParseQueryAdapter.QueryFactory<ParseObject> queryFactory) {
 		super(context, queryFactory);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -24,12 +25,8 @@ public class HomeListAdapter extends ParseQueryAdapter<ParseObject> {
 	    v = View.inflate(getContext(), R.layout.adapter_item, null);
 	  }
 	 
-	  // Take advantage of ParseQueryAdapter's getItemView logic for
-	  // populating the main TextView/ImageView.
-	  // The IDs in your custom layout must match what ParseQueryAdapter expects
-	  // if it will be populating a TextView or ImageView for you.
 	  super.getItemView(object, v, parent);
-	 
+	  
 	  return v;
 	}
 }

@@ -9,6 +9,7 @@ import java.io.FileReader;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+//import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -33,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//		ParseObject.registerSubclass(Item.class);
+//		ParseObject.registerSubclass(HomeListAdapter.class);
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 
 		//Check if the user is logged in, connect to parse if so.
@@ -48,33 +49,32 @@ public class MainActivity extends ActionBarActivity {
 
 		//Fill the list of nearby items.
 		//TODO - not working yet
-		//HomeListAdapter adapter = new HomeListAdapter(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
-		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+		HomeListAdapter adapter = new HomeListAdapter(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+			//		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
 			public ParseQuery<ParseObject> create() {
-				// Here we can configure a ParseQuery to our heart's desire.
-				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("TestObject");
-				// you can do a more advanced query as follows:
-				// can also set an order for the items.
-				//				      query.whereContainedIn("genre", Arrays.asList({ "Punk", "Metal" }));
-				//				      query.whereGreaterThanOrEqualTo("memberCount", 4);
-				//				      query.orderByDescending("albumsSoldCount");
+
+				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Item");
+				// see https://parse.com/docs/android_guide#geo-classes
+				// ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
+				// query.whereNear("location", userLocation);
+
+				// query.orderByDescending("someField");
 				return query;
 			}
 		});
 
-		//		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, "TestObject");
-		adapter.setTextKey("name");
-		adapter.setImageKey("photo");
-		ListView listView = (ListView) findViewById(R.id.homeListView);
-		listView.setAdapter(adapter);
+//		adapter.setTextKey("name");
+//		adapter.setImageKey("photo");
+//		ListView listView = (ListView) findViewById(R.id.homeListView);
+//		listView.setAdapter(adapter);
 
 		//Create the sorter.
-//		Spinner spinner = (Spinner) findViewById(R.id.sorter);
-//		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
-//				this, R.array.sort_options, android.R.layout.simple_spinner_item);
-//		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		spinner.setAdapter(spinnerAdapter);
-//		spinner.setOnItemSelectedListener(new Sorter());
+		//		Spinner spinner = (Spinner) findViewById(R.id.sorter);
+		//		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+		//				this, R.array.sort_options, android.R.layout.simple_spinner_item);
+		//		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		//		spinner.setAdapter(spinnerAdapter);
+		//		spinner.setOnItemSelectedListener(new Sorter());
 	}
 
 	@Override
@@ -99,15 +99,15 @@ public class MainActivity extends ActionBarActivity {
 
 				ParseUser.logInInBackground(username, password, new LogInCallback() {
 					public void done(ParseUser user, ParseException e) {
-						
+
 						if (e == null && user != null) {
-//							loginSuccessful();
+							//							loginSuccessful();
 							GeneralInfo.logged = true;
 							GeneralInfo.username = username;
 						} else if (user == null) {
-//							usernameOrPasswordIsInvalid();
+							//							usernameOrPasswordIsInvalid();
 						} else {
-//							somethingWentWrong();
+							//							somethingWentWrong();
 						}
 					}
 				});
@@ -142,15 +142,15 @@ public class MainActivity extends ActionBarActivity {
 
 
 	//This class implements sorting nearby items.
-//	private class Sorter extends Activity implements OnItemSelectedListener {
-//
-//		public void onItemSelected(AdapterView<?> parent, View view, 
-//				int pos, long id) {
-//			// pos: 0 = cheapest, 1 = closest, 2 = newest.
-//		}
-//
-//		public void onNothingSelected(AdapterView<?> parent) {}
-//	}
+	//	private class Sorter extends Activity implements OnItemSelectedListener {
+	//
+	//		public void onItemSelected(AdapterView<?> parent, View view, 
+	//				int pos, long id) {
+	//			// pos: 0 = cheapest, 1 = closest, 2 = newest.
+	//		}
+	//
+	//		public void onNothingSelected(AdapterView<?> parent) {}
+	//	}
 
 
 	private void addItemIfLoggedIn() {
