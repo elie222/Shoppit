@@ -29,6 +29,8 @@ import android.widget.ListView;
 
 public class MainActivity extends ActionBarActivity {
 
+	private ItemAdapter mainAdapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,19 +41,27 @@ public class MainActivity extends ActionBarActivity {
 
 		//Check if the user is logged in, connect to parse if so.
 		checkIfLoggedIn();
+		
+		mainAdapter = new ItemAdapter(this);
+		
+		ListView listView = (ListView) findViewById(R.id.homeListView);
+		listView.setAdapter(mainAdapter);
+		
+		
+		
 
 		//TODO - not working yet
-		HomeListAdapter adapter = new HomeListAdapter(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
-			//		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
-			public ParseQuery<ParseObject> create() {
-				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Item");
-				// see https://parse.com/docs/android_guide#geo-classes
-				// ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
-				// query.whereNear("location", userLocation);
-				// query.orderByDescending("someField");
-				return query;
-			}
-		});
+//		HomeListAdapter adapter = new HomeListAdapter(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+//			//		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+//			public ParseQuery<ParseObject> create() {
+//				ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Item");
+//				// see https://parse.com/docs/android_guide#geo-classes
+//				// ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
+//				// query.whereNear("location", userLocation);
+//				// query.orderByDescending("someField");
+//				return query;
+//			}
+//		});
 
 		// temporarily commented out
 //		adapter.setTextKey("name");

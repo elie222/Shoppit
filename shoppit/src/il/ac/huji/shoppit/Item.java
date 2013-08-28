@@ -22,8 +22,8 @@ public class Item extends ParseObject {
 		return getString("name");
 	}
 
-	public void setTitle(String title) {
-		put("name", title);
+	public void setName(String name) {
+		put("name", name);
 	}
 
 	public ParseUser getAuthor() {
