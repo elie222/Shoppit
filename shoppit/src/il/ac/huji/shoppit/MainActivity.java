@@ -7,6 +7,7 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import android.os.Bundle;
@@ -40,10 +41,25 @@ public class MainActivity extends ActionBarActivity {
 		//			ParseObject testObject = new ParseObject("TestObject");
 		//			testObject.put("name", "bar " + i);
 		//			testObject.saveInBackground();
-		//		}
+		//		}	
 
 		//Fill the list of nearby items.
-		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, "TestObject");
+		//TODO - not working yet
+		//HomeListAdapter adapter = new HomeListAdapter(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+				    public ParseQuery<ParseObject> create() {
+				      // Here we can configure a ParseQuery to our heart's desire.
+				      ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("TestObject");
+				      // you can do a more advanced query as follows:
+				      // can also set an order for the items.
+//				      query.whereContainedIn("genre", Arrays.asList({ "Punk", "Metal" }));
+//				      query.whereGreaterThanOrEqualTo("memberCount", 4);
+//				      query.orderByDescending("albumsSoldCount");
+				      return query;
+				    }
+				  });
+		
+//		ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, "TestObject");
 		adapter.setTextKey("name");
 		adapter.setImageKey("photo");
 		ListView listView = (ListView) findViewById(R.id.homeListView);
