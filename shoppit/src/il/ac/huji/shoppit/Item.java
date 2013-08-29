@@ -49,5 +49,13 @@ public class Item extends ParseObject {
 	public void setPhotoFile(ParseFile file) {
 		put("photo", file);
 	}
+	
+	public String getPrice() {
+		return getString("price");
+	}
+
+	public void setPrice(String price) {
+		put("price", price);
+	}
 
 }

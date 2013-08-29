@@ -50,10 +50,12 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 			});
 		}
 
-		TextView titleTextView = (TextView) v.findViewById(R.id.text1);
-		titleTextView.setText(item.getName());
-		TextView ratingTextView = (TextView) v.findViewById(R.id.favorite_meal_rating);
-		ratingTextView.setText(item.getRating());
+		TextView nameTextView = (TextView) v.findViewById(R.id.text1);
+		nameTextView.setText(item.getName());
+		
+		TextView priceTextView = (TextView) v.findViewById(R.id.price);
+		priceTextView.setText(item.getPrice());
+
 		return v;
 	}
 }
