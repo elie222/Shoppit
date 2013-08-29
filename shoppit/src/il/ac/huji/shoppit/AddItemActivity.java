@@ -1,6 +1,7 @@
 package il.ac.huji.shoppit;
 
 import com.parse.Parse;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -117,6 +118,13 @@ public class AddItemActivity extends ActionBarActivity {
 				newItem.setPrice(price);
 				// newItem.setPhotoFile(file);
 				newItem.setAuthor(ParseUser.getCurrentUser());
+				
+				// everyone can read the item, only the current user can edit it.
+				// will write a cloud code function to enable other users to like the object.
+				ParseACL itemACL = new ParseACL(ParseUser.getCurrentUser());
+				itemACL.setPublicReadAccess(true);
+				newItem.setACL(itemACL);
+				newItem.saveInBackground();
 
 				newItem.saveInBackground(new SaveCallback() {
 					@Override

@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "Shoppit": {
+            "applicationId": "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", 
+            "masterKey": "3AdNkDxkJwwammHqDDf0YIoyVlYefsYDuXJQKVX0"
+        }, 
+        "_default": {
+            "link": "Shoppit"
+        }
+    }
+}
