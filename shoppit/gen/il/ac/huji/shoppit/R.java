@@ -980,11 +980,10 @@ containing a value of this type.
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
         public static final int add=0x7f020057;
-        public static final int add_ugly=0x7f020058;
-        public static final int camera=0x7f020059;
-        public static final int ic_launcher=0x7f02005a;
-        public static final int search=0x7f02005b;
-        public static final int user=0x7f02005c;
+        public static final int camera=0x7f020058;
+        public static final int ic_launcher=0x7f020059;
+        public static final int search=0x7f02005a;
+        public static final int user=0x7f02005b;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f050042;
@@ -1140,24 +1139,19 @@ containing a value of this type.
         public static final int activity_list_layout=0x7f030019;
         public static final int activity_login=0x7f03001a;
         public static final int activity_main=0x7f03001b;
-        public static final int activity_main_activity_new=0x7f03001c;
-        public static final int activity_parse_table=0x7f03001d;
-        public static final int adapter_item=0x7f03001e;
-        public static final int add_item=0x7f03001f;
-        public static final int item_list=0x7f030020;
-        public static final int item_thumb=0x7f030021;
-        public static final int search=0x7f030022;
-        public static final int support_simple_spinner_dropdown_item=0x7f030023;
-        public static final int take_picture=0x7f030024;
+        public static final int add_item=0x7f03001c;
+        public static final int item_list=0x7f03001d;
+        public static final int item_thumb=0x7f03001e;
+        public static final int search=0x7f03001f;
+        public static final int support_simple_spinner_dropdown_item=0x7f030020;
+        public static final int take_picture=0x7f030021;
     }
     public static final class menu {
         public static final int login=0x7f0d0000;
         public static final int login_activity_actions=0x7f0d0001;
         public static final int main=0x7f0d0002;
         public static final int main_activity_actions=0x7f0d0003;
-        public static final int main_activity_new=0x7f0d0004;
-        public static final int parse_table=0x7f0d0005;
-        public static final int search_activity_actions=0x7f0d0006;
+        public static final int search_activity_actions=0x7f0d0004;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
