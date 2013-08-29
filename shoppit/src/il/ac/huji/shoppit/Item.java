@@ -1,6 +1,7 @@
 package il.ac.huji.shoppit;
 
 import com.parse.ParseClassName;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -56,6 +57,14 @@ public class Item extends ParseObject {
 
 	public void setPrice(String price) {
 		put("price", price);
+	}
+	
+	public ParseGeoPoint getLocation() {
+		return getParseGeoPoint("location");
+	}
+
+	public void setLocation(ParseGeoPoint point) {
+		put("location", point);
 	}
 
 }

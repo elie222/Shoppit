@@ -1,5 +1,12 @@
 package il.ac.huji.shoppit;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -17,6 +24,9 @@ public class AddItemActivity extends ActionBarActivity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_item);
+
+		ParseObject.registerSubclass(Item.class);
+		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 
 		categ1 = (Spinner) findViewById(R.id.categ1);
 		categ2 = (Spinner) findViewById(R.id.categ2);
@@ -43,7 +53,7 @@ public class AddItemActivity extends ActionBarActivity {
 				String price = ((EditText)findViewById(R.id.editText2)).getText().toString();
 
 				//Perform sanity checks
-				
+
 				if (name.length() == 0) {
 					Toast.makeText(getApplicationContext(), "Please fill the item name",
 							Toast.LENGTH_LONG).show();
@@ -55,25 +65,25 @@ public class AddItemActivity extends ActionBarActivity {
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-				
+
 				if (name.length() > 30) {
 					Toast.makeText(getApplicationContext(), "Item name is too long",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-				
+
 				if (price.length() == 0) {
 					Toast.makeText(getApplicationContext(), "Please fill the item price",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-				
+
 				if (price.length() > 6) {
 					Toast.makeText(getApplicationContext(), "Item price is too long",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-				
+
 				//Check there are no more than two digits after the decimal point.
 				int decimalPos = price.indexOf(".");
 				if (decimalPos >= 0 && price.substring(decimalPos + 1).length() > 2) {
@@ -91,7 +101,7 @@ public class AddItemActivity extends ActionBarActivity {
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-				
+
 				if (priceVal == 0) {
 					Toast.makeText(getApplicationContext(), "Item price cannot be zero",
 							Toast.LENGTH_LONG).show();
@@ -99,15 +109,35 @@ public class AddItemActivity extends ActionBarActivity {
 				}
 
 				((Button) findViewById(R.id.done)).setEnabled(false);
+
+				// TODO data is okay, get GPS position and upload to parse.
 				
-				//TODO data is okay, get GPS position and upload to parse.
+				Item newItem = new Item();
+				newItem.setName(name);
+				newItem.setPrice(price);
+				// newItem.setPhotoFile(file);
+				newItem.setAuthor(ParseUser.getCurrentUser());
+
+				newItem.saveInBackground(new SaveCallback() {
+					@Override
+					public void done(ParseException e) {
+						if (e == null) {
+							Toast.makeText(getApplicationContext(), "Item added successfully",
+									Toast.LENGTH_LONG).show();
+						} else {
+							Toast.makeText(getApplicationContext(), "Error adding item",
+									Toast.LENGTH_LONG).show();
+						}
+					}
+
+				});
 
 			}
 		});
 
 	}
-	
-	
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
