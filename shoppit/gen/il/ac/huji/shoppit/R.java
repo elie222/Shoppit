@@ -1194,42 +1194,43 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
-        public static final int action_forgot_password=0x7f0a002b;
+        public static final int action_forgot_password=0x7f0a002c;
         public static final int action_search=0x7f0a0017;
         public static final int action_settings=0x7f0a000e;
-        public static final int action_sign_in_register=0x7f0a0029;
-        public static final int action_sign_in_short=0x7f0a002a;
+        public static final int action_sign_in_register=0x7f0a002a;
+        public static final int action_sign_in_short=0x7f0a002b;
         public static final int add=0x7f0a001f;
         public static final int app_name=0x7f0a000d;
         public static final int barcode=0x7f0a0015;
         public static final int categ=0x7f0a0012;
         public static final int done=0x7f0a0022;
-        public static final int error_field_required=0x7f0a0030;
-        public static final int error_incorrect_password=0x7f0a002f;
-        public static final int error_invalid_email=0x7f0a002d;
-        public static final int error_invalid_password=0x7f0a002e;
+        public static final int error_field_required=0x7f0a0031;
+        public static final int error_incorrect_password=0x7f0a0030;
+        public static final int error_invalid_email=0x7f0a002e;
+        public static final int error_invalid_password=0x7f0a002f;
         public static final int hello_world=0x7f0a000f;
         public static final int info=0x7f0a001d;
         public static final int item_info=0x7f0a0021;
         public static final int logIn=0x7f0a001c;
-        public static final int login_progress_signing_in=0x7f0a002c;
+        public static final int login_progress_signing_in=0x7f0a002d;
         public static final int logout=0x7f0a001e;
         public static final int map=0x7f0a0014;
         public static final int nearby_items=0x7f0a0010;
         public static final int password=0x7f0a001a;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f0a0027;
-        public static final int prompt_password=0x7f0a0028;
+        public static final int prompt_email=0x7f0a0028;
+        public static final int prompt_password=0x7f0a0029;
         public static final int search=0x7f0a0013;
         public static final int search_hint=0x7f0a0025;
         public static final int signUp=0x7f0a001b;
         public static final int skip=0x7f0a0016;
         public static final int soty_by=0x7f0a0011;
         public static final int take_pic=0x7f0a0020;
-        public static final int title_activity_login=0x7f0a0026;
+        public static final int title_activity_login=0x7f0a0027;
         public static final int title_activity_main_activity_new=0x7f0a0023;
         public static final int title_activity_parse_table=0x7f0a0024;
+        public static final int title_activity_search_results=0x7f0a0026;
         public static final int user_info=0x7f0a0018;
         public static final int username=0x7f0a0019;
     }

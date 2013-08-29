@@ -66,5 +66,13 @@ public class Item extends ParseObject {
 	public void setLocation(ParseGeoPoint point) {
 		put("location", point);
 	}
+	
+	public int getLikesCount() {
+		return getInt("likesCount");
+	}
+
+	public void setLikesCount(int likesCount) {
+		put("likesCounts", likesCount);
+	}
 
 }

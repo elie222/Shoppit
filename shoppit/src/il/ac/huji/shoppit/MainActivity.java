@@ -9,11 +9,15 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import android.os.Bundle;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -34,25 +38,15 @@ public class MainActivity extends ActionBarActivity {
 
 		ListView listView = (ListView) findViewById(R.id.homeListView);
 		listView.setAdapter(mainAdapter);
-
-
-		// old code - delete when you want
-		//Create the sorter.
-		//		Spinner spinner = (Spinner) findViewById(R.id.sorter);
-		//		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
-		//				this, R.array.sort_options, android.R.layout.simple_spinner_item);
-		//		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		//		spinner.setAdapter(spinnerAdapter);
-		//		spinner.setOnItemSelectedListener(new Sorter());
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_activity_actions, menu);
-		return true;
-	}
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main_activity_actions, menu);
 
+	    return true;
+	}
 
 	private void checkIfLoggedIn() {
 
@@ -106,19 +100,6 @@ public class MainActivity extends ActionBarActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-
-
-	//This class implements sorting nearby items.
-	//	private class Sorter extends Activity implements OnItemSelectedListener {
-	//
-	//		public void onItemSelected(AdapterView<?> parent, View view, 
-	//				int pos, long id) {
-	//			// pos: 0 = cheapest, 1 = closest, 2 = newest.
-	//		}
-	//
-	//		public void onNothingSelected(AdapterView<?> parent) {}
-	//	}
 
 
 	private void addItemIfLoggedIn() {

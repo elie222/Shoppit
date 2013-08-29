@@ -3,21 +3,14 @@
     xmlns:yourapp="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/action_add"
-        android:icon="@drawable/camera"
-        android:title="@string/add"
-        yourapp:showAsAction="always"/>
-    <item
         android:id="@+id/action_search"
         android:icon="@drawable/search"
         android:title="@string/action_search"
         yourapp:showAsAction="always"/>
-
-    <!-- TODO This is one ugly icon. And why's it even in the action bar? It should be on the side somewhere, like if you click the three dots. -->
-<!--     <item
-        android:id="@+id/action_userinfo"
-        android:icon="@drawable/user"
-        android:title="@string/user_info"
-        yourapp:showAsAction="never"/> -->
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/camera"
+        android:title="@string/add"
+        yourapp:showAsAction="always"/>
 
 </menu>
