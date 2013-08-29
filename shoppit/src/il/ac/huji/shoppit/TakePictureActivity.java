@@ -20,7 +20,7 @@ public class TakePictureActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.take_picture);
+		setContentView(R.layout.activity_take_picture);
 
 		if (!startCameraDisplay())
 			return;

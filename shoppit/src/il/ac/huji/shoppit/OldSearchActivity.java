@@ -8,7 +8,7 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
 
-public class SearchActivity extends ActionBarActivity {
+public class OldSearchActivity extends ActionBarActivity {
 
 	String[] categories = GeneralInfo.categories;
 
@@ -17,7 +17,7 @@ public class SearchActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.search);
+		setContentView(R.layout.activity_old_search);
 
 		//Create the category list
 

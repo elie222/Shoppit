@@ -9,15 +9,13 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import android.os.Bundle;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -44,6 +42,8 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main_activity_actions, menu);
+	    
+	    SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
 	    return true;
 	}
