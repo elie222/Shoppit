@@ -90,12 +90,12 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.action_add:
 			addItemIfLoggedIn();
 			return true;
-		case R.id.action_search:
-			startActivity(new Intent(getBaseContext(), SearchActivity.class));
-			return true;
-		case R.id.action_userinfo:
-			startActivity(new Intent(getBaseContext(), GeneralInfo.logged ? InfoActivity.class : LoginActivity.class));
-			return true;
+//		case R.id.action_search:
+//			startActivity(new Intent(getBaseContext(), SearchActivity.class));
+//			return true;
+//		case R.id.action_userinfo:
+//			startActivity(new Intent(getBaseContext(), GeneralInfo.logged ? InfoActivity.class : LoginActivity.class));
+//			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

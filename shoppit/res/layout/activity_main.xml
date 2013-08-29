@@ -8,59 +8,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:ems="10"
-        android:hint="@string/search_hint"
-        android:inputType="text" >
-
-        <requestFocus />
-    </EditText>
-
-    <!--
-         I've never seen anything uglier than these things. It has to go.
-    I'm thinking the search box should go too and someone will just click the search icon to search.
-    -->
-    <!--
-         <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
-        android:layout_below="@+id/editText1"
-        android:layout_marginTop="14dp"
-        android:text="@string/nearby_items"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="16dp"
-        android:text="@string/soty_by" />
-
-    <Spinner
-        android:id="@+id/sorter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_below="@+id/textView1"
-        android:layout_marginLeft="29dp"
-        android:layout_toRightOf="@+id/textView2" />
-    -->
-
     <ListView
         android:id="@+id/homeListView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/editText1"
         android:layout_marginTop="18dp" >
     </ListView>
 
