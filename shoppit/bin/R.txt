@@ -360,11 +360,10 @@ int layout activity_list_layout 0x7f03001a
 int layout activity_login 0x7f03001b
 int layout activity_main 0x7f03001c
 int layout activity_old_search 0x7f03001d
-int layout activity_searchable 0x7f03001e
-int layout activity_take_picture 0x7f03001f
-int layout item_list 0x7f030020
-int layout item_thumb 0x7f030021
-int layout support_simple_spinner_dropdown_item 0x7f030022
+int layout activity_take_picture 0x7f03001e
+int layout item_list 0x7f03001f
+int layout item_thumb 0x7f030020
+int layout support_simple_spinner_dropdown_item 0x7f030021
 int menu login 0x7f0e0000
 int menu login_activity_actions 0x7f0e0001
 int menu main 0x7f0e0002
