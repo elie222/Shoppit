@@ -8,6 +8,8 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import android.os.Bundle;
 import android.app.SearchManager;
@@ -23,7 +25,7 @@ import android.widget.SearchView;;
 
 public class MainActivity extends ActionBarActivity {
 
-	private ItemAdapter mainAdapter;
+	private ItemAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +37,22 @@ public class MainActivity extends ActionBarActivity {
 
 		//Check if the user is logged in, connect to parse if so.
 		checkIfLoggedIn();
+		
+		ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
+			public ParseQuery<Item> create() {
+				// Here we can configure a ParseQuery to display
+				// only top-rated meals.
+				ParseQuery query = new ParseQuery("Item");
+				//                query.whereContainedIn("rating", Arrays.asList("5", "4"));
+				//                query.orderByDescending("rating");
+				return query;
+			}
+		};
 
-		mainAdapter = new ItemAdapter(this);
+		adapter = new ItemAdapter(this, queryFactory);
 
 		ListView listView = (ListView) findViewById(R.id.homeListView);
-		listView.setAdapter(mainAdapter);
+		listView.setAdapter(adapter);
 	}
 
 	@Override
