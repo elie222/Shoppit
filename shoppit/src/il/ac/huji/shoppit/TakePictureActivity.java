@@ -22,12 +22,12 @@ public class TakePictureActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_take_picture);
 
-		if (!startCameraDisplay())
+		if (!startCameraDisplay() || !GeneralInfo.startGettingLocation(getBaseContext(), 0))
 			return;
 
 
 		//Create on click listener for the button that snaps the photo
-		((Button)findViewById(R.id.button2)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton)findViewById(R.id.button2)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				camera.takePicture(shutterCallback, rawCallback, jpegCallback);
 				/*stopCamera();
@@ -147,6 +147,7 @@ public class TakePictureActivity extends ActionBarActivity {
 			camera.release();
 		} catch (NullPointerException e) {}
 		camera = null;
+		GeneralInfo.stopGettingLocation();
 	}
 
 

@@ -1,13 +1,14 @@
 package il.ac.huji.shoppit;
 
+import java.text.DecimalFormat;
+
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -108,16 +109,34 @@ public class AddItemActivity extends ActionBarActivity {
 							Toast.LENGTH_LONG).show();
 					return;
 				}
+				
+				
+				GeneralInfo.name = name;
+				GeneralInfo.price = new DecimalFormat("0.00").format(priceVal); //Give the price this format
+				
+
+				//Try to get the device location
+				GeneralInfo.stopGettingLocation();
+				if (GeneralInfo.location == null) {
+					Toast.makeText(getApplicationContext(), "Cannot get device location",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+
+				
+				//Data is OK, upload the item to parse.
 
 				((Button) findViewById(R.id.done)).setEnabled(false);
-
-				// TODO data is okay, get GPS position and upload to parse.
 				
 				Item newItem = new Item();
 				newItem.setName(name);
 				newItem.setPrice(price);
 				// newItem.setPhotoFile(file);
 				newItem.setAuthor(ParseUser.getCurrentUser());
+				
+				ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
+						GeneralInfo.location.getLongitude());
+				newItem.setLocation(point);
 				
 				// everyone can read the item, only the current user can edit it.
 				// will write a cloud code function to enable other users to like the object.
@@ -150,6 +169,13 @@ public class AddItemActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		GeneralInfo.stopGettingLocation();
 	}
 
 

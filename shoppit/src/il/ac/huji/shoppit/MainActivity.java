@@ -3,7 +3,6 @@ package il.ac.huji.shoppit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -11,7 +10,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
@@ -19,6 +17,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -37,6 +36,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 public class MainActivity extends ActionBarActivity {
+
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -45,11 +45,32 @@ public class MainActivity extends ActionBarActivity {
 	private CharSequence mTitle;
 	private String[] mCategoryTitles;
 
+
+	//This class will get the device location to fill the list of nearby items.
+	private LocationRetriever2 lr = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
+
+		@Override
+		void timerFunc() {
+
+			//TODO this function will fill the list of nearby items
+			//when the timer for getting the device position has elapsed
+			//or as soon as the position is located -- the sooner of the two.
+
+			Location deviceLocation = GeneralInfo.location;
+
+		}
+
+	});
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//		setContentView(R.layout.activity_main);
 		setContentView(R.layout.activity_main);
+
+		//Get the device location
+		lr.startGettingUpdates(this, 10000);
+
 
 		ParseObject.registerSubclass(Item.class);
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
@@ -137,17 +158,17 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_activity_actions, menu);
-		
+
 		// Get the SearchView and set the searchable configuration
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-		
+
 		if (searchView == null) Log.i("","search view is null");
 		else Log.i("","search view is NOT null");
-		
+
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
-//		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-		
+		//		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -168,7 +189,7 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		}
 		// Handle action buttons
-		
+
 		// DEMO CODE
 		//		switch(item.getItemId()) {
 		//		case R.id.action_websearch:
@@ -304,4 +325,12 @@ public class MainActivity extends ActionBarActivity {
 			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
 		}
 	}
+
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		lr.stopGettingUpdates();
+	}
+
 }
