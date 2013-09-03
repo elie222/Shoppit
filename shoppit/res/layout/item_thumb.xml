@@ -9,7 +9,7 @@
     tools:context=".MainActivity" >
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -20,9 +20,9 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
+        android:layout_alignLeft="@+id/nameTextView"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/name"
+        android:layout_below="@+id/nameTextView"
         android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>

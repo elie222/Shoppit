@@ -50,7 +50,7 @@ public class Item extends ParseObject {
 	public void setPhotoFile(ParseFile file) {
 		put("photo", file);
 	}
-	
+
 	public String getPrice() {
 		return getString("price");
 	}
@@ -58,7 +58,7 @@ public class Item extends ParseObject {
 	public void setPrice(String price) {
 		put("price", price);
 	}
-	
+
 	public ParseGeoPoint getLocation() {
 		return getParseGeoPoint("location");
 	}
@@ -66,7 +66,7 @@ public class Item extends ParseObject {
 	public void setLocation(ParseGeoPoint point) {
 		put("location", point);
 	}
-	
+
 	public int getLikesCount() {
 		return getInt("likesCount");
 	}
@@ -75,4 +75,22 @@ public class Item extends ParseObject {
 		put("likesCounts", likesCount);
 	}
 
+	public String getMainCategory() {
+		return getString("mainCategory");
+	}
+
+	public void setMainCategory(String category) {
+		put("mainCategory", category);
+	}
+
+	public String getSubCategory() {
+		return getString("subCategory");
+	}
+
+	public void setSubCategory(String category) {
+		put("subCategory", category);
+	}
+	
+	
+	
 }
