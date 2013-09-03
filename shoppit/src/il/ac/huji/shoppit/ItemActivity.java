@@ -28,6 +28,10 @@ public class ItemActivity extends Activity {
 		//		ParseImageView imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
 		//		imageView.setPlaceholder(getResources().getDrawable(R.drawable.placeholder));
 
+		
+		// TODO - this is bad. We're downloading the item again here. See the note in ItemAdapter.java
+		// for more info.
+		
 		Intent intent = getIntent();
 		String itemId = intent.getStringExtra(EXTRA_ITEM_ID);
 
