@@ -8,11 +8,11 @@
         android:title="@string/action_search"
         android:hint="@string/search_hint"
         yourapp:actionViewClass="android.widget.SearchView"
-        yourapp:showAsAction="ifRoom|collapseActionView"/>
+        yourapp:showAsAction="ifRoom|collapseActionView" />
     <item
         android:id="@+id/action_add"
         android:icon="@drawable/camera"
         android:title="@string/add"
-        yourapp:showAsAction="ifRoom"/>
+        yourapp:showAsAction="ifRoom" />
 
 </menu>
