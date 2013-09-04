@@ -55,7 +55,7 @@ public class ItemActivity extends Activity {
 		nameTextView.setText(item.getName());
 		
 		TextView priceTextView = (TextView) findViewById(R.id.priceTextView);
-		priceTextView.setText(item.getPrice());
+		priceTextView.setText(String.valueOf(item.getPrice()));
 		
 		TextView categoryTextView = (TextView) findViewById(R.id.categoryTextView);
 		categoryTextView.setText(item.getMainCategory());

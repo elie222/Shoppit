@@ -53,7 +53,7 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 		nameTextView.setText(item.getName());
 		
 		TextView priceTextView = (TextView) v.findViewById(R.id.priceTextView);
-		priceTextView.setText(item.getPrice());
+		priceTextView.setText(String.valueOf(item.getPrice()));
 		
 		// TODO - this is bad. We should be sending the item to the new activity and not the 
 		// item's id. ATM, we're downloading the item again in the new activity which is

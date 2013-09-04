@@ -130,7 +130,7 @@ public class AddItemActivity extends ActionBarActivity {
 				
 				Item newItem = new Item();
 				newItem.setName(name);
-				newItem.setPrice(price);
+				newItem.setPrice(Double.parseDouble(price));
 				// newItem.setPhotoFile(file);
 				newItem.setAuthor(ParseUser.getCurrentUser());
 				

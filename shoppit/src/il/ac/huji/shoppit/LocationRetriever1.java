@@ -48,7 +48,6 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 			return new LocationRetriever1(context, waitTime);
 		}
 
-
 		return null;
 	}
 

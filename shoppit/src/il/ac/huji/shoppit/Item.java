@@ -51,12 +51,22 @@ public class Item extends ParseObject {
 		put("photo", file);
 	}
 
-	public String getPrice() {
-		return getString("price");
+	// changed
+	
+	public double getPrice() {
+		return getDouble("price");
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(double price) {
 		put("price", price);
+	}
+	
+	public String getCurrency() {
+		return getString("currency");
+	}
+
+	public void setCurrency(String currency) {
+		put("currency", currency);
 	}
 
 	public ParseGeoPoint getLocation() {
