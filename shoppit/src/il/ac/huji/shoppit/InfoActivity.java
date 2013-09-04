@@ -46,7 +46,6 @@ public class InfoActivity extends ActionBarActivity {
 			addItemIfLoggedIn();
 			return true;
 		case R.id.action_search:
-			startActivity(new Intent(getBaseContext(), OldSearchActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -22,19 +22,14 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
-            android:name="il.ac.huji.shoppit.OldMainActivity"
+            android:name="il.ac.huji.shoppit.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light" >
-<!--             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
-        </activity>
-        <activity
-            android:name="il.ac.huji.shoppit.OldSearchActivity"
-            android:label="@string/search"
-            android:theme="@style/Theme.AppCompat.Light" >
+            </intent-filter>
         </activity>
         <activity
             android:name="il.ac.huji.shoppit.TakePictureActivity"
@@ -73,14 +68,8 @@
             android:label="@string/title_activity_item" >
         </activity>
         <activity
-            android:name="il.ac.huji.shoppit.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name="il.ac.huji.shoppit.ShopActivity"
+            android:label="@string/title_activity_shop" >
         </activity>
     </application>
 

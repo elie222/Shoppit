@@ -77,6 +77,7 @@ public class Item extends ParseObject {
 		put("location", point);
 	}
 
+	//TODO change this to a relation of users that like the item.
 	public int getLikesCount() {
 		return getInt("likesCount");
 	}

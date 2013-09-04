@@ -35,10 +35,9 @@
         <item>Electronics</item>
         <item>Books</item>
     </string-array>
-    
+
     <string name="drawer_open">open drawer</string>
     <string name="drawer_close">close drawer</string>
-
     <string name="title_activity_main_activity_new">Welcome</string>
     <string name="title_activity_parse_table">ParseTableActivity</string>
     <string name="search_hint">Search items or shops</string>
@@ -46,5 +45,6 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_item">ItemActivity</string>
     <string name="title_activity_nav_drawer">NavDrawerActivity</string>
+    <string name="title_activity_shop">ShopActivity</string>
 
 </resources>
