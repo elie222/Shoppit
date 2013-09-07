@@ -3,13 +3,19 @@ package il.ac.huji.shoppit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.List;
+
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
@@ -34,6 +40,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -45,6 +52,8 @@ public class MainActivity extends ActionBarActivity {
 	private CharSequence mTitle;
 	private String[] mCategoryTitles;
 
+	final Activity mainActivity = this;
+
 
 	//This class will get the device location to fill the list of nearby items.
 	private LocationRetriever2 lr = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
@@ -54,13 +63,47 @@ public class MainActivity extends ActionBarActivity {
 
 			//TODO this function will fill the list of nearby items
 			//when the timer for getting the device position has elapsed
-			//or as soon as the position is located -- the sooner of the two.
+			//or as soon as the position is located.
 
-			Location deviceLocation = GeneralInfo.location;
+			if (GeneralInfo.location == null) { //In case of error
+				mainActivity.runOnUiThread(new Runnable() {
+					public void run() {
+						Toast.makeText(mainActivity, "Error getting device location",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+				return;
+			}
+
+			ParseGeoPoint userLocation = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
+					GeneralInfo.location.getLongitude());
+
+			ParseQuery<ParseObject> query = ParseQuery.getQuery("Item");
+			query.whereNear("location", userLocation);
+			query.setLimit(100); //need this?
+			query.findInBackground(new FindCallback<ParseObject>() {
+
+				@Override
+				public void done(List<ParseObject> objects, ParseException e) {
+
+					if (e != null || objects == null) {
+						mainActivity.runOnUiThread(new Runnable() {
+							public void run() {
+								Toast.makeText(mainActivity, "Error getting nearby items",
+										Toast.LENGTH_LONG).show();
+							}
+						});
+						return;
+					}
+
+					//TODO got list of nearby items, add them to the list.
+
+				}});
 
 		}
 
 	});
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

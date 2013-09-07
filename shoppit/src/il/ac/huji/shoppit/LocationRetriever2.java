@@ -14,7 +14,7 @@ import android.os.Bundle;
  * It is used if the new Location Manager API fails.
  * 
  * This was taken off an example from Stack Overflow. It uses the GPS and the network signals to
- * evaluate the device position. If no information was gained within 20 seconds it returns failure.
+ * evaluate the device position. If no information was gained within the given time it returns failure.
  */
 public class LocationRetriever2 {
 
