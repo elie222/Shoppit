@@ -23,7 +23,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -37,7 +36,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -51,6 +49,8 @@ public class MainActivity extends ActionBarActivity {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] mCategoryTitles;
+
+	private NavDrawerAdapter mNavDrawerAdapter;
 
 	final Activity mainActivity = this;
 
@@ -129,8 +129,14 @@ public class MainActivity extends ActionBarActivity {
 		// set a custom shadow that overlays the main content when the drawer opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		// set up the drawer's list view with items and click listener
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, mCategoryTitles));
+		//		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mCategoryTitles));
+		mNavDrawerAdapter = new NavDrawerAdapter(getBaseContext());
+		mNavDrawerAdapter.addSeparatorItem("Categories");
+		mNavDrawerAdapter.addItems(mCategoryTitles);
+		//		mNavDrawerAdapter.addSeparatorItem("Another section");
+		//		mNavDrawerAdapter.addItem("Another item");
+
+		mDrawerList.setAdapter(mNavDrawerAdapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
@@ -277,10 +283,14 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void selectItem(int position) {
+		if (mNavDrawerAdapter.isSeparator(position)) {
+			return;
+		}
+
 		// update the main content by replacing fragments
 		Fragment fragment = new CategoryFragment();
 		Bundle args = new Bundle();
-		args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, position);
+		args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, position - mNavDrawerAdapter.getSectionNumber(position));
 		fragment.setArguments(args);
 
 		FragmentManager fragmentManager = getFragmentManager();
@@ -288,7 +298,7 @@ public class MainActivity extends ActionBarActivity {
 
 		// update selected item and title, then close the drawer
 		mDrawerList.setItemChecked(position, true);
-		setTitle(mCategoryTitles[position]);
+//		setTitle(mCategoryTitles[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
@@ -317,6 +327,24 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		//If user logged in successfully, continue to taking the item picture.
+		if (requestCode == 5000 && resultCode == RESULT_OK){
+			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		lr.stopGettingUpdates();
+	}
+
+
+
+
 	/**
 	 * Fragment that appears in the "content_frame", shows a list view of items in a given category
 	 */
@@ -334,6 +362,7 @@ public class MainActivity extends ActionBarActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_category, container, false);
 			int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
+			// Note: this line will cause the program to crash when adding more sections to the sidebar. 
 			final String category = getResources().getStringArray(R.array.categories_array)[i];
 
 			ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
@@ -355,21 +384,4 @@ public class MainActivity extends ActionBarActivity {
 			return rootView;
 		}
 	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		//If user logged in successfully, continue to taking the item picture.
-		if (requestCode == 5000 && resultCode == RESULT_OK){
-			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
-		}
-	}
-
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		lr.stopGettingUpdates();
-	}
-
 }
