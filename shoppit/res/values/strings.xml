@@ -24,6 +24,9 @@
     <string name="item_info">Item Information</string>
     <string name="done">Done</string>
     <string name="shops">Shops</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="item_label">Add an Item</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
@@ -36,6 +39,14 @@
         <item>Electronics</item>
         <item>Books</item>
     </string-array>
+    <string-array name="ratings_array">
+        <item>5</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
+        <item></item>
+    </string-array>
 
     <string name="drawer_open">open drawer</string>
     <string name="drawer_close">close drawer</string>
@@ -47,5 +58,6 @@
     <string name="title_activity_item">ItemActivity</string>
     <string name="title_activity_nav_drawer">NavDrawerActivity</string>
     <string name="title_activity_shop">ShopActivity</string>
+    <string name="title_activity_new_item">NewItemActivity</string>
 
 </resources>

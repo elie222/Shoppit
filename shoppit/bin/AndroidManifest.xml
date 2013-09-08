@@ -88,6 +88,11 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyD8p3gJkRUxHK9Wxe8q2mfM_1dAJBwUmks" />
+
+        <activity
+            android:name="il.ac.huji.shoppit.NewItemActivity"
+            android:label="@string/title_activity_new_item" >
+        </activity>
     </application>
 
 </manifest>
