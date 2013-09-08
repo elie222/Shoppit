@@ -1,6 +1,5 @@
 package il.ac.huji.shoppit;
 
-import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 
 import com.parse.Parse;
@@ -14,7 +13,6 @@ import com.parse.SaveCallback;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;

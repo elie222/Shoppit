@@ -32,20 +32,20 @@ public class ShopActivity extends Activity {
 		// TODO - this is bad. We're downloading the item again here. See the note in ItemAdapter.java
 		// for more info.
 
-		Intent intent = getIntent();
-		String shopId = intent.getStringExtra(EXTRA_SHOP_ID);
-
-		ParseQuery<Shop> query = ParseQuery.getQuery("SHOP");
-		query.getInBackground(shopId, new GetCallback<Shop>() {
-			public void done(Shop shop, ParseException e) {
-				if (e == null) {
-					setupViews(shop);
-				} else {
-					//					objectRetrievalFailed();
-					Log.e("ITEM_ACTIIVTY", "Failed to load object.");
-				}
-			}
-		});
+//		Intent intent = getIntent();
+//		String shopId = intent.getStringExtra(EXTRA_SHOP_ID);
+//
+//		ParseQuery<Shop> query = ParseQuery.getQuery("SHOP");
+//		query.getInBackground(shopId, new GetCallback<Shop>() {
+//			public void done(Shop shop, ParseException e) {
+//				if (e == null) {
+//					setupViews(shop);
+//				} else {
+//					//					objectRetrievalFailed();
+//					Log.e("ITEM_ACTIIVTY", "Failed to load object.");
+//				}
+//			}
+//		});
 	}
 
 	@Override

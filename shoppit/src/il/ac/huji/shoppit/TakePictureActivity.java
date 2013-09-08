@@ -3,7 +3,6 @@ package il.ac.huji.shoppit;
 import java.io.*;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.*;
 import android.os.Bundle;

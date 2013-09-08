@@ -1,7 +1,5 @@
 package il.ac.huji.shoppit;
 
-import java.util.Arrays;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -11,7 +9,6 @@ import android.widget.TextView;
 import com.parse.GetDataCallback;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
-import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseException;
 
@@ -38,7 +35,7 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 
 		ParseImageView itemImage = (ParseImageView) v.findViewById(R.id.icon);
 		ParseFile photoFile = item.getPhotoFile();
-//		ParseFile photoFile = item.getParseFile("photo");
+
 		if (photoFile != null) {
 			itemImage.setParseFile(photoFile);
 			itemImage.loadInBackground(new GetDataCallback() {
