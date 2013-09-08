@@ -1144,9 +1144,10 @@ containing a value of this type.
         public static final int drawer_shadow=0x7f020073;
         public static final int ic_drawer=0x7f020074;
         public static final int ic_launcher=0x7f020075;
-        public static final int location_place=0x7f020076;
-        public static final int search=0x7f020077;
-        public static final int user=0x7f020078;
+        public static final int ic_launcher_shoppit=0x7f020076;
+        public static final int location_place=0x7f020077;
+        public static final int search=0x7f020078;
+        public static final int user=0x7f020079;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f06004f;
