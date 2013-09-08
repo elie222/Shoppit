@@ -35,13 +35,13 @@ public class Item extends ParseObject {
 		put("author", user);
 	}
 
-	public String getRating() {
-		return getString("rating");
-	}
-
-	public void setRating(String rating) {
-		put("rating", rating);
-	}
+//	public String getRating() {
+//		return getString("rating");
+//	}
+//
+//	public void setRating(String rating) {
+//		put("rating", rating);
+//	}
 
 	public ParseFile getPhotoFile() {
 		return getParseFile("photo");
@@ -50,8 +50,6 @@ public class Item extends ParseObject {
 	public void setPhotoFile(ParseFile file) {
 		put("photo", file);
 	}
-
-	// changed
 	
 	public double getPrice() {
 		return getDouble("price");
@@ -94,13 +92,13 @@ public class Item extends ParseObject {
 		put("mainCategory", category);
 	}
 
-	public String getSubCategory() {
-		return getString("subCategory");
-	}
-
-	public void setSubCategory(String category) {
-		put("subCategory", category);
-	}
+//	public String getSubCategory() {
+//		return getString("subCategory");
+//	}
+//
+//	public void setSubCategory(String category) {
+//		put("subCategory", category);
+//	}
 	
 	
 	

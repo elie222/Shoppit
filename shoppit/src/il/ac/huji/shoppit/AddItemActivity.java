@@ -49,8 +49,9 @@ public class AddItemActivity extends ActionBarActivity {
 		((EditText)findViewById(R.id.editText1)).requestFocus();
 
 		// I replaced this line
-//		((ImageView) findViewById(R.id.itemPic)).setImageBitmap(GeneralInfo.itemImage);
-		Bitmap itemImageBitmap = BitmapFactory.decodeByteArray(GeneralInfo.itemImageData, 0, GeneralInfo.itemImageData.length);;
+		//		((ImageView) findViewById(R.id.itemPic)).setImageBitmap(GeneralInfo.itemImage);
+		Bitmap itemImageBitmap = BitmapFactory.decodeByteArray
+				(GeneralInfo.itemImageData, 0, GeneralInfo.itemImageData.length);
 		((ImageView) findViewById(R.id.itemPic)).setImageBitmap(itemImageBitmap);
 
 
@@ -116,11 +117,11 @@ public class AddItemActivity extends ActionBarActivity {
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-				
-				
+
+
 				GeneralInfo.name = name;
 				GeneralInfo.price = new DecimalFormat("0.00").format(priceVal); //Give the price this format
-				
+
 
 				//Try to get the device location
 				GeneralInfo.stopGettingLocation();
@@ -130,30 +131,30 @@ public class AddItemActivity extends ActionBarActivity {
 					return;
 				}
 
-				
+
 				//Data is OK, upload the item to parse.
 
 				((Button) findViewById(R.id.done)).setEnabled(false);
-				
+
 				Item newItem = new Item();
 				newItem.setName(name);
 				newItem.setPrice(Double.parseDouble(price));
 				newItem.setCurrency("NIS");// TODO
 				newItem.setAuthor(ParseUser.getCurrentUser());
-				
+
 				ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
 						GeneralInfo.location.getLongitude());
 				newItem.setLocation(point);
-				
+
 				ParseFile photoFile = new ParseFile("photo.jpg", GeneralInfo.itemImageData);
 				newItem.setPhotoFile(photoFile);
-				
+
 				// everyone can read the item, only the current user can edit it.
 				// will write a cloud code function to enable other users to like the object.
 				ParseACL itemACL = new ParseACL(ParseUser.getCurrentUser());
 				itemACL.setPublicReadAccess(true);
 				newItem.setACL(itemACL);
-				newItem.saveInBackground();
+				//				newItem.saveInBackground();
 
 				newItem.saveInBackground(new SaveCallback() {
 					@Override
@@ -180,8 +181,8 @@ public class AddItemActivity extends ActionBarActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	
+
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -214,7 +215,7 @@ public class AddItemActivity extends ActionBarActivity {
 
 		public void onNothingSelected(AdapterView<?> parent) {}
 	}
-	
+
 
 
 }

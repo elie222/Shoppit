@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -20,17 +21,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.SaveCallback;
-
 public class CameraFragment extends Fragment {
 
 	public static final String TAG = "CameraFragment";
 
 	private Camera camera;
 	private SurfaceView surfaceView;
-	private ParseFile photoFile;
 	private ImageButton photoButton;
 
 	@Override
@@ -58,6 +54,7 @@ public class CameraFragment extends Fragment {
 			public void onClick(View v) {
 				if (camera == null)
 					return;
+				
 				camera.takePicture(new Camera.ShutterCallback() {
 
 					@Override
@@ -84,7 +81,7 @@ public class CameraFragment extends Fragment {
 			public void surfaceCreated(SurfaceHolder holder) {
 				try {
 					if (camera != null) {
-						camera.setDisplayOrientation(90);
+//						camera.setDisplayOrientation(90);
 						camera.setPreviewDisplay(holder);
 						camera.startPreview();
 					}
@@ -107,21 +104,23 @@ public class CameraFragment extends Fragment {
 		return v;
 	}
 
-	/*
+	
+	
+	/*  TODO - we don't actually want this scaling/resizing, since it makes the picture too small,
+	 * but we might want to do some other scaling, so I've left the code in for now.
+	 * 
 	 * ParseQueryAdapter loads ParseFiles into a ParseImageView at whatever size
 	 * they are saved. Since we never need a full-size image in our app, we'll
 	 * save a scaled one right away.
 	 */
 	private void saveScaledPhoto(byte[] data) {
-
+		
 		// Resize photo from camera byte array
 		Bitmap itemImage = BitmapFactory.decodeByteArray(data, 0, data.length);
 		Bitmap itemImageScaled = Bitmap.createScaledBitmap(itemImage, 200, 200
 				* itemImage.getHeight() / itemImage.getWidth(), false);
 
-		// Override Android default landscape orientation and save portrait
 		Matrix matrix = new Matrix();
-		matrix.postRotate(90);
 		Bitmap rotatedScaledItemImage = Bitmap.createBitmap(itemImageScaled, 0,
 				0, itemImageScaled.getWidth(), itemImageScaled.getHeight(),
 				matrix, true);
@@ -130,40 +129,24 @@ public class CameraFragment extends Fragment {
 		rotatedScaledItemImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 
 		byte[] scaledData = bos.toByteArray();
-
-		// Save the scaled image to Parse
-		photoFile = new ParseFile("item_photo.jpg", scaledData);
-		photoFile.saveInBackground(new SaveCallback() {
-
-			public void done(ParseException e) {
-				if (e != null) {
-					Toast.makeText(getActivity(),
-							"Error saving: " + e.getMessage(),
-							Toast.LENGTH_LONG).show();
-				} else {
-					addPhotoToItemAndReturn(photoFile);
-				}
-			}
-		});
+		
+		addPhotoToItemAndReturn(scaledData);
 	}
 
-	/*
-	 * Once the photo has saved successfully, we're ready to return to the
-	 * NewItemFragment. When we added the CameraFragment to the back stack, we
-	 * named it "NewItemFragment". Now we'll pop fragments off the back stack
-	 * until we reach that Fragment.
-	 */
-	private void addPhotoToItemAndReturn(ParseFile photoFile) {
-		((NewItemActivity) getActivity()).getCurrentItem().setPhotoFile(
-				photoFile);
-		FragmentManager fm = getActivity().getFragmentManager();
-		fm.popBackStack("NewItemFragment",
-				FragmentManager.POP_BACK_STACK_INCLUSIVE);
+	private void addPhotoToItemAndReturn(byte[] data) {
+		((NewItemActivity) getActivity()).setCurrentPhotoData(data);
+		
+		Fragment newItemFragment = new NewItemFragment();
+		FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
+		transaction.replace(R.id.fragmentContainer, newItemFragment);
+		transaction.addToBackStack("CameraFragment");
+		transaction.commit();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		
 		if (camera == null) {
 			try {
 				camera = Camera.open();
@@ -182,6 +165,7 @@ public class CameraFragment extends Fragment {
 		if (camera != null) {
 			camera.stopPreview();
 			camera.release();
+			camera = null;
 		}
 		super.onPause();
 	}

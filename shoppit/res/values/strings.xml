@@ -39,13 +39,10 @@
         <item>Electronics</item>
         <item>Books</item>
     </string-array>
-    <string-array name="ratings_array">
-        <item>5</item>
-        <item>4</item>
-        <item>3</item>
-        <item>2</item>
-        <item>1</item>
-        <item></item>
+    <string-array name="currencies_array">
+        <item>Israeli Shekel</item>
+        <item>US Dollar</item>
+        <item>Pound Sterling</item>
     </string-array>
 
     <string name="drawer_open">open drawer</string>
