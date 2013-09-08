@@ -50,7 +50,10 @@ public class AddItemActivity extends ActionBarActivity {
 
 		((EditText)findViewById(R.id.editText1)).requestFocus();
 
-		((ImageView) findViewById(R.id.itemPic)).setImageBitmap(GeneralInfo.itemImage);
+		// I replaced this line
+//		((ImageView) findViewById(R.id.itemPic)).setImageBitmap(GeneralInfo.itemImage);
+		Bitmap itemImageBitmap = BitmapFactory.decodeByteArray(GeneralInfo.itemImageData, 0, GeneralInfo.itemImageData.length);;
+		((ImageView) findViewById(R.id.itemPic)).setImageBitmap(itemImageBitmap);
 
 
 		//Create on click listener for the done button

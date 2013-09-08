@@ -107,7 +107,7 @@ public class TakePictureActivity extends ActionBarActivity {
 			
 			//Store the picture taken and start the item adding activity.
 			GeneralInfo.itemImageData = data;
-			GeneralInfo.itemImage = BitmapFactory.decodeByteArray(data, 0, data.length);
+//			GeneralInfo.itemImage = BitmapFactory.decodeByteArray(data, 0, data.length);
 			Intent intent = new Intent(getBaseContext(), AddItemActivity.class);
 			startActivity(intent);
 		}
