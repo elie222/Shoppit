@@ -23,6 +23,7 @@
     <string name="take_pic">Item Picture</string>
     <string name="item_info">Item Information</string>
     <string name="done">Done</string>
+    <string name="shops">Shops</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>

@@ -3,16 +3,21 @@
     xmlns:yourapp="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/action_search"
-        android:icon="@drawable/search"
-        android:title="@string/action_search"
-        android:hint="@string/search_hint"
-        yourapp:actionViewClass="android.widget.SearchView"
-        yourapp:showAsAction="ifRoom|collapseActionView" />
+        android:id="@+id/action_shops"
+        android:icon="@drawable/location_place"
+        android:title="@string/shops"
+        yourapp:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_add"
-        android:icon="@drawable/camera"
+        android:icon="@drawable/device_access_camera"
         android:title="@string/add"
-        yourapp:showAsAction="ifRoom" />
+        yourapp:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_search"
+        android:hint="@string/search_hint"
+        android:icon="@drawable/action_search"
+        android:title="@string/action_search"
+        yourapp:actionViewClass="android.widget.SearchView"
+        yourapp:showAsAction="ifRoom|collapseActionView"/>
 
 </menu>

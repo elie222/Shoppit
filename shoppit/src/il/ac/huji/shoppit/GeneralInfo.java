@@ -14,6 +14,7 @@ public class GeneralInfo {
 	//It is saved here because various activities are used to get the location.
 	//Storing it here makes it easy for them to call a function that uploads the item.
 	static Bitmap itemImage = null;
+	static byte[] itemImageData = null;
 	static String name, price, categ1, categ2;
 	static Location location = null;
 

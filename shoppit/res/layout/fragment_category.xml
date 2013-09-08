@@ -44,20 +44,20 @@
         android:orientation="horizontal" >
 
         <RadioButton
-            android:id="@+id/radio0"
+            android:id="@+id/radioNearby"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Nearby" />
 
         <RadioButton
-            android:id="@+id/radio1"
+            android:id="@+id/radioCheapest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cheapest" />
 
         <RadioButton
-            android:id="@+id/radio2"
+            android:id="@+id/radioShops"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Shops" />

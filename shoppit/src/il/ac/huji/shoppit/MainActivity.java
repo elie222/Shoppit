@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -223,6 +224,7 @@ public class MainActivity extends ActionBarActivity {
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
 		menu.findItem(R.id.action_add).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_shops).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -253,6 +255,8 @@ public class MainActivity extends ActionBarActivity {
 		//		}
 
 		switch (item.getItemId()) {
+		case R.id.action_shops:
+			return true;
 		case R.id.action_add:
 			addItemIfLoggedIn();
 			return true;
@@ -298,7 +302,7 @@ public class MainActivity extends ActionBarActivity {
 
 		// update selected item and title, then close the drawer
 		mDrawerList.setItemChecked(position, true);
-//		setTitle(mCategoryTitles[position]);
+		//		setTitle(mCategoryTitles[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
@@ -342,46 +346,4 @@ public class MainActivity extends ActionBarActivity {
 		lr.stopGettingUpdates();
 	}
 
-
-
-
-	/**
-	 * Fragment that appears in the "content_frame", shows a list view of items in a given category
-	 */
-	public static class CategoryFragment extends Fragment {
-		public static final String ARG_CATEGORY_NUMBER = "category_number";
-		public static final String MAIN_CATEGORY = "mainCategory";
-
-		private ItemAdapter adapter;
-
-		public CategoryFragment() {
-			// Empty constructor required for fragment subclasses
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_category, container, false);
-			int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
-			// Note: this line will cause the program to crash when adding more sections to the sidebar. 
-			final String category = getResources().getStringArray(R.array.categories_array)[i];
-
-			ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
-				public ParseQuery<Item> create() {
-					ParseQuery<Item> query = new ParseQuery<Item>("Item");
-					query.whereEqualTo(MAIN_CATEGORY, category);
-					return query;
-				}
-			};
-
-			adapter = new ItemAdapter(getActivity(), queryFactory);
-
-			ListView listView = (ListView) rootView.findViewById(R.id.homeListView);
-			listView.setAdapter(adapter);
-
-			//			getActivity().setTitle(getActivity().getTitle() + " " + category);
-			getActivity().setTitle(category);
-
-			return rootView;
-		}
-	}
 }

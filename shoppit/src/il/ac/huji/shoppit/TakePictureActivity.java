@@ -27,7 +27,7 @@ public class TakePictureActivity extends ActionBarActivity {
 
 
 		//Create on click listener for the button that snaps the photo
-		((ImageButton)findViewById(R.id.button2)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton)findViewById(R.id.take_picture_button)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				camera.takePicture(shutterCallback, rawCallback, jpegCallback);
 				/*stopCamera();
@@ -38,14 +38,14 @@ public class TakePictureActivity extends ActionBarActivity {
 
 
 		//Create on click listener for the barcode button
-		((Button)findViewById(R.id.button1)).setOnClickListener(new View.OnClickListener() {
+		((Button)findViewById(R.id.barcode_button)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				//TODO
 			}
 		});
 
 		//Create on click listener for the skip button
-		((Button)findViewById(R.id.button3)).setOnClickListener(new View.OnClickListener() {
+		((Button)findViewById(R.id.skip_button)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				//TODO
 			}
@@ -106,6 +106,7 @@ public class TakePictureActivity extends ActionBarActivity {
 		public void onPictureTaken(byte[] data, Camera camera) {
 			
 			//Store the picture taken and start the item adding activity.
+			GeneralInfo.itemImageData = data;
 			GeneralInfo.itemImage = BitmapFactory.decodeByteArray(data, 0, data.length);
 			Intent intent = new Intent(getBaseContext(), AddItemActivity.class);
 			startActivity(intent);

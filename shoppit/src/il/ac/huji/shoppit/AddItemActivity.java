@@ -1,14 +1,20 @@
 package il.ac.huji.shoppit;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -131,12 +137,15 @@ public class AddItemActivity extends ActionBarActivity {
 				Item newItem = new Item();
 				newItem.setName(name);
 				newItem.setPrice(Double.parseDouble(price));
-				// newItem.setPhotoFile(file);
+				newItem.setCurrency("NIS");// TODO
 				newItem.setAuthor(ParseUser.getCurrentUser());
 				
 				ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
 						GeneralInfo.location.getLongitude());
 				newItem.setLocation(point);
+				
+				ParseFile photoFile = new ParseFile("photo.jpg", GeneralInfo.itemImageData);
+				newItem.setPhotoFile(photoFile);
 				
 				// everyone can read the item, only the current user can edit it.
 				// will write a cloud code function to enable other users to like the object.
@@ -152,7 +161,7 @@ public class AddItemActivity extends ActionBarActivity {
 							Toast.makeText(getApplicationContext(), "Item added successfully",
 									Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(getApplicationContext(), "Error adding item",
+							Toast.makeText(getApplicationContext(), "Error adding item " + e.getCode() + " " + e.getMessage(),
 									Toast.LENGTH_LONG).show();
 						}
 					}
@@ -204,9 +213,7 @@ public class AddItemActivity extends ActionBarActivity {
 
 		public void onNothingSelected(AdapterView<?> parent) {}
 	}
-
-
-
+	
 
 
 }
