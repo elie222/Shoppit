@@ -90,7 +90,7 @@
             android:value="AIzaSyD8p3gJkRUxHK9Wxe8q2mfM_1dAJBwUmks" />
 
         <activity
-            android:name="il.ac.huji.shoppit.NewItemActivity"
+            android:name="il.ac.huji.shoppit.NewShopActivity"
             android:label="@string/title_activity_new_item" >
         </activity>
     </application>

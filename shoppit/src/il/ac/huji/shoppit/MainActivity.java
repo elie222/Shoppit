@@ -117,6 +117,7 @@ public class MainActivity extends ActionBarActivity {
 
 
 		ParseObject.registerSubclass(Item.class);
+		ParseObject.registerSubclass(Shop.class);
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 
 		//Check if the user is logged in, connect to parse if so.
@@ -303,6 +304,8 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		String sectionName = mNavDrawerAdapter.getSectionName(position);
+		String selectedName = mNavDrawerAdapter.getItemName(position);
+		Log.i("MAIN ACT", selectedName);
 		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
 
 		if (sectionName == CATEGORY_SEPARATOR) {
@@ -322,8 +325,18 @@ public class MainActivity extends ActionBarActivity {
 			mDrawerLayout.closeDrawer(mDrawerList);
 
 			return;
-		} else if (sectionName == GENERAL_SEPARATOR) {
+		} else if (selectedName.equals("Add Shop")) { // a bit ugly...
 			// start new activity
+			if (ParseUser.getCurrentUser() != null) {
+				startActivity(new Intent(getBaseContext(), NewShopActivity.class));
+			} else {
+				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
+				startActivityForResult(loginIntent, 5000);
+			}
+			
+			mDrawerLayout.closeDrawer(mDrawerList);
+			
+			return;
 		}
 	}
 

@@ -116,29 +116,29 @@ public class CameraFragment extends Fragment {
 	private void saveScaledPhoto(byte[] data) {
 		
 		// Resize photo from camera byte array
-		Bitmap itemImage = BitmapFactory.decodeByteArray(data, 0, data.length);
-		Bitmap itemImageScaled = Bitmap.createScaledBitmap(itemImage, 200, 200
-				* itemImage.getHeight() / itemImage.getWidth(), false);
+		Bitmap shopImage = BitmapFactory.decodeByteArray(data, 0, data.length);
+		Bitmap shopImageScaled = Bitmap.createScaledBitmap(shopImage, 200, 200
+				* shopImage.getHeight() / shopImage.getWidth(), false);
 
 		Matrix matrix = new Matrix();
-		Bitmap rotatedScaledItemImage = Bitmap.createBitmap(itemImageScaled, 0,
-				0, itemImageScaled.getWidth(), itemImageScaled.getHeight(),
+		Bitmap rotatedScaledShopImage = Bitmap.createBitmap(shopImageScaled, 0,
+				0, shopImageScaled.getWidth(), shopImageScaled.getHeight(),
 				matrix, true);
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		rotatedScaledItemImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+		rotatedScaledShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 
 		byte[] scaledData = bos.toByteArray();
 		
-		addPhotoToItemAndReturn(scaledData);
+		addPhotoToShopAndReturn(scaledData);
 	}
 
-	private void addPhotoToItemAndReturn(byte[] data) {
-		((NewItemActivity) getActivity()).setCurrentPhotoData(data);
+	private void addPhotoToShopAndReturn(byte[] data) {
+		((NewShopActivity) getActivity()).setCurrentPhotoData(data);
 		
-		Fragment newItemFragment = new NewItemFragment();
+		Fragment newShopFragment = new NewShopFragment();
 		FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-		transaction.replace(R.id.fragmentContainer, newItemFragment);
+		transaction.replace(R.id.fragmentContainer, newShopFragment);
 		transaction.addToBackStack("CameraFragment");
 		transaction.commit();
 	}

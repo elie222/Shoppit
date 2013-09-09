@@ -56,6 +56,10 @@ class NavDrawerAdapter extends BaseAdapter {
 		return mData.get(index);
 	}
 	
+	public String getItemName(int position) {
+		return mData.get(position);
+	}
+	
 	public int getPositionInSection(int position) {
 		int separatorIndex = mSeparatorsSet.floor(position);
 		return position - separatorIndex - 1;
