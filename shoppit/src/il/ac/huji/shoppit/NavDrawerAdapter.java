@@ -33,7 +33,7 @@ class NavDrawerAdapter extends BaseAdapter {
 		mData.add(item);
 		notifyDataSetChanged();
 	}
-	
+
 	public void addItems(final String[] items) {
 		for (int i=0; i<items.length; i++) {
 			mData.add(items[i]);
@@ -47,11 +47,21 @@ class NavDrawerAdapter extends BaseAdapter {
 		mSeparatorsSet.add(mData.size() - 1);
 		notifyDataSetChanged();
 	}
-	
+
 	public int getSectionNumber(int position) {
 		return mSeparatorsSet.headSet(position).size();
 	}
+
+	public String getSectionName(int position) {
+		int index = mSeparatorsSet.floor(position);
+		return mData.get(index);
+	}
 	
+	public int getPositionInSection(int position) {
+		int separatorIndex = mSeparatorsSet.floor(position);
+		return position - separatorIndex - 1;
+	}
+
 	public boolean isSeparator(int position) {
 		if (mSeparatorsSet.contains(position)) {
 			return true;
@@ -89,9 +99,9 @@ class NavDrawerAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
 		int type = getItemViewType(position);
-		
-//		Log.i("navdrawer", "getView " + position + " " + convertView + " type = " + type);
-		
+
+		//		Log.i("navdrawer", "getView " + position + " " + convertView + " type = " + type);
+
 		if (convertView == null) {
 			holder = new ViewHolder();
 			switch (type) {
@@ -108,15 +118,15 @@ class NavDrawerAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder)convertView.getTag();
 		}
-		
+
 		holder.textView.setText(mData.get(position));
 		return convertView;
 	}
 
-	
+
 	public class ViewHolder {
 		public TextView textView;
 	}
-	
+
 }
 

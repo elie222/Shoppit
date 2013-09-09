@@ -17,8 +17,9 @@ public final class R {
         public static final int abc_slide_out_top=0x7f040005;
     }
     public static final class array {
-        public static final int categories_array=0x7f0d0001;
-        public static final int currencies_array=0x7f0d0002;
+        public static final int categories_array=0x7f0d0002;
+        public static final int currencies_array=0x7f0d0003;
+        public static final int general_navbar_array=0x7f0d0001;
         public static final int sort_options=0x7f0d0000;
     }
     public static final class attr {
@@ -1146,13 +1147,14 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020075;
         public static final int ic_launcher_2=0x7f020076;
         public static final int ic_launcher_shoppit=0x7f020077;
-        public static final int location_place=0x7f020078;
-        public static final int search=0x7f020079;
-        public static final int user=0x7f02007a;
+        public static final int location_map=0x7f020078;
+        public static final int location_place=0x7f020079;
+        public static final int search=0x7f02007a;
+        public static final int user=0x7f02007b;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f070051;
-        public static final int action_add=0x7f07007d;
+        public static final int action_add=0x7f07007c;
         public static final int action_bar=0x7f07001d;
         public static final int action_bar_activity_content=0x7f070018;
         public static final int action_bar_container=0x7f07001c;
@@ -1161,16 +1163,16 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f070024;
         public static final int action_bar_title=0x7f070023;
         public static final int action_context_bar=0x7f07001e;
-        public static final int action_forgot_password=0x7f07007a;
+        public static final int action_forgot_password=0x7f070079;
         public static final int action_menu_divider=0x7f070019;
         public static final int action_menu_presenter=0x7f07001a;
         public static final int action_mode_bar=0x7f070032;
         public static final int action_mode_bar_stub=0x7f070031;
         public static final int action_mode_close_button=0x7f070025;
-        public static final int action_search=0x7f07007b;
-        public static final int action_settings=0x7f070079;
-        public static final int action_shops=0x7f07007c;
-        public static final int action_userinfo=0x7f07007e;
+        public static final int action_search=0x7f07007a;
+        public static final int action_settings=0x7f070078;
+        public static final int action_shops=0x7f07007b;
+        public static final int action_userinfo=0x7f07007d;
         public static final int activity_chooser_view_content=0x7f070026;
         public static final int always=0x7f07000f;
         public static final int barcode_button=0x7f070066;
@@ -1178,14 +1180,14 @@ containing a value of this type.
         public static final int camera_photo_button=0x7f07006c;
         public static final int camera_preview=0x7f07006a;
         public static final int camera_surface_view=0x7f07006b;
-        public static final int cancel_button=0x7f070077;
+        public static final int cancel_button=0x7f070076;
         public static final int categ1=0x7f070048;
         public static final int categ2=0x7f07004a;
         public static final int categoryTextView=0x7f070056;
         public static final int checkbox=0x7f07002e;
         public static final int collapseActionView=0x7f070011;
         public static final int content_frame=0x7f070060;
-        public static final int currency_spinner=0x7f070074;
+        public static final int currency_spinner=0x7f070073;
         public static final int default_activity_button=0x7f070029;
         public static final int dialog=0x7f070012;
         public static final int disableHome=0x7f07000c;
@@ -1203,15 +1205,15 @@ containing a value of this type.
         public static final int fragmentContainer=0x7f070062;
         public static final int home=0x7f070017;
         public static final int homeAsUp=0x7f070009;
-        public static final int homeListView=0x7f070071;
+        public static final int homeListView=0x7f070070;
         public static final int hybrid=0x7f070004;
         public static final int icon=0x7f07002b;
         public static final int ifRoom=0x7f07000e;
         public static final int image=0x7f070028;
         public static final int itemPic=0x7f07004d;
-        public static final int item_name=0x7f070072;
-        public static final int item_preview_image=0x7f070078;
-        public static final int item_price=0x7f070073;
+        public static final int item_name=0x7f070071;
+        public static final int item_preview_image=0x7f070077;
+        public static final int item_price=0x7f070072;
         public static final int left_drawer=0x7f070061;
         public static final int left_icon=0x7f070034;
         public static final int likeCheckBox=0x7f070057;
@@ -1228,7 +1230,7 @@ containing a value of this type.
         public static final int none=0x7f070000;
         public static final int normal=0x7f070001;
         public static final int photoParseImageView=0x7f070055;
-        public static final int photo_button=0x7f070075;
+        public static final int photo_button=0x7f070074;
         public static final int priceTextView=0x7f070054;
         public static final int progress_circular=0x7f070037;
         public static final int progress_horizontal=0x7f070038;
@@ -1236,11 +1238,10 @@ containing a value of this type.
         public static final int radioCheapest=0x7f07006f;
         public static final int radioGroup1=0x7f07006d;
         public static final int radioNearby=0x7f07006e;
-        public static final int radioShops=0x7f070070;
         public static final int right_container=0x7f070035;
         public static final int right_icon=0x7f070036;
         public static final int satellite=0x7f070002;
-        public static final int save_button=0x7f070076;
+        public static final int save_button=0x7f070075;
         public static final int search_badge=0x7f07003b;
         public static final int search_bar=0x7f07003a;
         public static final int search_button=0x7f07003c;

@@ -39,6 +39,9 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
+	private static final String GENERAL_SEPARATOR = "General";
+	private static final String CATEGORY_SEPARATOR = "Categories";
+	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -46,6 +49,7 @@ public class MainActivity extends ActionBarActivity {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] mCategoryTitles;
+	private String[] mGeneralNavBarTitles;
 
 	private NavDrawerAdapter mNavDrawerAdapter;
 
@@ -116,10 +120,11 @@ public class MainActivity extends ActionBarActivity {
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 
 		//Check if the user is logged in, connect to parse if so.
-		checkIfLoggedIn();
+		//		checkIfLoggedIn();
 
 		mTitle = mDrawerTitle = getTitle();
 		mCategoryTitles = getResources().getStringArray(R.array.categories_array);
+		mGeneralNavBarTitles = getResources().getStringArray(R.array.general_navbar_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -128,10 +133,10 @@ public class MainActivity extends ActionBarActivity {
 		// set up the drawer's list view with items and click listener
 		//		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mCategoryTitles));
 		mNavDrawerAdapter = new NavDrawerAdapter(getBaseContext());
-		mNavDrawerAdapter.addSeparatorItem("Categories");
+		mNavDrawerAdapter.addSeparatorItem(GENERAL_SEPARATOR);
+		mNavDrawerAdapter.addItems(mGeneralNavBarTitles);
+		mNavDrawerAdapter.addSeparatorItem(CATEGORY_SEPARATOR);
 		mNavDrawerAdapter.addItems(mCategoryTitles);
-		//		mNavDrawerAdapter.addSeparatorItem("Another section");
-		//		mNavDrawerAdapter.addItem("Another item");
 
 		mDrawerList.setAdapter(mNavDrawerAdapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -166,39 +171,40 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-	private void checkIfLoggedIn() {
-
-		File loginData = new File(this.getFilesDir() + "/data/files/", "shoppit.txt");
-
-		if (loginData.exists()) { //User is logged in.
-			BufferedReader reader = null;
-			try {
-				reader = new BufferedReader(new FileReader(loginData));
-				final String username = reader.readLine(),
-						password = reader.readLine();
-
-				ParseUser.logInInBackground(username, password, new LogInCallback() {
-					public void done(ParseUser user, ParseException e) {
-
-						if (e == null && user != null) {
-							//							loginSuccessful();
-							GeneralInfo.logged = true;
-							GeneralInfo.username = username;
-						} else if (user == null) {
-							//							usernameOrPasswordIsInvalid();
-						} else {
-							//							somethingWentWrong();
-						}
-					}
-				});
-
-			} catch (Exception e) {}
-			try {
-				reader.close();
-			} catch (Exception e) {}
-
-		}
-	}
+	// just use ParseUser.getCurrentUser() to get the current user
+//	private void checkIfLoggedIn() {
+//
+//		File loginData = new File(this.getFilesDir() + "/data/files/", "shoppit.txt");
+//
+//		if (loginData.exists()) { //User is logged in.
+//			BufferedReader reader = null;
+//			try {
+//				reader = new BufferedReader(new FileReader(loginData));
+//				final String username = reader.readLine(),
+//						password = reader.readLine();
+//
+//				ParseUser.logInInBackground(username, password, new LogInCallback() {
+//					public void done(ParseUser user, ParseException e) {
+//
+//						if (e == null && user != null) {
+//							//							loginSuccessful();
+//							GeneralInfo.logged = true;
+//							GeneralInfo.username = username;
+//						} else if (user == null) {
+//							//							usernameOrPasswordIsInvalid();
+//						} else {
+//							//							somethingWentWrong();
+//						}
+//					}
+//				});
+//
+//			} catch (Exception e) {}
+//			try {
+//				reader.close();
+//			} catch (Exception e) {}
+//
+//		}
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -256,26 +262,32 @@ public class MainActivity extends ActionBarActivity {
 			startActivity(intent);
 			return true;
 		case R.id.action_add:
-			addItemIfLoggedIn();
+			if (ParseUser.getCurrentUser() != null) {
+				startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+				//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
+			} else {
+				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
+				startActivityForResult(loginIntent, 5000);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	private void addItemIfLoggedIn() {
-
-		//If user is logged in, continue to taking the item picture.
-		if (ParseUser.getCurrentUser() != null) {
-			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
-//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
-			return;
-		}
-
-		//Else, ask the user to log in.
-		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-		startActivityForResult(intent, 5000);
-	}
+//	private void addItemIfLoggedIn() {
+//
+//		//If user is logged in, continue to taking the item picture.
+//		if (ParseUser.getCurrentUser() != null) {
+//			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+//			//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
+//			return;
+//		}
+//
+//		//Else, ask the user to log in.
+//		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+//		startActivityForResult(intent, 5000);
+//	}
 
 	/* The click listener for ListView in the navigation drawer */
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -290,19 +302,29 @@ public class MainActivity extends ActionBarActivity {
 			return;
 		}
 
-		// update the main content by replacing fragments
-		Fragment fragment = new CategoryFragment();
-		Bundle args = new Bundle();
-		args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, position - mNavDrawerAdapter.getSectionNumber(position));
-		fragment.setArguments(args);
+		String sectionName = mNavDrawerAdapter.getSectionName(position);
+		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
+		
+		if (sectionName == CATEGORY_SEPARATOR) {
+			// update the main content by replacing fragments
+			Fragment fragment = new CategoryFragment();
+			Bundle args = new Bundle();
+			
+			args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
+			fragment.setArguments(args);
 
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
-		// update selected item and title, then close the drawer
-		mDrawerList.setItemChecked(position, true);
-		//		setTitle(mCategoryTitles[position]);
-		mDrawerLayout.closeDrawer(mDrawerList);
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(position, true);
+			setTitle(mCategoryTitles[positionInSection]);
+			mDrawerLayout.closeDrawer(mDrawerList);
+			
+			return;
+		} else if (sectionName == GENERAL_SEPARATOR) {
+			// start new activity
+		}
 	}
 
 	@Override

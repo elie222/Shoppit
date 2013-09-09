@@ -5,6 +5,7 @@ import com.parse.ParseQueryAdapter;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,11 @@ public class CategoryFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
 		View rootView = inflater.inflate(R.layout.fragment_category, container, false);
 		int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
-		// Note: this line will cause the program to crash when adding more sections to the sidebar. 
+		//		Log.i("CAT_FRAG", "cat no: " + i);
+
 		final String category = getResources().getStringArray(R.array.categories_array)[i];
 
 		ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
@@ -40,7 +43,6 @@ public class CategoryFragment extends Fragment {
 		ListView listView = (ListView) rootView.findViewById(R.id.homeListView);
 		listView.setAdapter(adapter);
 
-		//			getActivity().setTitle(getActivity().getTitle() + " " + category);
 		getActivity().setTitle(category);
 
 		return rootView;

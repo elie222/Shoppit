@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_shops"
-        android:icon="@drawable/location_place"
+        android:icon="@drawable/location_map"
         android:title="@string/shops"
         yourapp:showAsAction="ifRoom"/>
     <item

@@ -11,7 +11,6 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.ListView;
 
 public class SearchableActivity extends ListActivity {
 
@@ -33,7 +32,8 @@ public class SearchableActivity extends ListActivity {
 			
 			ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
 				public ParseQuery<Item> create() {
-					ParseQuery query = new ParseQuery("Item");
+					ParseQuery<Item> query = new ParseQuery<Item>("Item");
+					// https://www.parse.com/questions/case-insensitive-pfquery
 					query.whereContains("name", queryString);
 					
 					return query;
