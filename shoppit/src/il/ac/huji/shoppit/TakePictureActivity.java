@@ -81,7 +81,6 @@ public class TakePictureActivity extends ActionBarActivity {
 			public void surfaceCreated(SurfaceHolder holder) {
 				try {
 					if (camera != null) {
-						camera.setDisplayOrientation(90);
 						camera.setPreviewDisplay(holder);
 						camera.startPreview();
 					}

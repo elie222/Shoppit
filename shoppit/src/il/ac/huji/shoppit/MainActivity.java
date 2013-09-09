@@ -266,7 +266,7 @@ public class MainActivity extends ActionBarActivity {
 	private void addItemIfLoggedIn() {
 
 		//If user is logged in, continue to taking the item picture.
-		if (GeneralInfo.logged) {
+		if (ParseUser.getCurrentUser() != null) {
 			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
 //			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
 			return;

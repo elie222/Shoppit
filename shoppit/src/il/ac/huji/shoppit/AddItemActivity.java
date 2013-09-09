@@ -140,14 +140,7 @@ public class AddItemActivity extends ActionBarActivity {
 				//Data is OK, upload the item to parse.
 
 				((Button) findViewById(R.id.done)).setEnabled(false);
-<<<<<<< HEAD
 
-=======
-				
-				//Split the keywords
-				
-				
->>>>>>> dfc0d9c4a1ef9727d17215e831c7315b006017fb
 				Item newItem = new Item();
 				newItem.setName(name);
 				newItem.setPrice(Double.parseDouble(price));
