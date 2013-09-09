@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		void timerFunc() {
 
-			//TODO this function will fill the list of nearby items
+			//This function will fill the list of nearby items
 			//when the timer for getting the device position has elapsed
 			//or as soon as the position is located.
 
@@ -267,8 +267,8 @@ public class MainActivity extends ActionBarActivity {
 
 		//If user is logged in, continue to taking the item picture.
 		if (GeneralInfo.logged) {
-//			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
-			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
+			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
 			return;
 		}
 

@@ -7,7 +7,9 @@ import android.hardware.Camera;
 import android.hardware.Camera.*;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.*;
+import android.view.SurfaceHolder.Callback;
 import android.widget.*;
 
 public class TakePictureActivity extends ActionBarActivity {
@@ -74,7 +76,35 @@ public class TakePictureActivity extends ActionBarActivity {
 		//Set the large surface view to display what the camera sees.
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
 		SurfaceHolder surfaceHolder = surfaceView.getHolder();
-		try {
+		surfaceHolder.addCallback(new Callback() {
+
+			public void surfaceCreated(SurfaceHolder holder) {
+				try {
+					if (camera != null) {
+						camera.setDisplayOrientation(90);
+						camera.setPreviewDisplay(holder);
+						camera.startPreview();
+					}
+				} catch (IOException e) {
+					Toast.makeText(getApplicationContext(), "Cannot create stream from camera",
+							Toast.LENGTH_LONG).show();
+					finish();
+				}
+			}
+
+			public void surfaceChanged(SurfaceHolder holder, int format,
+					int width, int height) {
+				// nothing to do here
+			}
+
+			public void surfaceDestroyed(SurfaceHolder holder) {
+				// nothing here
+			}
+
+		});
+		
+		
+		/*try {
 			camera.setPreviewDisplay(surfaceHolder);
 		} catch (IOException e) {
 			Toast.makeText(getApplicationContext(), "Cannot create stream from camera",
@@ -84,7 +114,7 @@ public class TakePictureActivity extends ActionBarActivity {
 		}
 
 		//Start displaying.
-		camera.startPreview();
+		camera.startPreview();*/
 		return true;
 	}
 

@@ -15,8 +15,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.method.KeyListener;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -135,7 +140,14 @@ public class AddItemActivity extends ActionBarActivity {
 				//Data is OK, upload the item to parse.
 
 				((Button) findViewById(R.id.done)).setEnabled(false);
+<<<<<<< HEAD
 
+=======
+				
+				//Split the keywords
+				
+				
+>>>>>>> dfc0d9c4a1ef9727d17215e831c7315b006017fb
 				Item newItem = new Item();
 				newItem.setName(name);
 				newItem.setPrice(Double.parseDouble(price));
