@@ -44,6 +44,18 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/categoryTextView"
         android:layout_alignParentRight="true"
-        android:layout_margin="10dp" />
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:id="@+id/likesCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/categoryTextView"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="1dp"
+        android:layout_toLeftOf="@id/likeCheckBox"
+        android:text="5"
+        android:textSize="18sp" />
 
 </RelativeLayout>

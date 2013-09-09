@@ -4,6 +4,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseFile;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 /*
@@ -74,15 +75,15 @@ public class Item extends ParseObject {
 	public void setLocation(ParseGeoPoint point) {
 		put("location", point);
 	}
-
-	//TODO change this to a relation of users that like the item.
-	public int getLikesCount() {
-		return getInt("likesCount");
+	
+	public ParseRelation<ParseUser> getLikesRelation() {
+		return getRelation("likes");
 	}
-
-	public void setLikesCount(int likesCount) {
-		put("likesCounts", likesCount);
-	}
+	
+	// use Cloud function to like an Item
+//	public void setLikesRelation(int likesCount) {
+//		put("likesCounts", likesCount);
+//	}
 
 	public String getMainCategory() {
 		return getString("mainCategory");
