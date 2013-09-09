@@ -23,7 +23,6 @@ class NavDrawerAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 
 	private TreeSet<Integer> mSeparatorsSet = new TreeSet<Integer>();
-	//	private Context mContext;
 
 	public NavDrawerAdapter(Context context) {
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -60,6 +59,10 @@ class NavDrawerAdapter extends BaseAdapter {
 	public int getPositionInSection(int position) {
 		int separatorIndex = mSeparatorsSet.floor(position);
 		return position - separatorIndex - 1;
+	}
+	
+	public int getPosition(String item) {
+		return mData.indexOf(item);
 	}
 
 	public boolean isSeparator(int position) {

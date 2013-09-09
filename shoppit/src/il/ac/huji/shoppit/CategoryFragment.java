@@ -25,7 +25,7 @@ public class CategoryFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View rootView = inflater.inflate(R.layout.fragment_category, container, false);
-		int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
+		final int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
 		//		Log.i("CAT_FRAG", "cat no: " + i);
 
 		final String category = getResources().getStringArray(R.array.categories_array)[i];
@@ -33,7 +33,9 @@ public class CategoryFragment extends Fragment {
 		ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
 			public ParseQuery<Item> create() {
 				ParseQuery<Item> query = new ParseQuery<Item>("Item");
-				query.whereEqualTo(MAIN_CATEGORY, category);
+				if (i != 0) {
+					query.whereEqualTo(MAIN_CATEGORY, category);	
+				}
 				return query;
 			}
 		};

@@ -39,6 +39,7 @@
         <item>Profile</item>
     </string-array>
     <string-array name="categories_array">
+        <item>All</item>
         <item>Food</item>
         <item>Clothes</item>
         <item>Books</item>

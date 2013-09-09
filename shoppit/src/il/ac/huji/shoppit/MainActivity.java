@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final String GENERAL_SEPARATOR = "General";
 	private static final String CATEGORY_SEPARATOR = "Categories";
-	
+
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -167,44 +167,44 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		if (savedInstanceState == null) {
-			selectItem(0);
+			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
 		}
 	}
 
 	// just use ParseUser.getCurrentUser() to get the current user
-//	private void checkIfLoggedIn() {
-//
-//		File loginData = new File(this.getFilesDir() + "/data/files/", "shoppit.txt");
-//
-//		if (loginData.exists()) { //User is logged in.
-//			BufferedReader reader = null;
-//			try {
-//				reader = new BufferedReader(new FileReader(loginData));
-//				final String username = reader.readLine(),
-//						password = reader.readLine();
-//
-//				ParseUser.logInInBackground(username, password, new LogInCallback() {
-//					public void done(ParseUser user, ParseException e) {
-//
-//						if (e == null && user != null) {
-//							//							loginSuccessful();
-//							GeneralInfo.logged = true;
-//							GeneralInfo.username = username;
-//						} else if (user == null) {
-//							//							usernameOrPasswordIsInvalid();
-//						} else {
-//							//							somethingWentWrong();
-//						}
-//					}
-//				});
-//
-//			} catch (Exception e) {}
-//			try {
-//				reader.close();
-//			} catch (Exception e) {}
-//
-//		}
-//	}
+	//	private void checkIfLoggedIn() {
+	//
+	//		File loginData = new File(this.getFilesDir() + "/data/files/", "shoppit.txt");
+	//
+	//		if (loginData.exists()) { //User is logged in.
+	//			BufferedReader reader = null;
+	//			try {
+	//				reader = new BufferedReader(new FileReader(loginData));
+	//				final String username = reader.readLine(),
+	//						password = reader.readLine();
+	//
+	//				ParseUser.logInInBackground(username, password, new LogInCallback() {
+	//					public void done(ParseUser user, ParseException e) {
+	//
+	//						if (e == null && user != null) {
+	//							//							loginSuccessful();
+	//							GeneralInfo.logged = true;
+	//							GeneralInfo.username = username;
+	//						} else if (user == null) {
+	//							//							usernameOrPasswordIsInvalid();
+	//						} else {
+	//							//							somethingWentWrong();
+	//						}
+	//					}
+	//				});
+	//
+	//			} catch (Exception e) {}
+	//			try {
+	//				reader.close();
+	//			} catch (Exception e) {}
+	//
+	//		}
+	//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -275,19 +275,19 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-//	private void addItemIfLoggedIn() {
-//
-//		//If user is logged in, continue to taking the item picture.
-//		if (ParseUser.getCurrentUser() != null) {
-//			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
-//			//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
-//			return;
-//		}
-//
-//		//Else, ask the user to log in.
-//		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-//		startActivityForResult(intent, 5000);
-//	}
+	//	private void addItemIfLoggedIn() {
+	//
+	//		//If user is logged in, continue to taking the item picture.
+	//		if (ParseUser.getCurrentUser() != null) {
+	//			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+	//			//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
+	//			return;
+	//		}
+	//
+	//		//Else, ask the user to log in.
+	//		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+	//		startActivityForResult(intent, 5000);
+	//	}
 
 	/* The click listener for ListView in the navigation drawer */
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -304,12 +304,12 @@ public class MainActivity extends ActionBarActivity {
 
 		String sectionName = mNavDrawerAdapter.getSectionName(position);
 		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
-		
+
 		if (sectionName == CATEGORY_SEPARATOR) {
 			// update the main content by replacing fragments
 			Fragment fragment = new CategoryFragment();
 			Bundle args = new Bundle();
-			
+
 			args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
 			fragment.setArguments(args);
 
@@ -320,7 +320,7 @@ public class MainActivity extends ActionBarActivity {
 			mDrawerList.setItemChecked(position, true);
 			setTitle(mCategoryTitles[positionInSection]);
 			mDrawerLayout.closeDrawer(mDrawerList);
-			
+
 			return;
 		} else if (sectionName == GENERAL_SEPARATOR) {
 			// start new activity
