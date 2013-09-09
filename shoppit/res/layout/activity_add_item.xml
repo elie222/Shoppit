@@ -86,7 +86,7 @@
         android:layout_above="@+id/done"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/categ2" />
+        android:layout_below="@+id/editText3" />
 
     <Button
         android:id="@+id/done"
@@ -95,5 +95,23 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="@string/done" />
+
+    <EditText
+        android:id="@+id/editText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/categ2"
+        android:layout_toRightOf="@+id/textView4"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editText3"
+        android:layout_alignBottom="@+id/editText3"
+        android:layout_alignLeft="@+id/textView4"
+        android:text="Keywords:"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
