@@ -52,6 +52,9 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 		TextView priceTextView = (TextView) v.findViewById(R.id.priceTextView);
 		priceTextView.setText(String.valueOf(item.getPrice()));
 		
+		TextView currencyTextView = (TextView) v.findViewById(R.id.currencyTextView);
+		currencyTextView.setText(String.valueOf(item.getCurrency()));
+		
 		// TODO - this is bad. We should be sending the item to the new activity and not the 
 		// item's id. ATM, we're downloading the item again in the new activity which is
 		// a waste. The problem is that ParseObject isn't Parceable.

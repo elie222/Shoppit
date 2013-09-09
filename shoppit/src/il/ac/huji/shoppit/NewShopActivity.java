@@ -9,24 +9,22 @@ import android.view.WindowManager;
 
 public class NewShopActivity extends Activity {
 	 
-    private Shop shop;
-    private byte[] photoData;
+    private Shop shop = null;
+    private byte[] photoData = null;
  
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	shop = new Shop();
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
  
-        // Begin with main data entry view,
-        // NewShopFragment
         setContentView(R.layout.activity_new_shop);
         FragmentManager manager = getFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
  
         if (fragment == null) {
-            fragment = new CameraFragment();
+            fragment = new NewShopFragment();
             manager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         }
     }

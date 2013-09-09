@@ -66,7 +66,8 @@ public class CameraFragment extends Fragment {
 
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
-						saveScaledPhoto(data);
+//						saveScaledPhoto(data);
+						addPhotoToShopAndReturn(data);
 					}
 
 				});
@@ -135,12 +136,10 @@ public class CameraFragment extends Fragment {
 
 	private void addPhotoToShopAndReturn(byte[] data) {
 		((NewShopActivity) getActivity()).setCurrentPhotoData(data);
-		
-		Fragment newShopFragment = new NewShopFragment();
-		FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
-		transaction.replace(R.id.fragmentContainer, newShopFragment);
-		transaction.addToBackStack("CameraFragment");
-		transaction.commit();
+				
+		FragmentManager fm = getActivity().getFragmentManager();
+		fm.popBackStack("NewShopFragment",
+				FragmentManager.POP_BACK_STACK_INCLUSIVE);
 	}
 
 	@Override

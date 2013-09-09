@@ -1,6 +1,7 @@
 package il.ac.huji.shoppit;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -97,10 +98,13 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	}
 
 
-	void getLastLocation() {
+	Location getLastLocation() {
 		try {
 			GeneralInfo.location = mLocationClient.getLastLocation();
-		} catch (Exception e) {}
+			return mLocationClient.getLastLocation();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 

@@ -3,6 +3,7 @@ package il.ac.huji.shoppit;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,6 +44,7 @@ public class NewShopFragment extends Fragment {
 	private Button saveButton;
 	private Button cancelButton;
 	private TextView nameTextView;
+	private ImageView shopPreview;
 	private byte[] photoData;
 
 	@Override
@@ -74,8 +76,8 @@ public class NewShopFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO check data is valid (copy code from AddShopActivity)
-				
+				// TODO check data is valid
+
 				Shop shop = ((NewShopActivity) getActivity()).getCurrentShop();
 
 				shop.setName(nameTextView.getText().toString());
@@ -129,26 +131,33 @@ public class NewShopFragment extends Fragment {
 			}
 		});
 
-		photoData = ((NewShopActivity) getActivity()).getCurrentPhotoData();
-
-		Bitmap shopImageBitmap = BitmapFactory.decodeByteArray(photoData, 0, photoData.length);
-		((ImageView) v.findViewById(R.id.shop_preview_image)).setImageBitmap(shopImageBitmap);
+		// Until the user has taken a photo, hide the preview
+		shopPreview = (ImageView) v.findViewById(R.id.shop_preview_image);
+		shopPreview.setVisibility(View.INVISIBLE);
 
 		return v;
 	}
 
-	// just go back to the previous camera screen
-	// TODO - need to save the data entered by the user so far
-	// can do this if we don't pop the back stack, but instead push another camera fragment onto
-	// the back stack
 	public void startCamera() {
-		FragmentManager fm = getActivity().getFragmentManager();
-		fm.popBackStack("CameraFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		Fragment cameraFragment = new CameraFragment();
+		FragmentTransaction transaction = getActivity().getFragmentManager()
+				.beginTransaction();
+		transaction.replace(R.id.fragmentContainer, cameraFragment);
+		transaction.addToBackStack("NewShopFragment");
+		transaction.commit();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		photoData = ((NewShopActivity) getActivity()).getCurrentPhotoData();
+		
+		if (photoData != null) {
+			Bitmap shopImageBitmap = BitmapFactory.decodeByteArray(photoData, 0, photoData.length);
+			shopPreview.setImageBitmap(shopImageBitmap);
+			shopPreview.setVisibility(View.VISIBLE);
+		}
 	}
 
 }

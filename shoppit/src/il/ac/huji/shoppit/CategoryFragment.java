@@ -5,6 +5,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
 import android.app.Fragment;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
