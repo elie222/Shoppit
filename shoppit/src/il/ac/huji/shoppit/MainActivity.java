@@ -119,6 +119,7 @@ public class MainActivity extends ActionBarActivity {
 
 		ParseObject.registerSubclass(Item.class);
 		ParseObject.registerSubclass(Shop.class);
+		ParseObject.registerSubclass(Comment.class);
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 
 		//Check if the user is logged in, connect to parse if so.

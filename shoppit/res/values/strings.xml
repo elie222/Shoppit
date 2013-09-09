@@ -28,6 +28,8 @@
     <string name="save">Save</string>
     <string name="item_label">Add an Item</string>
     <string name="shop_label">Add a New Shop</string>
+    <string name="comments">Comments</string>
+    <string name="add_comment">Add Comment</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
@@ -63,5 +65,6 @@
     <string name="title_activity_nav_drawer">NavDrawerActivity</string>
     <string name="title_activity_shop">ShopActivity</string>
     <string name="title_activity_new_item">NewItemActivity</string>
+    <string name="title_activity_comment_dialog">CommentDialog</string>
 
 </resources>

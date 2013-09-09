@@ -93,6 +93,10 @@
             android:name="il.ac.huji.shoppit.NewShopActivity"
             android:label="@string/title_activity_new_item" >
         </activity>
+        <activity
+            android:name="il.ac.huji.shoppit.CommentDialog"
+            android:label="@string/title_activity_comment_dialog" >
+        </activity>
     </application>
 
 </manifest>

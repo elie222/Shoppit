@@ -10,11 +10,12 @@
         android:layout_height="wrap_content"
         android:background="#2B2B2B"
         android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:text="text"
+        android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#FFFFFFFF"
-        android:visibility="visible"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp" />
+        android:visibility="visible" />
 
 </LinearLayout>

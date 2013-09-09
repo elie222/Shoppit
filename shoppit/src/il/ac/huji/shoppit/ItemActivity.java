@@ -15,20 +15,31 @@ import com.parse.ParseUser;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ItemActivity extends Activity {
 
 	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
 
+	private TextView nameTextView;
+	private TextView priceTextView;
+	private TextView categoryTextView;
 	private CheckBox likeCheckBox;
 	private TextView likesCountTextView;
 	private Integer likesCount;
+	private ParseImageView imageView;
+	private ListView commentsListView;
+
+	private Button addCommentButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +70,16 @@ public class ItemActivity extends Activity {
 			}
 		});
 
+		nameTextView = (TextView) findViewById(R.id.nameTextView);
+		priceTextView = (TextView) findViewById(R.id.priceTextView);
+		categoryTextView = (TextView) findViewById(R.id.categoryTextView);
 		likeCheckBox = (CheckBox) findViewById(R.id.likeCheckBox);
 		likesCountTextView = (TextView) findViewById(R.id.likesCountTextView);
+		imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
+		commentsListView = (ListView) findViewById(R.id.commentsListView);
+		addCommentButton = (Button) findViewById(R.id.addCommentButton);
 
-		likeCheckBox.setOnClickListener(new View.OnClickListener() {//TODO update likesCount
+		likeCheckBox.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -82,27 +99,32 @@ public class ItemActivity extends Activity {
 						if (e == null) {
 							Log.i("ITEM_ACTIVITY", message);
 						} else {
-							Log.i("ITEM_ACTIVITY", "ERROROROROR " + e.getMessage());
+							Log.i("ITEM_ACTIVITY", "ERROR: " + e.getMessage());
 						}
 					}
 				});
 			}
 		});
+		
+		addCommentButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FragmentManager fm = getFragmentManager();
+		        CommentDialog testDialog = new CommentDialog();
+		        testDialog.setRetainInstance(true);
+		        testDialog.show(fm, "fragment_comment_dialog");
+			}
+			
+		});
 
 	}
 
 	protected void setupViews(Item item) {
-
-		TextView nameTextView = (TextView) findViewById(R.id.nameTextView);
+		
 		nameTextView.setText(item.getName());
-
-		TextView priceTextView = (TextView) findViewById(R.id.priceTextView);
 		priceTextView.setText(String.valueOf(item.getPrice()));
-
-		TextView categoryTextView = (TextView) findViewById(R.id.categoryTextView);
 		categoryTextView.setText(item.getMainCategory());
-
-		ParseImageView imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
 
 		// get the number of users that like the item
 		ParseQuery<ParseUser> queryLikesCount = item.getLikesRelation().getQuery();
@@ -157,5 +179,6 @@ public class ItemActivity extends Activity {
 		getMenuInflater().inflate(R.menu.item, menu);
 		return true;
 	}
+	
 
 }
