@@ -56,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
 	final Activity mainActivity = this;
 
 
+	// You want to put this code in CategoryFragment.java
 	//This class will get the device location to fill the list of nearby items.
 	private LocationRetriever2 lr = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
 

@@ -1,5 +1,6 @@
 package il.ac.huji.shoppit;
 
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
@@ -36,6 +37,14 @@ public class CategoryFragment extends Fragment {
 				if (i != 0) {
 					query.whereEqualTo(MAIN_CATEGORY, category);	
 				}
+				
+				ParseGeoPoint userLocation = new ParseGeoPoint(37.708813, -122.526398); // TODO
+//				ParseGeoPoint userLocation = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
+//						GeneralInfo.location.getLongitude());
+//
+				query.whereNear("location", userLocation);
+				// query.setLimit(100); //need this? no. default is 100
+
 				return query;
 			}
 		};
