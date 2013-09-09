@@ -285,10 +285,11 @@ int drawable device_access_camera 0x7f020072
 int drawable drawer_shadow 0x7f020073
 int drawable ic_drawer 0x7f020074
 int drawable ic_launcher 0x7f020075
-int drawable ic_launcher_shoppit 0x7f020076
-int drawable location_place 0x7f020077
-int drawable search 0x7f020078
-int drawable user 0x7f020079
+int drawable ic_launcher_2 0x7f020076
+int drawable ic_launcher_shoppit 0x7f020077
+int drawable location_place 0x7f020078
+int drawable search 0x7f020079
+int drawable user 0x7f02007a
 int id LinearLayout1 0x7f06004f
 int id action_add 0x7f06007b
 int id action_bar 0x7f06001d
