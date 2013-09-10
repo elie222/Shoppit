@@ -1,12 +1,8 @@
 package il.ac.huji.shoppit;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.List;
 
 import com.parse.FindCallback;
-import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -146,7 +142,7 @@ public class MainActivity extends ActionBarActivity {
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true); // REQUIRES API LEVEL 14
+//		getActionBar().setHomeButtonEnabled(true); // REQUIRES API LEVEL 14. do we need this line?
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon

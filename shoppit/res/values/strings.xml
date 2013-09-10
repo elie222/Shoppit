@@ -25,11 +25,16 @@
     <string name="done">Done</string>
     <string name="shops">Shops</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
     <string name="save">Save</string>
     <string name="item_label">Add an Item</string>
     <string name="shop_label">Add a New Shop</string>
     <string name="comments">Comments</string>
+    <string name="comment">Comment</string>
     <string name="add_comment">Add Comment</string>
+    <string name="post_comment">Post Comment</string>
+    <string name="post">Post</string>
+    <string name="enter_comment_hint">Enter commment...</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>

@@ -29,6 +29,8 @@ import android.widget.Toast;
 public class ItemActivity extends Activity {
 
 	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
+	
+	private Item mItem;
 
 	private TextView nameTextView;
 	private TextView priceTextView;
@@ -62,6 +64,7 @@ public class ItemActivity extends Activity {
 		query.getInBackground(itemId, new GetCallback<Item>() {
 			public void done(Item item, ParseException e) {
 				if (e == null) {
+					mItem = item;
 					setupViews(item);
 				} else {
 					//					objectRetrievalFailed();
@@ -111,7 +114,8 @@ public class ItemActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				FragmentManager fm = getFragmentManager();
-		        CommentDialog testDialog = new CommentDialog();
+//		        CommentDialog testDialog = new CommentDialog();
+		        CommentDialogFragment testDialog = new CommentDialogFragment();
 		        testDialog.setRetainInstance(true);
 		        testDialog.show(fm, "fragment_comment_dialog");
 			}
@@ -178,6 +182,10 @@ public class ItemActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.item, menu);
 		return true;
+	}
+	
+	public Item getItem() {
+		return mItem;
 	}
 	
 

@@ -31,7 +31,7 @@ public class CommentDialog extends DialogFragment implements OnEditorActionListe
 		View view = inflater.inflate(R.layout.fragment_comment_dialog, container);
 
 		commentEditText = (EditText) view.findViewById(R.id.commentEditText);
-		postCommentButton = (Button) view.findViewById(R.id.postCommentButton);
+//		postCommentButton = (Button) view.findViewById(R.id.postCommentButton);
 
 		getDialog().setTitle("Comment");
 

@@ -25,4 +25,12 @@ public class Comment extends ParseObject {
 	public void setComment(String comment) {
 		put("comment", comment);
 	}
+	
+	public ParseObject getItem() {
+		return getParseObject("item");
+	}
+	
+	public void setItem(ParseObject item) {
+		put("item", item);
+	}
 }
