@@ -8,28 +8,37 @@ import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ItemActivity extends Activity {
+
+/**
+ * @author Elie2
+ * This class handles displaying items.
+ */
+public class ItemActivity extends Activity implements CommentDialogFragment.CommentDialogListener {
 
 	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
-	
+
 	private Item mItem;
 
 	private TextView nameTextView;
@@ -40,8 +49,8 @@ public class ItemActivity extends Activity {
 	private Integer likesCount;
 	private ParseImageView imageView;
 	private ListView commentsListView;
-
 	private Button addCommentButton;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +74,7 @@ public class ItemActivity extends Activity {
 			public void done(Item item, ParseException e) {
 				if (e == null) {
 					mItem = item;
-					setupViews(item);
+					setupViewsWithItemData();
 				} else {
 					//					objectRetrievalFailed();
 					Log.e("ITEM_ACTIIVTY", "Failed to load object.");
@@ -92,7 +101,7 @@ public class ItemActivity extends Activity {
 					likesCount--;
 				}
 				likesCountTextView.setText(likesCount.toString());
-				
+
 				HashMap<String, Object> params = new HashMap<String, Object>();
 				params.put("itemId", itemId);
 				params.put("like", likeCheckBox.isChecked());
@@ -102,36 +111,41 @@ public class ItemActivity extends Activity {
 						if (e == null) {
 							Log.i("ITEM_ACTIVITY", message);
 						} else {
-							Log.i("ITEM_ACTIVITY", "ERROR: " + e.getMessage());
+							Log.e("ITEM_ACTIVITY", "ERROR MESSAGE: " + e.getMessage());
 						}
 					}
 				});
 			}
 		});
-		
+
 		addCommentButton.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				FragmentManager fm = getFragmentManager();
-//		        CommentDialog testDialog = new CommentDialog();
-		        CommentDialogFragment testDialog = new CommentDialogFragment();
-		        testDialog.setRetainInstance(true);
-		        testDialog.show(fm, "fragment_comment_dialog");
+				CommentDialogFragment commentDialog = new CommentDialogFragment();
+				commentDialog.setRetainInstance(true);
+				commentDialog.show(fm, "comment_dialog_fragment");
 			}
-			
+
 		});
 
 	}
 
-	protected void setupViews(Item item) {
-		
-		nameTextView.setText(item.getName());
-		priceTextView.setText(String.valueOf(item.getPrice()));
-		categoryTextView.setText(item.getMainCategory());
+
+	/**
+	 * This function setups the views on the page with info from the Item.
+	 */
+	protected void setupViewsWithItemData() {
+
+		setTitle(mItem.getName());
+
+		nameTextView.setText(mItem.getName());
+		priceTextView.setText(String.valueOf(mItem.getPrice()));
+		categoryTextView.setText(mItem.getMainCategory());
 
 		// get the number of users that like the item
-		ParseQuery<ParseUser> queryLikesCount = item.getLikesRelation().getQuery();
+		ParseQuery<ParseUser> queryLikesCount = mItem.getLikesRelation().getQuery();
 		queryLikesCount.countInBackground(new CountCallback() {
 			public void done(int count, ParseException e) {
 				if (e == null) {
@@ -143,28 +157,31 @@ public class ItemActivity extends Activity {
 			}
 		});
 
-		// check if user has liked the object
-		ParseQuery<ParseUser> queryUserLikes = item.getLikesRelation().getQuery();
-		queryUserLikes.whereEqualTo("objectId", ParseUser.getCurrentUser().get("objectId"));
+		// check if current user has liked the object
+		ParseUser user = ParseUser.getCurrentUser();
 
-		queryUserLikes.countInBackground(new CountCallback() {
-			public void done(int count, ParseException e) {
-				if (e == null) {
-					if (count == 1) {
-						likeCheckBox.setChecked(true);
-					} else if (count == 0) {
-						likeCheckBox.setChecked(false);
+		if (user!= null) {
+			ParseQuery<ParseUser> queryUserLikes = mItem.getLikesRelation().getQuery();
+			queryUserLikes.whereEqualTo("objectId", user.get("objectId"));
+
+			queryUserLikes.countInBackground(new CountCallback() {
+				public void done(int count, ParseException e) {
+					if (e == null) {
+						if (count == 1) {
+							likeCheckBox.setChecked(true);
+						} else if (count == 0) {
+							likeCheckBox.setChecked(false);
+						} else {
+							Log.e("LIKE_CHECK_BOX", "error1 with the likes query");
+						}
 					} else {
-						Log.e("LIKE_CHECK_BOX", "error1 with the likes query");
+						Log.e("LIKE_CHECK_BOX",  "error2 with the likes query: " + e.getMessage());
 					}
-				} else {
-					Log.e("LIKE_CHECK_BOX",  "error2 with the likes query: " + e.getMessage());
 				}
-			}
-		});
+			});
+		}
 
-
-		ParseFile photoFile = item.getPhotoFile();
+		ParseFile photoFile = mItem.getPhotoFile();
 		if (photoFile != null) {
 			imageView.setParseFile(photoFile);
 			imageView.loadInBackground(new GetDataCallback() {
@@ -175,18 +192,50 @@ public class ItemActivity extends Activity {
 			});
 		}
 
+		// show comments
+		reloadCommentsListView();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.item, menu);
+
 		return true;
 	}
-	
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		reloadCommentsListView();
+	}
+
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+	}
+
+	// TODO - try avoiding reloading all comments every time... ask question on Parse Forums
+	// TODO - scroll down to bottom of comments list automatically
+	private void reloadCommentsListView() {
+		ParseQueryAdapter.QueryFactory<Comment> queryFactory = new ParseQueryAdapter.QueryFactory<Comment>() {
+			public ParseQuery<Comment> create() {
+				ParseQuery<Comment> query = new ParseQuery<Comment>("Comment");
+				query.whereEqualTo("item", mItem);
+				query.orderByAscending("createdAt");
+
+				return query;
+			}
+		};
+
+		ParseQueryAdapter<Comment> adapter = new ParseQueryAdapter<Comment>(this, queryFactory);
+		adapter.setTextKey("comment"); // TODO - show comment author too
+
+		commentsListView.setAdapter(adapter);
+	}
+
 	public Item getItem() {
 		return mItem;
 	}
-	
+
 
 }
