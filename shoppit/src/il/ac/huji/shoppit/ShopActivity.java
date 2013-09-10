@@ -1,15 +1,12 @@
 package il.ac.huji.shoppit;
 
-import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
-import com.parse.ParseQuery;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;

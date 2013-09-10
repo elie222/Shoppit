@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -21,6 +20,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+/**
+ * @author Elie2
+ * This fragment is used to take a picture by NewShopActivity.
+ */
 public class CameraFragment extends Fragment {
 
 	public static final String TAG = "CameraFragment";
@@ -107,13 +110,14 @@ public class CameraFragment extends Fragment {
 
 	
 	
-	/*  TODO - we don't actually want this scaling/resizing, since it makes the picture too small,
+	/* we don't actually want this scaling/resizing, since it makes the picture too small,
 	 * but we might want to do some other scaling, so I've left the code in for now.
 	 * 
 	 * ParseQueryAdapter loads ParseFiles into a ParseImageView at whatever size
 	 * they are saved. Since we never need a full-size image in our app, we'll
 	 * save a scaled one right away.
 	 */
+	@SuppressWarnings("unused")
 	private void saveScaledPhoto(byte[] data) {
 		
 		// Resize photo from camera byte array

@@ -2,23 +2,19 @@ package il.ac.huji.shoppit;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +25,13 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-/*
+/**
+ * @author Elie2
+ * One of the two fragments used by NewShopActivity.
  * This fragment manages the data entry for a
  * new Shop object. It lets the user input a 
- * shop name, give it a rating, and take a 
- * photo. If there is already a photo associated
- * with this shop, it will be displayed in the 
+ * shop name and take a photo. If there is already a photo
+ * associated with this shop, it will be displayed in the 
  * preview at the bottom, which is a standalone
  * ParseImageView.
  */

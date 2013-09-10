@@ -20,8 +20,11 @@ public class GeneralInfo {
 
 	//Whether the user is logged in or not.
 	//This variable is set when starting the app or logging in manually.
-	static boolean logged = false;
-	static String username = null;
+//	static boolean logged = false;
+//	static String username = null;
+	
+	// USE ParseUser.getCurrentUser() to check if the user is logged in or not.
+	// will return null if no user is logged in.
 
 
 	//Location readers

@@ -4,9 +4,13 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.view.Window;
-import android.view.WindowManager;
 
+
+/**
+ * @author Elie2
+ * This activity is used to add a new shop. Makes use of two fragments:
+ * NewShopFragment and CameraFragment. Pictures for shops are optional.
+ */
 public class NewShopActivity extends Activity {
 	 
     private Shop shop = null;

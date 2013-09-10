@@ -84,7 +84,7 @@ public class LoginActivity extends ActionBarActivity {
 				if (user != null) {
 					// Hooray! The user is logged in.
 					//Save the login data to the device.
-					writeLoginData(username, password);
+//					writeLoginData(username, password);
 					setResult(RESULT_OK, getIntent());
 					finish();
 					Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();
@@ -122,7 +122,7 @@ public class LoginActivity extends ActionBarActivity {
 			public void done(ParseException e) {
 				if (e == null) {
 					// Hooray! Let them use the app now.
-					writeLoginData(username, password);
+//					writeLoginData(username, password);
 					setResult(RESULT_OK, getIntent());
 					finish();
 					Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();
@@ -140,26 +140,26 @@ public class LoginActivity extends ActionBarActivity {
 	 * @param username
 	 * @param password
 	 */
-	private void writeLoginData(String username, String password) {
-		File loginData = new File(getFilesDir() + "/data/files/", "shoppit.txt");
-		PrintWriter writer = null;
-		try {
-			loginData.getParentFile().mkdirs();
-			loginData.createNewFile();
-			writer = new PrintWriter(new FileWriter(loginData));
-			writer.println(username);
-			writer.println(password);
-		} catch (Exception e) {
-			try {
-				writer.close();
-			} catch (Exception e1) {}
-			loginData.delete();
-			return;
-		}
-		GeneralInfo.logged = true;
-		GeneralInfo.username = username;
-		writer.close();
-	}
+//	private void writeLoginData(String username, String password) {
+//		File loginData = new File(getFilesDir() + "/data/files/", "shoppit.txt");
+//		PrintWriter writer = null;
+//		try {
+//			loginData.getParentFile().mkdirs();
+//			loginData.createNewFile();
+//			writer = new PrintWriter(new FileWriter(loginData));
+//			writer.println(username);
+//			writer.println(password);
+//		} catch (Exception e) {
+//			try {
+//				writer.close();
+//			} catch (Exception e1) {}
+//			loginData.delete();
+//			return;
+//		}
+//		GeneralInfo.logged = true;
+//		GeneralInfo.username = username;
+//		writer.close();
+//	}
 
 
 	/**
@@ -178,31 +178,31 @@ public class LoginActivity extends ActionBarActivity {
 
 
 	//Clicking the action bar.
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_add:
-			addItemIfLoggedIn();
-			return true;
-		case R.id.action_search:
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
-	
-	private void addItemIfLoggedIn() {
-
-		//If user is logged in, continue to taking the item picture.
-		if (GeneralInfo.logged) {
-			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
-			return;
-		}
-		
-		//Else, ask the user to log in.
-		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-		startActivityForResult(intent, 5000);
-	}
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case R.id.action_add:
+//			addItemIfLoggedIn();
+//			return true;
+//		case R.id.action_search:
+//			return true;
+//		default:
+//			return super.onOptionsItemSelected(item);
+//		}
+//	}
+//	
+//	
+//	private void addItemIfLoggedIn() {
+//
+//		//If user is logged in, continue to taking the item picture.
+//		if (GeneralInfo.logged) {
+//			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+//			return;
+//		}
+//		
+//		//Else, ask the user to log in.
+//		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+//		startActivityForResult(intent, 5000);
+//	}
 
 }
