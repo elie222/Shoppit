@@ -5,6 +5,7 @@ import java.util.List;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -117,6 +118,7 @@ public class MainActivity extends ActionBarActivity {
 		ParseObject.registerSubclass(Shop.class);
 		ParseObject.registerSubclass(Comment.class);
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
+		ParseFacebookUtils.initialize(getString(R.string.app_id));
 
 		//Check if the user is logged in, connect to parse if so.
 		//		checkIfLoggedIn();

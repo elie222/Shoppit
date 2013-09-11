@@ -97,6 +97,12 @@
             android:name="il.ac.huji.shoppit.CommentDialog"
             android:label="@string/title_activity_comment_dialog" >
         </activity>
+        <activity
+            android:name="il.ac.huji.shoppit.LoginDialogFragment"
+            android:label="@string/title_activity_login_dialog_fragment" >
+        </activity>
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
+        <activity android:name="com.facebook.LoginActivity" android:label="@string/app_name"></activity>
     </application>
 
 </manifest>
