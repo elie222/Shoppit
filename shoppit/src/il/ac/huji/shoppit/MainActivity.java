@@ -89,7 +89,6 @@ public class MainActivity extends ActionBarActivity {
 
 	});
 
-
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,10 +120,10 @@ public class MainActivity extends ActionBarActivity {
 		// set up the drawer's list view with items and click listener
 		//		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mCategoryTitles));
 		mNavDrawerAdapter = new NavDrawerAdapter(getBaseContext());
-		mNavDrawerAdapter.addSeparatorItem(GENERAL_SEPARATOR);
-		mNavDrawerAdapter.addItems(mGeneralNavBarTitles);
 		mNavDrawerAdapter.addSeparatorItem(CATEGORY_SEPARATOR);
 		mNavDrawerAdapter.addItems(mCategoryTitles);
+		mNavDrawerAdapter.addSeparatorItem(GENERAL_SEPARATOR);
+		mNavDrawerAdapter.addItems(mGeneralNavBarTitles);
 
 		mDrawerList.setAdapter(mNavDrawerAdapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -326,6 +325,12 @@ public class MainActivity extends ActionBarActivity {
 			mDrawerLayout.closeDrawer(mDrawerList);
 
 			return;
+		} else if (selectedName.equals("Log out")) { // ugly again...
+			ParseUser.logOut();
+			
+			// TODO remove log out option from menu (replace with login option?)
+			
+			mDrawerLayout.closeDrawer(mDrawerList);
 		}
 	}
 

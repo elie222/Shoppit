@@ -8,7 +8,9 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import android.app.Fragment;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,9 @@ public class CategoryFragment extends Fragment {
 
 	public static final String ARG_CATEGORY_NUMBER = "category_number";
 	public static final String MAIN_CATEGORY = "mainCategory";
+	
+	// FOR DEBUGGING
+	protected static final String TAG = "CAT_FRAG";
 
 	private ItemAdapter adapter;
 
@@ -36,7 +41,6 @@ public class CategoryFragment extends Fragment {
 
 		ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
 			public ParseQuery<Item> create() {
-
 
 				ParseQuery<Item> query = new ParseQuery<Item>("Item");
 				if (i != 0) {
