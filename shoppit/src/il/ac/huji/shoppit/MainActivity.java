@@ -54,6 +54,8 @@ public class MainActivity extends ActionBarActivity {
 
 	final Activity mainActivity = this;
 
+	int selectedCategory = 1;
+
 
 	// You want to put this code in CategoryFragment.java
 	//This class will get the device location to fill the list of nearby items.
@@ -66,24 +68,16 @@ public class MainActivity extends ActionBarActivity {
 			//when the timer for getting the device position has elapsed
 			//or as soon as the position is located.
 
-			if (GeneralInfo.location == null) { //In case of error
-				mainActivity.runOnUiThread(new Runnable() {
-					public void run() {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					Log.d("HERE", (GeneralInfo.location == null)+"");
+					if (GeneralInfo.location == null) { //In case of error
 						Toast.makeText(mainActivity, "Error getting device location",
 								Toast.LENGTH_LONG).show();
 					}
-				});
-				return;
-			}
-
-			Fragment fragment = new CategoryFragment();
-			Bundle args = new Bundle();
-
-			args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, 0);
-			fragment.setArguments(args);
-
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+					selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
+				}
+			});
 
 		}
 
@@ -155,9 +149,9 @@ public class MainActivity extends ActionBarActivity {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		if (savedInstanceState == null) {
-			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
-		}
+		//if (savedInstanceState == null) {
+		//	selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
+		//}
 	}
 
 	// just use ParseUser.getCurrentUser() to get the current user
@@ -293,10 +287,11 @@ public class MainActivity extends ActionBarActivity {
 
 		String sectionName = mNavDrawerAdapter.getSectionName(position);
 		String selectedName = mNavDrawerAdapter.getItemName(position);
-		Log.i("MAIN ACT", selectedName);
+		//Log.i("MAIN ACT", selectedName);
 		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
 
 		if (sectionName == CATEGORY_SEPARATOR) {
+
 			// update the main content by replacing fragments
 			Fragment fragment = new CategoryFragment();
 			Bundle args = new Bundle();
@@ -311,6 +306,8 @@ public class MainActivity extends ActionBarActivity {
 			mDrawerList.setItemChecked(position, true);
 			setTitle(mCategoryTitles[positionInSection]);
 			mDrawerLayout.closeDrawer(mDrawerList);
+
+			selectedCategory = position;
 
 			return;
 		} else if (selectedName.equals("Add Shop")) { // a bit ugly...
@@ -327,9 +324,9 @@ public class MainActivity extends ActionBarActivity {
 			return;
 		} else if (selectedName.equals("Log out")) { // ugly again...
 			ParseUser.logOut();
-			
+
 			// TODO remove log out option from menu (replace with login option?)
-			
+
 			mDrawerLayout.closeDrawer(mDrawerList);
 		}
 	}
