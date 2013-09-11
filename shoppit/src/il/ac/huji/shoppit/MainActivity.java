@@ -74,30 +74,14 @@ public class MainActivity extends ActionBarActivity {
 				return;
 			}
 
-			ParseGeoPoint userLocation = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
-					GeneralInfo.location.getLongitude());
+			Fragment fragment = new CategoryFragment();
+			Bundle args = new Bundle();
 
-			ParseQuery<ParseObject> query = ParseQuery.getQuery("Item");
-			query.whereNear("location", userLocation);
-			query.setLimit(100); //need this?
-			query.findInBackground(new FindCallback<ParseObject>() {
+			args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, 0);
+			fragment.setArguments(args);
 
-				@Override
-				public void done(List<ParseObject> objects, ParseException e) {
-
-					if (e != null || objects == null) {
-						mainActivity.runOnUiThread(new Runnable() {
-							public void run() {
-								Toast.makeText(mainActivity, "Error getting nearby items",
-										Toast.LENGTH_LONG).show();
-							}
-						});
-						return;
-					}
-
-					//TODO got list of nearby items, add them to the list.
-
-				}});
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
 		}
 
@@ -144,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-//		getActionBar().setHomeButtonEnabled(true); // REQUIRES API LEVEL 14. do we need this line?
+		//		getActionBar().setHomeButtonEnabled(true); // REQUIRES API LEVEL 14. do we need this line?
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -333,9 +317,9 @@ public class MainActivity extends ActionBarActivity {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, 5000);
 			}
-			
+
 			mDrawerLayout.closeDrawer(mDrawerList);
-			
+
 			return;
 		}
 	}
