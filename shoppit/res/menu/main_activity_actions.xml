@@ -18,6 +18,6 @@
         android:icon="@drawable/action_search"
         android:title="@string/action_search"
         yourapp:actionViewClass="android.widget.SearchView"
-        yourapp:showAsAction="ifRoom|collapseActionView"/>
+        yourapp:showAsAction="always|collapseActionView"/>
 
 </menu>
