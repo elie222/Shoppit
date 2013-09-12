@@ -4,13 +4,17 @@ import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseFile;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 /*
  * An extension of ParseObject that makes
  * it more convenient to access information
- * about a given Item 
+ * about a given Shop
  */
+
+// TODO - things to add?
+// items query, other info like address, opening times, etc.
 
 @ParseClassName("Shop")
 public class Shop extends ParseObject {
@@ -49,4 +53,11 @@ public class Shop extends ParseObject {
 	public void setLocation(ParseGeoPoint point) {
 		put("location", point);
 	}
+	
+	public ParseRelation<ParseUser> getLikesRelation() {
+		return getRelation("likes");
+	}
+	
+	// use Cloud function to like a Shop
+	
 }

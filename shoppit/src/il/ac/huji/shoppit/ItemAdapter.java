@@ -14,7 +14,7 @@ import com.parse.ParseException;
 
 public class ItemAdapter extends ParseQueryAdapter<Item> {
 	
-	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
+//	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
 	
 	private Context _context;
 
@@ -61,8 +61,9 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 		v.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				GeneralInfo.itemHolder = item;
 				Intent intent = new Intent(_context, ItemActivity.class);
-				intent.putExtra(EXTRA_ITEM_ID, item.getObjectId());
+//				intent.putExtra(EXTRA_ITEM_ID, item.getObjectId());
 				_context.startActivity(intent);
 			}
 		});

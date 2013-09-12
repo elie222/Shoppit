@@ -83,8 +83,12 @@ public class NewShopFragment extends Fragment {
 				ParseFile photoFile = new ParseFile("photo.jpg", photoData);
 				shop.setPhotoFile(photoFile);
 
-				ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
-						GeneralInfo.location.getLongitude());
+//				ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
+//						GeneralInfo.location.getLongitude());
+				
+				// TODO
+				ParseGeoPoint point = new ParseGeoPoint();
+				
 				shop.setLocation(point);
 
 				// everyone can read the shop, only the current user can edit it.

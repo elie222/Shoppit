@@ -103,6 +103,7 @@ public class LoginActivity extends ActionBarActivity {
 		// TODO - add cancel button?
 		LoginActivity.this.progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
+		// TODO - change permissions list. we don't actually need all this info
 		List<String> permissions = Arrays.asList("basic_info", "user_about_me",
 				"user_relationships", "user_birthday", "user_location");
 

@@ -4,11 +4,9 @@ import java.util.HashMap;
 
 import com.parse.CountCallback;
 import com.parse.FunctionCallback;
-import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -22,13 +20,13 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 /**
@@ -37,7 +35,8 @@ import android.widget.Toast;
  */
 public class ItemActivity extends Activity implements CommentDialogFragment.CommentDialogListener {
 
-	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
+	//	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
+	private ShareActionProvider mShareActionProvider;
 
 	private Item mItem;
 
@@ -50,7 +49,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 	private ParseImageView imageView;
 	private ListView commentsListView;
 	private Button addCommentButton;
-	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,24 +62,25 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		//		imageView.setPlaceholder(getResources().getDrawable(R.drawable.placeholder));
 
 
-		// TODO - this is bad. We're downloading the item again here. See the note in ItemAdapter.java
+		// this is bad. We're downloading the item again here. See the note in ItemAdapter.java
 		// for more info.
+		//		Intent intent = getIntent();
+		//		final String itemId = intent.getStringExtra(EXTRA_ITEM_ID);
+		//
+		//		ParseQuery<Item> query = ParseQuery.getQuery("Item");
+		//		query.getInBackground(itemId, new GetCallback<Item>() {
+		//			public void done(Item item, ParseException e) {
+		//				if (e == null) {
+		//					mItem = item;
+		//					setupViewsWithItemData();
+		//				} else {
+		//					//					objectRetrievalFailed();
+		//					Log.e("ITEM_ACTIIVTY", "Failed to load object.");
+		//				}
+		//			}
+		//		});
 
-		Intent intent = getIntent();
-		final String itemId = intent.getStringExtra(EXTRA_ITEM_ID);
-
-		ParseQuery<Item> query = ParseQuery.getQuery("Item");
-		query.getInBackground(itemId, new GetCallback<Item>() {
-			public void done(Item item, ParseException e) {
-				if (e == null) {
-					mItem = item;
-					setupViewsWithItemData();
-				} else {
-					//					objectRetrievalFailed();
-					Log.e("ITEM_ACTIIVTY", "Failed to load object.");
-				}
-			}
-		});
+		mItem = GeneralInfo.itemHolder;
 
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
 		priceTextView = (TextView) findViewById(R.id.priceTextView);
@@ -103,7 +103,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 				likesCountTextView.setText(likesCount.toString());
 
 				HashMap<String, Object> params = new HashMap<String, Object>();
-				params.put("itemId", itemId);
+				params.put("itemId", mItem.getObjectId());
 				params.put("like", likeCheckBox.isChecked());
 
 				ParseCloud.callFunctionInBackground("likeItem", params, new FunctionCallback<String>() {
@@ -129,6 +129,8 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 			}
 
 		});
+
+		setupViewsWithItemData();
 
 	}
 
@@ -200,9 +202,28 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.item, menu);
+		MenuItem item = menu.findItem(R.id.menu_item_share);
+		mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, "I really like this item on Shoppit: "
+				+ mItem.getName() + ". And it only costs " + mItem.getPrice() + mItem.getCurrency() + "!");
+		sendIntent.setType("text/plain");
+
+		mShareActionProvider.setShareIntent(sendIntent);
+
+		//		startActivity(sendIntent);
 
 		return true;
 	}
+
+	// Call to update the share intent
+	//	private void setShareIntent(Intent shareIntent) {
+	//	    if (mShareActionProvider != null) {
+	//	        mShareActionProvider.setShareIntent(shareIntent);
+	//	    }
+	//	}
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {

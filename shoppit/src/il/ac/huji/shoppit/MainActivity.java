@@ -1,14 +1,8 @@
 package il.ac.huji.shoppit;
 
-import java.util.List;
-
-import com.parse.FindCallback;
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import android.annotation.SuppressLint;
@@ -40,6 +34,9 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final String GENERAL_SEPARATOR = "General";
 	private static final String CATEGORY_SEPARATOR = "Categories";
+
+	private static final int ADD_ITEM_REQUEST_CODE = 5000;
+	private static final int ADD_SHOP_REQUEST_CODE = 5001;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -250,7 +247,7 @@ public class MainActivity extends ActionBarActivity {
 				//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
-				startActivityForResult(loginIntent, 5000);
+				startActivityForResult(loginIntent, ADD_ITEM_REQUEST_CODE);
 			}
 			return true;
 		default:
@@ -269,7 +266,7 @@ public class MainActivity extends ActionBarActivity {
 	//
 	//		//Else, ask the user to log in.
 	//		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-	//		startActivityForResult(intent, 5000);
+	//		startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
 	//	}
 
 	/* The click listener for ListView in the navigation drawer */
@@ -308,26 +305,42 @@ public class MainActivity extends ActionBarActivity {
 			mDrawerLayout.closeDrawer(mDrawerList);
 
 			selectedCategory = position;
-
 			return;
+			
 		} else if (selectedName.equals("Add Shop")) { // a bit ugly...
 			// start new activity
 			if (ParseUser.getCurrentUser() != null) {
 				startActivity(new Intent(getBaseContext(), NewShopActivity.class));
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
-				startActivityForResult(loginIntent, 5000);
+				startActivityForResult(loginIntent, ADD_SHOP_REQUEST_CODE);
 			}
 
 			mDrawerLayout.closeDrawer(mDrawerList);
-
 			return;
+			
 		} else if (selectedName.equals("Log out")) { // ugly again...
+			
 			ParseUser.logOut();
 
 			// TODO remove log out option from menu (replace with login option?)
-
 			mDrawerLayout.closeDrawer(mDrawerList);
+			return;
+			
+		} else if (selectedName.equals("Shops")) { // ugly again...
+			// update the main content by replacing fragments
+			Fragment fragment = new ShopListFragment();
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(position, true);
+			setTitle("Shops");//TODO i feel like this is happening in two places. one is unnecessary
+			mDrawerLayout.closeDrawer(mDrawerList);
+
+			selectedCategory = position;
+
+			return;
 		}
 	}
 
@@ -358,10 +371,10 @@ public class MainActivity extends ActionBarActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		//If user logged in successfully, continue to taking the item picture.
-		if (requestCode == 5000 && resultCode == RESULT_OK){
+		if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == RESULT_OK){
 			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+		} else if (requestCode == ADD_SHOP_REQUEST_CODE && resultCode == RESULT_OK){
+			startActivity(new Intent(getBaseContext(), NewShopActivity.class));
 		}
 	}
 

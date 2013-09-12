@@ -81,9 +81,6 @@ public class Item extends ParseObject {
 	}
 	
 	// use Cloud function to like an Item
-//	public void setLikesRelation(int likesCount) {
-//		put("likesCounts", likesCount);
-//	}
 
 	public String getMainCategory() {
 		return getString("mainCategory");
@@ -93,14 +90,12 @@ public class Item extends ParseObject {
 		put("mainCategory", category);
 	}
 
-//	public String getSubCategory() {
-//		return getString("subCategory");
-//	}
-//
-//	public void setSubCategory(String category) {
-//		put("subCategory", category);
-//	}
+	public Shop getShop() {
+		return (Shop) getParseObject("shop");
+	}
 	
-	
+	public void setShop(Shop shop) {
+		put("shop", shop);
+	}
 	
 }

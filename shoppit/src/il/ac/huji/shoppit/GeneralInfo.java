@@ -17,6 +17,8 @@ public class GeneralInfo {
 	static byte[] itemImageData = null;
 	static String name, price, categ1, categ2;
 	static Location location = null;
+	static Item itemHolder = null;
+	static Shop shopHolder = null;
 
 	//Whether the user is logged in or not.
 	//This variable is set when starting the app or logging in manually.
@@ -76,7 +78,7 @@ public class GeneralInfo {
 	}
 
 
-
+	// TODO - remove. and stuff like this should be in res/values/strings.xml
 	static String[] categories = new String[] { "Clothes", "Cosmetics", "Electronics",
 		"Food", "Furniture", "Jewelry", "(Other)"};
 
@@ -104,7 +106,6 @@ public class GeneralInfo {
 		{""}
 
 	};
-
 
 
 

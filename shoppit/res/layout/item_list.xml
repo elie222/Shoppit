@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="10dp" >
 
     <com.parse.ParseImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp" />
 
     <TextView
         android:id="@+id/text1"
@@ -14,8 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="True"
         android:layout_below="@id/icon"
-        android:paddingLeft="3dip"
-        android:paddingRight="3dip" />
+        android:padding="3dip" />
 
     <TextView
         android:id="@+id/priceTextView"
