@@ -21,7 +21,7 @@ public class CategoryFragment extends Fragment {
 
 	public static final String ARG_CATEGORY_NUMBER = "category_number";
 	public static final String MAIN_CATEGORY = "mainCategory";
-	
+
 	// FOR DEBUGGING
 	protected static final String TAG = "CAT_FRAG";
 
@@ -40,7 +40,7 @@ public class CategoryFragment extends Fragment {
 		final String category = getResources().getStringArray(R.array.categories_array)[i];
 
 		ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
-			public ParseQuery<Item> create() {
+			public ParseQuery<Item> create() {				
 
 				ParseQuery<Item> query = new ParseQuery<Item>("Item");
 				if (i != 0) {
