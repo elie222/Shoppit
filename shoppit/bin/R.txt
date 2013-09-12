@@ -314,7 +314,7 @@ int drawable com_facebook_list_divider 0x7f020068
 int drawable com_facebook_list_section_header_background 0x7f020069
 int drawable com_facebook_loginbutton_silver 0x7f02006a
 int drawable com_facebook_logo 0x7f02006b
-int drawable com_facebook_picker_default_separator_color 0x7f0200a2
+int drawable com_facebook_picker_default_separator_color 0x7f0200a1
 int drawable com_facebook_picker_item_background 0x7f02006c
 int drawable com_facebook_picker_list_focused 0x7f02006d
 int drawable com_facebook_picker_list_longpressed 0x7f02006e
@@ -367,8 +367,7 @@ int drawable login_button_focused 0x7f02009c
 int drawable login_button_normal 0x7f02009d
 int drawable login_button_pressed 0x7f02009e
 int drawable search 0x7f02009f
-int drawable table_round_shape 0x7f0200a0
-int drawable user 0x7f0200a1
+int drawable user 0x7f0200a0
 int id LinearLayout1 0x7f070053
 int id action_add 0x7f070099
 int id action_bar 0x7f07001f
