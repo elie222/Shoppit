@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -57,7 +58,7 @@ public class CameraFragment extends Fragment {
 			public void onClick(View v) {
 				if (camera == null)
 					return;
-				
+
 				camera.takePicture(new Camera.ShutterCallback() {
 
 					@Override
@@ -69,8 +70,8 @@ public class CameraFragment extends Fragment {
 
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
-//						saveScaledPhoto(data);
-						addPhotoToShopAndReturn(data);
+						saveScaledPhoto(data);
+						//						addPhotoToShopAndReturn(data);
 					}
 
 				});
@@ -85,7 +86,7 @@ public class CameraFragment extends Fragment {
 			public void surfaceCreated(SurfaceHolder holder) {
 				try {
 					if (camera != null) {
-//						camera.setDisplayOrientation(90);
+						camera.setDisplayOrientation(90);
 						camera.setPreviewDisplay(holder);
 						camera.startPreview();
 					}
@@ -108,8 +109,8 @@ public class CameraFragment extends Fragment {
 		return v;
 	}
 
-	
-	
+
+
 	/* we don't actually want this scaling/resizing, since it makes the picture too small,
 	 * but we might want to do some other scaling, so I've left the code in for now.
 	 * 
@@ -117,39 +118,77 @@ public class CameraFragment extends Fragment {
 	 * they are saved. Since we never need a full-size image in our app, we'll
 	 * save a scaled one right away.
 	 */
-	@SuppressWarnings("unused")
+	//	@SuppressWarnings("unused")
+	//	private void saveScaledPhoto(byte[] data) {
+	//		
+	//		// Resize photo from camera byte array
+	//		Bitmap shopImage = BitmapFactory.decodeByteArray(data, 0, data.length);
+	//		Bitmap shopImageScaled = Bitmap.createScaledBitmap(shopImage, 200, 200
+	//				* shopImage.getHeight() / shopImage.getWidth(), false);
+	//
+	//		Matrix matrix = new Matrix();
+	//		matrix.postRotate(90);
+	//		Bitmap rotatedScaledShopImage = Bitmap.createBitmap(shopImageScaled, 0,
+	//				0, shopImageScaled.getWidth(), shopImageScaled.getHeight(),
+	//				matrix, true);
+	//
+	//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	//		rotatedScaledShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+	//
+	//		byte[] scaledData = bos.toByteArray();
+	//		
+	//		addPhotoToShopAndReturn(scaledData);
+	//	}
+
 	private void saveScaledPhoto(byte[] data) {
-		
+
 		// Resize photo from camera byte array
 		Bitmap shopImage = BitmapFactory.decodeByteArray(data, 0, data.length);
-		Bitmap shopImageScaled = Bitmap.createScaledBitmap(shopImage, 200, 200
-				* shopImage.getHeight() / shopImage.getWidth(), false);
 
 		Matrix matrix = new Matrix();
-		Bitmap rotatedScaledShopImage = Bitmap.createBitmap(shopImageScaled, 0,
-				0, shopImageScaled.getWidth(), shopImageScaled.getHeight(),
+		matrix.postRotate(90);
+		Bitmap rotatedShopImage = Bitmap.createBitmap(shopImage, 0,
+				0, shopImage.getWidth(), shopImage.getHeight(),
 				matrix, true);
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		rotatedScaledShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+		rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 
 		byte[] scaledData = bos.toByteArray();
-		
+
 		addPhotoToShopAndReturn(scaledData);
 	}
 
 	private void addPhotoToShopAndReturn(byte[] data) {
-		((NewShopActivity) getActivity()).setCurrentPhotoData(data);
-				
-		FragmentManager fm = getActivity().getFragmentManager();
-		fm.popBackStack("NewShopFragment",
-				FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		
+		if (getActivity().getClass() == NewShopActivity.class) {
+			Log.i(TAG, "NewShopActivity");
+			((NewShopActivity) getActivity()).setCurrentPhotoData(data);
+
+			FragmentManager fm = getActivity().getFragmentManager();
+			fm.popBackStack("NewShopFragment",
+					FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		} else if (getActivity().getClass() == NewItemActivity.class) {
+			Log.i(TAG, "NewItemActivity");
+			((NewItemActivity) getActivity()).setCurrentPhotoData(data);
+			
+			Fragment cameraFragment = new NewItemFragment();
+			FragmentTransaction transaction = getActivity().getFragmentManager()
+					.beginTransaction();
+			transaction.replace(R.id.fragmentContainer, cameraFragment);
+			transaction.addToBackStack("NewItemFragment");
+			transaction.commit();
+			
+		} else {
+			Log.e(TAG, "error in addPhotoToShopAndReturn");
+		}
+
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if (camera == null) {
 			try {
 				camera = Camera.open();
@@ -172,5 +211,5 @@ public class CameraFragment extends Fragment {
 		}
 		super.onPause();
 	}
-	
+
 }

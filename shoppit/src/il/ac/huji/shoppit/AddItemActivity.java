@@ -27,7 +27,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class AddItemActivity extends ActionBarActivity {
 
-	Spinner categ1, categ2;
+	// TODO remove subcategory
+	Spinner categorySpinner, subCategorySpinner;
+	EditText keywordsEditText;
 
 
 	@Override
@@ -36,36 +38,39 @@ public class AddItemActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_item);
 
-		ParseObject.registerSubclass(Item.class);
-		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
-
-		categ1 = (Spinner) findViewById(R.id.categ1);
-		categ2 = (Spinner) findViewById(R.id.categ2);
+		categorySpinner = (Spinner) findViewById(R.id.categorySpinner);
+		subCategorySpinner = (Spinner) findViewById(R.id.subCategorySpinner);
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
 				android.R.layout.simple_spinner_item, GeneralInfo.categories);
-		categ1.setAdapter(adapter);
-		categ1.setSelection(GeneralInfo.categories.length-1);
+		categorySpinner.setAdapter(adapter);
+		categorySpinner.setSelection(GeneralInfo.categories.length-1);
 
-		categ1.setOnItemSelectedListener(new Categ1Selection());
+		categorySpinner.setOnItemSelectedListener(new Categ1Selection());
 
-		categ2.setEnabled(false);
+		subCategorySpinner.setEnabled(false);
 
-		((EditText)findViewById(R.id.editText1)).requestFocus();
+		((EditText)findViewById(R.id.nameEditText)).requestFocus();
 
 		// I replaced this line
 		//		((ImageView) findViewById(R.id.itemPic)).setImageBitmap(GeneralInfo.itemImage);
 		Bitmap itemImageBitmap = BitmapFactory.decodeByteArray
 				(GeneralInfo.itemImageData, 0, GeneralInfo.itemImageData.length);
 		((ImageView) findViewById(R.id.itemPic)).setImageBitmap(itemImageBitmap);
+		
+		keywordsEditText = (EditText) findViewById(R.id.keywordsEditText);
 
 
 		//Create on click listener for the done button
-		((Button)findViewById(R.id.done)).setOnClickListener(new View.OnClickListener() {
+		((Button)findViewById(R.id.doneButton)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 
-				String name = ((EditText)findViewById(R.id.editText1)).getText().toString().trim().replaceAll("[ \t]+", " ");
-				String price = ((EditText)findViewById(R.id.editText2)).getText().toString();
+				String name = ((EditText)findViewById(R.id.nameEditText)).getText().toString().trim().replaceAll("[ \t]+", " ");
+				String price = ((EditText)findViewById(R.id.priceEditText)).getText().toString();
+				
+				// TODO - check keywords format is valid
+				String keywordsString = keywordsEditText.getText().toString();
+				String [] keywords = keywordsString.split("\\s+");
 
 				//Perform sanity checks
 
@@ -123,10 +128,9 @@ public class AddItemActivity extends ActionBarActivity {
 					return;
 				}
 
-
+				//TODO why are name and price being saved in GeneralInfo?
 				GeneralInfo.name = name;
 				GeneralInfo.price = new DecimalFormat("0.00").format(priceVal); //Give the price this format
-
 
 				//Try to get the device location
 				GeneralInfo.stopGettingLocation();
@@ -136,30 +140,31 @@ public class AddItemActivity extends ActionBarActivity {
 					return;
 				}
 
-
 				//Data is OK, upload the item to parse.
 
-				((Button) findViewById(R.id.done)).setEnabled(false);
+				((Button) findViewById(R.id.doneButton)).setEnabled(false);
 
 				Item newItem = new Item();
 				newItem.setName(name);
 				newItem.setPrice(Double.parseDouble(price));
 				newItem.setCurrency("NIS");// TODO
 				newItem.setAuthor(ParseUser.getCurrentUser());
+				newItem.setKeywords(keywords);
 
+				// location
 				ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
 						GeneralInfo.location.getLongitude());
 				newItem.setLocation(point);
 
+				// photo
 				ParseFile photoFile = new ParseFile("photo.jpg", GeneralInfo.itemImageData);
 				newItem.setPhotoFile(photoFile);
 
-				// everyone can read the item, only the current user can edit it.
-				// will write a cloud code function to enable other users to like the object.
+				// Permissions
+				// everyone can read the item, only user that creates it can edit it.
 				ParseACL itemACL = new ParseACL(ParseUser.getCurrentUser());
 				itemACL.setPublicReadAccess(true);
 				newItem.setACL(itemACL);
-				//				newItem.saveInBackground();
 
 				newItem.saveInBackground(new SaveCallback() {
 					@Override
@@ -206,20 +211,21 @@ public class AddItemActivity extends ActionBarActivity {
 			//If the "(Other)" category was selected, don't select a sub category.
 			boolean lastCategSelected = (pos == GeneralInfo.categories.length - 1);
 			if (lastCategSelected) {
-				categ2.setAdapter(null);
+				subCategorySpinner.setAdapter(null);
 			}
 			else {
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
 						android.R.layout.simple_spinner_item, GeneralInfo.subCateg[pos]);
-				categ2.setAdapter(adapter);
-				categ2.setSelection(GeneralInfo.subCateg[pos].length - 1);
+				subCategorySpinner.setAdapter(adapter);
+				subCategorySpinner.setSelection(GeneralInfo.subCateg[pos].length - 1);
 			}
 
-			categ2.setEnabled(!lastCategSelected);
+			subCategorySpinner.setEnabled(!lastCategSelected);
 		}
 
 		public void onNothingSelected(AdapterView<?> parent) {}
 	}
+	
 
 
 

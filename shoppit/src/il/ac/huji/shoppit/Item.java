@@ -1,5 +1,9 @@
 package il.ac.huji.shoppit;
 
+import java.util.Arrays;
+
+import org.json.JSONArray;
+
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -89,6 +93,14 @@ public class Item extends ParseObject {
 	public void setMainCategory(String category) {
 		put("mainCategory", category);
 	}
+	
+	public JSONArray getKeywords() {
+		return getJSONArray("keywords");
+	}
+
+	public void setKeywords(String[] keywords) {
+		addAllUnique("keywords", Arrays.asList(keywords));
+	}
 
 	public Shop getShop() {
 		return (Shop) getParseObject("shop");
@@ -97,5 +109,7 @@ public class Item extends ParseObject {
 	public void setShop(Shop shop) {
 		put("shop", shop);
 	}
+	
+	
 	
 }

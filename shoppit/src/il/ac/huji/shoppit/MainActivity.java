@@ -72,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
 						Toast.makeText(mainActivity, "Error getting device location",
 								Toast.LENGTH_LONG).show();
 					}
+
 					selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
 				}
 			});
@@ -243,8 +244,8 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		case R.id.action_add:
 			if (ParseUser.getCurrentUser() != null) {
-				startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
-				//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
+				//				startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+				startActivity(new Intent(getBaseContext(), NewItemActivity.class));
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_ITEM_REQUEST_CODE);
@@ -306,7 +307,7 @@ public class MainActivity extends ActionBarActivity {
 
 			selectedCategory = position;
 			return;
-			
+
 		} else if (selectedName.equals("Add Shop")) { // a bit ugly...
 			// start new activity
 			if (ParseUser.getCurrentUser() != null) {
@@ -318,15 +319,15 @@ public class MainActivity extends ActionBarActivity {
 
 			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
-			
+
 		} else if (selectedName.equals("Log out")) { // ugly again...
-			
+
 			ParseUser.logOut();
 
 			// TODO remove log out option from menu (replace with login option?)
 			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
-			
+
 		} else if (selectedName.equals("Shops")) { // ugly again...
 			// update the main content by replacing fragments
 			Fragment fragment = new ShopListFragment();
@@ -335,7 +336,6 @@ public class MainActivity extends ActionBarActivity {
 
 			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
-			setTitle("Shops");//TODO i feel like this is happening in two places. one is unnecessary
 			mDrawerLayout.closeDrawer(mDrawerList);
 
 			selectedCategory = position;
