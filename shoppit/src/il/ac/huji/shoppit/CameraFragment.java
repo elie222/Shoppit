@@ -44,6 +44,11 @@ public class CameraFragment extends Fragment {
 
 		photoButton = (ImageButton) v.findViewById(R.id.camera_photo_button);
 		barcodeButton = (Button) v.findViewById(R.id.barcode_button);
+		
+		// hide barcode button when adding shop
+		if (getActivity().getClass() == NewShopActivity.class) {
+			barcodeButton.setVisibility(View.INVISIBLE);
+		}
 
 		if (camera == null) {
 			try {
