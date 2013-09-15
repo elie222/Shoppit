@@ -18,6 +18,9 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ public class CameraFragment extends Fragment {
 	private Camera camera;
 	private SurfaceView surfaceView;
 	private ImageButton photoButton;
+	private Button barcodeButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
@@ -39,6 +43,7 @@ public class CameraFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_camera, parent, false);
 
 		photoButton = (ImageButton) v.findViewById(R.id.camera_photo_button);
+		barcodeButton = (Button) v.findViewById(R.id.barcode_button);
 
 		if (camera == null) {
 			try {
@@ -77,6 +82,15 @@ public class CameraFragment extends Fragment {
 				});
 
 			}
+		});
+		
+		barcodeButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO
+			}
+			
 		});
 
 		surfaceView = (SurfaceView) v.findViewById(R.id.camera_surface_view);
@@ -160,7 +174,7 @@ public class CameraFragment extends Fragment {
 	}
 
 	private void addPhotoToShopAndReturn(byte[] data) {
-		
+
 		if (getActivity().getClass() == NewShopActivity.class) {
 			Log.i(TAG, "NewShopActivity");
 			((NewShopActivity) getActivity()).setCurrentPhotoData(data);
@@ -171,14 +185,14 @@ public class CameraFragment extends Fragment {
 		} else if (getActivity().getClass() == NewItemActivity.class) {
 			Log.i(TAG, "NewItemActivity");
 			((NewItemActivity) getActivity()).setCurrentPhotoData(data);
-			
+
 			Fragment cameraFragment = new NewItemFragment();
 			FragmentTransaction transaction = getActivity().getFragmentManager()
 					.beginTransaction();
 			transaction.replace(R.id.fragmentContainer, cameraFragment);
 			transaction.addToBackStack("NewItemFragment");
 			transaction.commit();
-			
+
 		} else {
 			Log.e(TAG, "error in addPhotoToShopAndReturn");
 		}

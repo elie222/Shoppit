@@ -397,7 +397,7 @@ int id beginning 0x7f070016
 int id camera_photo_button 0x7f07006e
 int id camera_preview 0x7f070086
 int id camera_surface_view 0x7f07006b
-int id cancel_button 0x7f070090
+int id cancel_button 0x7f070093
 int id categorySpinner 0x7f07004a
 int id categoryTextView 0x7f070058
 int id checkbox 0x7f070030
@@ -426,6 +426,7 @@ int id commentEditText 0x7f07008b
 int id commentTitleTextView 0x7f07005b
 int id commentsListView 0x7f07005c
 int id content_frame 0x7f070067
+int id currencySpinner 0x7f07008d
 int id currencyTextView 0x7f070096
 int id default_activity_button 0x7f07002b
 int id dialog 0x7f070014
@@ -448,10 +449,8 @@ int id icon 0x7f07002d
 int id ifRoom 0x7f070010
 int id image 0x7f07002a
 int id itemPic 0x7f07004f
-int id item_description 0x7f07008d
-int id item_name 0x7f07008c
-int id item_preview_image 0x7f070091
 int id keywordsEditText 0x7f070051
+int id keywordsTextView 0x7f07008e
 int id large 0x7f070006
 int id left_drawer 0x7f070068
 int id left_icon 0x7f070036
@@ -471,8 +470,9 @@ int id nameTextView 0x7f070055
 int id never 0x7f07000f
 int id none 0x7f070000
 int id normal 0x7f070001
+int id photoImageView 0x7f07008c
 int id photoParseImageView 0x7f070057
-int id photo_button 0x7f07008e
+int id photo_button 0x7f070091
 int id picker_subtitle 0x7f07007e
 int id priceEditText 0x7f07004d
 int id priceTextView 0x7f070056
@@ -485,7 +485,7 @@ int id radioNearby 0x7f070088
 int id right_container 0x7f070037
 int id right_icon 0x7f070038
 int id satellite 0x7f070002
-int id save_button 0x7f07008f
+int id save_button 0x7f070092
 int id search_badge 0x7f07003d
 int id search_bar 0x7f07003c
 int id search_button 0x7f07003e
@@ -496,8 +496,8 @@ int id search_mag_icon 0x7f070040
 int id search_plate 0x7f070041
 int id search_src_text 0x7f070042
 int id search_voice_btn 0x7f070046
-int id shop_description 0x7f070093
-int id shop_name 0x7f070092
+int id shop_description 0x7f070090
+int id shop_name 0x7f07008f
 int id shop_preview_image 0x7f070094
 int id shopsListView 0x7f070095
 int id shortcut 0x7f070031

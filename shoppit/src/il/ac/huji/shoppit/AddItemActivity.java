@@ -2,12 +2,10 @@ package il.ac.huji.shoppit;
 
 import java.text.DecimalFormat;
 
-import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -15,16 +13,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
-import android.text.method.KeyListener;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+// NOT USING THIS CLASS ANYMORE. HAS BUGS. USING NewItemActivity (with CameraFragment and NewItemFragment instead)
 public class AddItemActivity extends ActionBarActivity {
 
 	// TODO remove subcategory
