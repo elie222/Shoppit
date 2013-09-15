@@ -2,8 +2,10 @@ package il.ac.huji.shoppit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.GetDataCallback;
@@ -14,14 +16,19 @@ import com.parse.ParseException;
 
 public class ItemAdapter extends ParseQueryAdapter<Item> {
 	
-//	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
+	private final static String TAG = "ItemAdapter";
 	
-	private Context _context;
+	private Context mContext;
+
+	private TextView nameTextView;
+	private TextView priceTextView;
+	private TextView currencyTextView;
+	private ParseImageView imageView;
 
 	public ItemAdapter(Context context, ParseQueryAdapter.QueryFactory<Item> queryFactory) {
 		super(context, queryFactory);
 		
-		_context = context;
+		mContext = context;
 	}
 
 	@Override
@@ -32,13 +39,35 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 		}
 
 		super.getItemView(item, v, parent);
-
-		ParseImageView itemImage = (ParseImageView) v.findViewById(R.id.icon);
+	
+		nameTextView = (TextView) v.findViewById(R.id.text1);
+		priceTextView = (TextView) v.findViewById(R.id.priceTextView);
+		currencyTextView = (TextView) v.findViewById(R.id.currencyTextView);
+		imageView = (ParseImageView) v.findViewById(R.id.icon);
+		
+		nameTextView.setText(item.getName());		
+		priceTextView.setText(String.valueOf(item.getPrice()));
+		currencyTextView.setText(String.valueOf(item.getCurrency()));
+		
+		// if we wanted to set the image size programmatically. 
+//		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
+//		imageView.setLayoutParams(layoutParams);
+		
+//		ViewTreeObserver vto = itemImage.getViewTreeObserver();
+//		vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//		    public boolean onPreDraw() {
+//		        int finalHeight = itemImage.getMeasuredHeight();
+//		        int finalWidth = itemImage.getMeasuredWidth();
+//		        Log.i(TAG, "Height: " + finalHeight + " Width: " + finalWidth);
+//		        return true;
+//		    }
+//		});
+		
 		ParseFile photoFile = item.getPhotoFile();
 
 		if (photoFile != null) {
-			itemImage.setParseFile(photoFile);
-			itemImage.loadInBackground(new GetDataCallback() {
+			imageView.setParseFile(photoFile);
+			imageView.loadInBackground(new GetDataCallback() {
 				@Override
 				public void done(byte[] data, ParseException e) {
 					// nothing to do
@@ -46,25 +75,12 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 			});
 		}
 
-		TextView nameTextView = (TextView) v.findViewById(R.id.text1);
-		nameTextView.setText(item.getName());
-		
-		TextView priceTextView = (TextView) v.findViewById(R.id.priceTextView);
-		priceTextView.setText(String.valueOf(item.getPrice()));
-		
-		TextView currencyTextView = (TextView) v.findViewById(R.id.currencyTextView);
-		currencyTextView.setText(String.valueOf(item.getCurrency()));
-		
-		// TODO - this is bad. We should be sending the item to the new activity and not the 
-		// item's id. ATM, we're downloading the item again in the new activity which is
-		// a waste. The problem is that ParseObject isn't Parceable.
 		v.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				GeneralInfo.itemHolder = item;
-				Intent intent = new Intent(_context, ItemActivity.class);
-//				intent.putExtra(EXTRA_ITEM_ID, item.getObjectId());
-				_context.startActivity(intent);
+				Intent intent = new Intent(mContext, ItemActivity.class);
+				mContext.startActivity(intent);
 			}
 		});
 

@@ -40,6 +40,7 @@
     <string name="drawer_open">open drawer</string>
     <string name="drawer_close">close drawer</string>
     <string name="share">Share</string>
+    <string name="keyword_hint">(Optional) space separated</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
@@ -67,15 +68,13 @@
     </string-array>
 
     <string name="title_activity_main_activity_new">Welcome</string>
-    <string name="title_activity_parse_table">ParseTableActivity</string>
-    <string name="title_activity_search_results">SearchResultsActivity</string>
-    <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_item">ItemActivity</string>
-    <string name="title_activity_nav_drawer">NavDrawerActivity</string>
-    <string name="title_activity_shop">ShopActivity</string>
-    <string name="title_activity_new_item">NewItemActivity</string>
-    <string name="title_activity_comment_dialog">CommentDialog</string>
+    <string name="title_activity_search_results">Search results</string>
+    <string name="title_activity_search">Search</string>
+    <string name="title_activity_item">Item</string>
+    <string name="title_activity_nav_drawer">Navigation Drawer</string>
+    <string name="title_activity_shop">Shop</string>
+    <string name="title_activity_new_item">New item</string>
+    <string name="title_activity_comment_dialog">Comment</string>
     <string name="title_activity_login_dialog_fragment">Log in</string>
-    <string name="keyword_hint">(Optional) space separated</string>
 
 </resources>

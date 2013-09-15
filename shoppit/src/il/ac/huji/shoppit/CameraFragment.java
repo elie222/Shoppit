@@ -18,15 +18,13 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 /**
  * @author Elie2
- * This fragment is used to take a picture by NewShopActivity.
+ * This fragment is used to take a picture. It is used by both NewItemActivity and NewShopActivity.
  */
 public class CameraFragment extends Fragment {
 

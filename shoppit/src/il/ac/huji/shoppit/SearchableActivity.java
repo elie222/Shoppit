@@ -1,7 +1,5 @@
 package il.ac.huji.shoppit;
 
-import com.parse.Parse;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
@@ -9,8 +7,9 @@ import android.os.Bundle;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
-import android.util.Log;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class SearchableActivity extends ListActivity {
 
@@ -20,11 +19,8 @@ public class SearchableActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Log.e("SEARCHABLE_ACT", "HELLLOO!");
-		
-		ParseObject.registerSubclass(Item.class);
-		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+	
 		// Get the intent, verify the action and get the query
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -33,8 +29,7 @@ public class SearchableActivity extends ListActivity {
 			ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
 				public ParseQuery<Item> create() {
 					ParseQuery<Item> query = new ParseQuery<Item>("Item");
-					// https://www.parse.com/questions/case-insensitive-pfquery
-					query.whereContains("name", queryString);
+					query.whereContains("searchString", queryString.toLowerCase());
 					
 					return query;
 				}
@@ -52,5 +47,17 @@ public class SearchableActivity extends ListActivity {
 		getMenuInflater().inflate(R.menu.search, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    // Respond to the action bar's Up/Home button
+	    case android.R.id.home:
+	        NavUtils.navigateUpFromSameTask(this);
+	        return true;
+	    }
+	    return super.onOptionsItemSelected(item);
+	}
+
 
 }

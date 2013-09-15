@@ -63,3 +63,51 @@ Parse.Cloud.define("likeItem", function (request, response) {
     });
 
 });
+
+// this is in array format. changed to string instead
+// Parse.Cloud.beforeSave("Item", function (request, response) {
+
+//     var name = request.object.get("name");
+//     var category = request.object.get("mainCategory");
+//     var keywords = request.object.get("keywords");
+
+//     console.log(name);
+//     console.log(category);
+//     console.log(keywords);
+
+//     var searchArray = [];
+
+//     searchArray.push(name.toLowerCase());
+//     searchArray.push(category.toLowerCase());
+
+//     for (var index in keywords) {
+//         searchArray.push(keywords[index].toLowerCase());
+//     }
+
+//     console.log(searchArray);
+
+//     request.object.set("searchArray", searchArray);
+
+//     response.success();
+// });
+
+Parse.Cloud.beforeSave("Item", function (request, response) {
+
+    var name = request.object.get("name");
+    var category = request.object.get("mainCategory");
+    var keywords = request.object.get("keywords");
+
+    searchString = "";
+    searchString += (name.toLowerCase() + " ");
+    searchString += (category.toLowerCase() + " ");
+
+    for (var index in keywords) {
+        searchString += (keywords[index].toLowerCase() + " ");
+    }
+
+    // console.log(searchString);
+
+    request.object.set("searchString", searchString);
+
+    response.success();
+});

@@ -1,8 +1,10 @@
 package il.ac.huji.shoppit;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.parse.CountCallback;
+import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseCloud;
@@ -18,6 +20,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,30 +58,15 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_item);
+		
+		// enable up button (the caret in the top-left hand corner of the screen that allows going up an activity.
+		// Has different functionality to the back button.)
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// The placeholder will be used before and during the fetch, to be replaced by the fetched image
 		// data.
 		//		ParseImageView imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
 		//		imageView.setPlaceholder(getResources().getDrawable(R.drawable.placeholder));
-
-
-		// this is bad. We're downloading the item again here. See the note in ItemAdapter.java
-		// for more info.
-		//		Intent intent = getIntent();
-		//		final String itemId = intent.getStringExtra(EXTRA_ITEM_ID);
-		//
-		//		ParseQuery<Item> query = ParseQuery.getQuery("Item");
-		//		query.getInBackground(itemId, new GetCallback<Item>() {
-		//			public void done(Item item, ParseException e) {
-		//				if (e == null) {
-		//					mItem = item;
-		//					setupViewsWithItemData();
-		//				} else {
-		//					//					objectRetrievalFailed();
-		//					Log.e("ITEM_ACTIIVTY", "Failed to load object.");
-		//				}
-		//			}
-		//		});
 
 		mItem = GeneralInfo.itemHolder;
 
@@ -163,6 +151,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		ParseUser user = ParseUser.getCurrentUser();
 
 		if (user!= null) {
+			
 			ParseQuery<ParseUser> queryUserLikes = mItem.getLikesRelation().getQuery();
 			queryUserLikes.whereEqualTo("objectId", user.get("objectId"));
 
@@ -181,6 +170,20 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 					}
 				}
 			});
+			
+			// for debugging, but i think everything's fine
+//			queryUserLikes.findInBackground(new FindCallback<ParseUser>() {
+//				
+//				@Override
+//				public void done(List<ParseUser> objects, ParseException e) {
+//					// TODO Auto-generated method stub
+//					for (int i=0; i<objects.size(); i++) {
+//						Log.i("List of users", objects.get(i).toString());
+//					}
+//					
+//				}
+//				
+//			});
 		}
 
 		ParseFile photoFile = mItem.getPhotoFile();
@@ -252,6 +255,17 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		adapter.setTextKey("comment"); // TODO - show comment author too
 
 		commentsListView.setAdapter(adapter);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    // Respond to the action bar's Up/Home button
+	    case android.R.id.home:
+	        NavUtils.navigateUpFromSameTask(this);
+	        return true;
+	    }
+	    return super.onOptionsItemSelected(item);
 	}
 
 	public Item getItem() {

@@ -8,7 +8,7 @@
         android:id="@+id/textSeparator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#2B2B2B"
+        android:background="@android:color/black"
         android:gravity="center"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
@@ -16,6 +16,13 @@
         android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#FFFFFFFF"
+        android:visibility="visible" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="0.2dp"
+        android:background="@android:color/white"
         android:visibility="visible" />
 
 </LinearLayout>

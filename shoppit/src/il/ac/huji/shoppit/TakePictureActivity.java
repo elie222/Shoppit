@@ -14,6 +14,7 @@ import android.view.*;
 import android.view.SurfaceHolder.Callback;
 import android.widget.*;
 
+// NOT USING THIS ANYMORE. USING CameraFragment instead.
 public class TakePictureActivity extends ActionBarActivity {
 
 	//	Camera camera = null;

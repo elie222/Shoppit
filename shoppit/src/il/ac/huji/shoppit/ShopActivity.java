@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,29 +54,13 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shop);
 
+		// add up caret to top let hand corner of screen
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		// The placeholder will be used before and during the fetch, to be replaced by the fetched image
 		// data.
 		//		ParseImageView imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
 		//		imageView.setPlaceholder(getResources().getDrawable(R.drawable.placeholder));
-
-
-		// this is bad. We're downloading the shop again here. See the note in ShopAdapter.java
-		// for more info.
-		//		Intent intent = getIntent();
-		//		final String shopId = intent.getStringExtra(EXTRA_ITEM_ID);
-		//
-		//		ParseQuery<Shop> query = ParseQuery.getQuery("Shop");
-		//		query.getInBackground(shopId, new GetCallback<Shop>() {
-		//			public void done(Shop shop, ParseException e) {
-		//				if (e == null) {
-		//					mShop = shop;
-		//					setupViewsWithShopData();
-		//				} else {
-		//					//					objectRetrievalFailed();
-		//					Log.e("ITEM_ACTIIVTY", "Failed to load object.");
-		//				}
-		//			}
-		//		});
 
 		mShop = GeneralInfo.shopHolder;
 
@@ -239,10 +224,21 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 
 		commentsListView.setAdapter(adapter);
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    // Respond to the action bar's Up/Home button
+	    case android.R.id.home:
+	        NavUtils.navigateUpFromSameTask(this);
+	        return true;
+	    }
+	    return super.onOptionsItemSelected(item);
+	}
 
+	
 	public Shop getShop() {
 		return mShop;
 	}
-
 
 }
