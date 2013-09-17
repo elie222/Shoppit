@@ -287,9 +287,16 @@ LocationListener {
 
 		if (sectionName == CATEGORY_SEPARATOR) {
 
+			if (!foundLocation) {
+				Toast.makeText(mainActivity, "Error getting device location",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+			
 			Location lastLocation = mLocationClient.getLastLocation();
 
 			if (lastLocation == null ) {
+				// this shouldn't really happen
 				Toast.makeText(mainActivity, "Error getting device location",
 						Toast.LENGTH_LONG).show();
 				return;
