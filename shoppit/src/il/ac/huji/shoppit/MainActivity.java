@@ -1,5 +1,11 @@
 package il.ac.huji.shoppit;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
@@ -14,6 +20,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -30,10 +37,17 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity
+implements ConnectionCallbacks, OnConnectionFailedListener, 
+LocationListener {
+
+	private static final String TAG = "MAIN_ACT";
 
 	private static final String GENERAL_SEPARATOR = "General";
 	private static final String CATEGORY_SEPARATOR = "Categories";
+
+	public static final String LATITUDE_EXTRA = "LATITUDE_EXTRA";
+	public static final String LONGITUDE_EXTRA = "LONGITUDE_EXTRA";
 
 	private static final int ADD_ITEM_REQUEST_CODE = 5000;
 	private static final int ADD_SHOP_REQUEST_CODE = 5001;
@@ -53,43 +67,58 @@ public class MainActivity extends ActionBarActivity {
 
 	int selectedCategory = 1;
 
+	// -------------
+	// for getting location
+	// -------------
+	private LocationClient mLocationClient;
+
+	// These settings are the same as the settings for the map. They will in fact give you updates
+	// at the maximal rates currently possible.
+	private static final LocationRequest REQUEST = LocationRequest.create()
+			.setInterval(60* 60 * 1000)		// 60 minutes
+			.setFastestInterval(60 * 1000)	// 60 seconds
+			.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+	private boolean foundLocation = false;
+
+
 
 	// You want to put this code in CategoryFragment.java
 	//This class will get the device location to fill the list of nearby items.
-	private LocationRetriever2 lr = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
-
-		@Override
-		void timerFunc() {
-
-			//This function will fill the list of nearby items
-			//when the timer for getting the device position has elapsed
-			//or as soon as the position is located.
-
-			runOnUiThread(new Runnable() {
-				public void run() {
-					Log.d("HERE", (GeneralInfo.location == null)+"");
-					if (GeneralInfo.location == null) { //In case of error
-						Toast.makeText(mainActivity, "Error getting device location",
-								Toast.LENGTH_LONG).show();
-					}
-
-					selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
-				}
-			});
-
-		}
-
-	});
+	//	private LocationRetriever2 lr = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
+	//
+	//		@Override
+	//		void timerFunc() {
+	//
+	//			//This function will fill the list of nearby items
+	//			//when the timer for getting the device position has elapsed
+	//			//or as soon as the position is located.
+	//
+	//			runOnUiThread(new Runnable() {
+	//				public void run() {
+	//					//					Log.d(TAG, (GeneralInfo.location == null)+"");
+	//					//					Log.d(TAG, (GeneralInfo.location)+"");
+	//					if (GeneralInfo.location == null) { //In case of error
+	//						Toast.makeText(mainActivity, "Error getting device location",
+	//								Toast.LENGTH_LONG).show();
+	//					}
+	//
+	//					selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
+	//				}
+	//			});
+	//
+	//		}
+	//
+	//	});
 
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//		setContentView(R.layout.activity_main);
 		setContentView(R.layout.activity_main);
 
 		//Get the device location
-		lr.startGettingUpdates(this, 10000);
+		//		lr.startGettingUpdates(this, 10000);
 
 
 		ParseObject.registerSubclass(Item.class);
@@ -147,45 +176,11 @@ public class MainActivity extends ActionBarActivity {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		//if (savedInstanceState == null) {
-		//	selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
-		//}
+		// TODO moved to onResume
+		//		if (savedInstanceState == null) {
+		//			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
+		//		}
 	}
-
-	// just use ParseUser.getCurrentUser() to get the current user
-	//	private void checkIfLoggedIn() {
-	//
-	//		File loginData = new File(this.getFilesDir() + "/data/files/", "shoppit.txt");
-	//
-	//		if (loginData.exists()) { //User is logged in.
-	//			BufferedReader reader = null;
-	//			try {
-	//				reader = new BufferedReader(new FileReader(loginData));
-	//				final String username = reader.readLine(),
-	//						password = reader.readLine();
-	//
-	//				ParseUser.logInInBackground(username, password, new LogInCallback() {
-	//					public void done(ParseUser user, ParseException e) {
-	//
-	//						if (e == null && user != null) {
-	//							//							loginSuccessful();
-	//							GeneralInfo.logged = true;
-	//							GeneralInfo.username = username;
-	//						} else if (user == null) {
-	//							//							usernameOrPasswordIsInvalid();
-	//						} else {
-	//							//							somethingWentWrong();
-	//						}
-	//					}
-	//				});
-	//
-	//			} catch (Exception e) {}
-	//			try {
-	//				reader.close();
-	//			} catch (Exception e) {}
-	//
-	//		}
-	//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -207,7 +202,7 @@ public class MainActivity extends ActionBarActivity {
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		menu.findItem(R.id.action_search).setVisible(!drawerOpen);
 		menu.findItem(R.id.action_add).setVisible(!drawerOpen);
-		menu.findItem(R.id.action_shops).setVisible(!drawerOpen);
+		menu.findItem(R.id.action_map).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -238,14 +233,30 @@ public class MainActivity extends ActionBarActivity {
 		//		}
 
 		switch (item.getItemId()) {
-		case R.id.action_shops:
-			Intent intent = new Intent(getBaseContext(), ShopActivity.class);
+		case R.id.action_map:
+			Intent intent = new Intent(getBaseContext(), MapActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.action_add:
 			if (ParseUser.getCurrentUser() != null) {
-				//				startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
-				startActivity(new Intent(getBaseContext(), NewItemActivity.class));
+				if (foundLocation) {
+					Location lastLocation = mLocationClient.getLastLocation();
+
+					if (lastLocation == null ) {
+						// this shouldn't ever happen really
+						Toast.makeText(mainActivity, "Error getting device location",
+								Toast.LENGTH_LONG).show();
+						return true;
+					}
+					
+					Intent newItemIntent = new Intent(getBaseContext(), NewItemActivity.class);
+					newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+					newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+					startActivity(newItemIntent);
+				} else {
+					Toast.makeText(mainActivity, "Error getting device location",
+							Toast.LENGTH_LONG).show();
+				}
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_ITEM_REQUEST_CODE);
@@ -255,20 +266,6 @@ public class MainActivity extends ActionBarActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	//	private void addItemIfLoggedIn() {
-	//
-	//		//If user is logged in, continue to taking the item picture.
-	//		if (ParseUser.getCurrentUser() != null) {
-	//			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
-	//			//			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
-	//			return;
-	//		}
-	//
-	//		//Else, ask the user to log in.
-	//		Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-	//		startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
-	//	}
 
 	/* The click listener for ListView in the navigation drawer */
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -290,11 +287,21 @@ public class MainActivity extends ActionBarActivity {
 
 		if (sectionName == CATEGORY_SEPARATOR) {
 
+			Location lastLocation = mLocationClient.getLastLocation();
+
+			if (lastLocation == null ) {
+				Toast.makeText(mainActivity, "Error getting device location",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			// update the main content by replacing fragments
 			Fragment fragment = new CategoryFragment();
 			Bundle args = new Bundle();
 
 			args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
+			args.putDouble(CategoryFragment.ARG_LATITUDE, lastLocation.getLatitude());
+			args.putDouble(CategoryFragment.ARG_LONGITUDE, lastLocation.getLongitude());
 			fragment.setArguments(args);
 
 			FragmentManager fragmentManager = getFragmentManager();
@@ -372,16 +379,67 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == RESULT_OK){
-			startActivity(new Intent(getBaseContext(), TakePictureActivity.class));
+			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
 		} else if (requestCode == ADD_SHOP_REQUEST_CODE && resultCode == RESULT_OK){
 			startActivity(new Intent(getBaseContext(), NewShopActivity.class));
 		}
 	}
 
+	//	@Override
+	//	protected void onPause() {
+	//		super.onPause();
+	//		lr.stopGettingUpdates();
+	//	}
+
 	@Override
-	protected void onPause() {
+	protected void onResume() {
+		super.onResume();
+		setUpLocationClientIfNeeded();
+		mLocationClient.connect();
+	}
+
+	@Override
+	public void onPause() {
 		super.onPause();
-		lr.stopGettingUpdates();
+		if (mLocationClient != null) {
+			mLocationClient.disconnect();
+		}
+	}
+
+	private void setUpLocationClientIfNeeded() {
+		if (mLocationClient == null) {
+			mLocationClient = new LocationClient(
+					getApplicationContext(),
+					this,  // ConnectionCallbacks
+					this); // OnConnectionFailedListener
+		}
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		// we only want to do this if no location has been found before. i.e. on app startup
+		if (!foundLocation) {
+			foundLocation = true;
+			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
+		}
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+		mLocationClient.requestLocationUpdates(
+				REQUEST,
+				this);  // LocationListener
+	}
+
+	@Override
+	public void onDisconnected() {
+		// do nothing
 	}
 
 }

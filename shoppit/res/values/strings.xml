@@ -76,5 +76,6 @@
     <string name="title_activity_new_item">New item</string>
     <string name="title_activity_comment_dialog">Comment</string>
     <string name="title_activity_login_dialog_fragment">Log in</string>
+    <string name="title_activity_map">MapActivity</string>
 
 </resources>

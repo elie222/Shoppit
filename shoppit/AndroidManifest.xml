@@ -132,6 +132,14 @@
             android:name="il.ac.huji.shoppit.NewItemActivity"
             android:label="@string/title_activity_new_item" >
         </activity>
+        <activity
+            android:name="il.ac.huji.shoppit.MapActivity"
+            android:label="@string/title_activity_map"
+            android:parentActivityName="il.ac.huji.shoppit.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.ac.huji.shoppit.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

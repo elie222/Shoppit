@@ -6,6 +6,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -100,13 +101,14 @@ public class LoginActivity extends ActionBarActivity {
 	}
 
 	private void onFacebookLogInButtonClicked() {
-		// TODO - add cancel button?
+		// TODO doesn't work. could be a bug with the new FB SDK
+		// TODO - add cancel button?		
 		LoginActivity.this.progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
 		// TODO - change permissions list. we don't actually need all this info
 		List<String> permissions = Arrays.asList("basic_info", "user_about_me",
 				"user_relationships", "user_birthday", "user_location");
-
+		
 		ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
 
 			@Override

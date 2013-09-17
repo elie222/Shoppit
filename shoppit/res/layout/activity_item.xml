@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:text="Twix"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -21,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="£1.20"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <com.parse.ParseImageView
@@ -35,8 +33,7 @@
         android:id="@+id/categoryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/photoParseImageView"
-        android:text="Food, Chocolate" />
+        android:layout_below="@id/photoParseImageView" />
 
     <CheckBox
         android:id="@+id/likeCheckBox"
@@ -52,24 +49,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/categoryTextView"
-        android:layout_marginRight="1dp"
         android:layout_alignBaseline="@+id/likeCheckBox"
+        android:layout_marginRight="1dp"
         android:layout_toLeftOf="@id/likeCheckBox"
-        android:text="5"
         android:textSize="18sp" />
-    
+
     <TextView
         android:id="@+id/commentTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/categoryTextView"
-        android:text="@string/comments"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:textAllCaps="true"
+        android:paddingBottom="5dp"
         android:paddingTop="10dp"
-        android:paddingBottom="5dp" />
-    
+        android:text="@string/comments"
+        android:textAllCaps="true"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
     <ListView
         android:id="@+id/commentsListView"
         android:layout_width="match_parent"
@@ -83,8 +79,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/commentTitleTextView"
         android:layout_alignBottom="@+id/commentTitleTextView"
-        android:layout_below="@+id/categoryTextView"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/categoryTextView"
         android:text="@string/add_comment" />
 
 </RelativeLayout>

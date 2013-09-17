@@ -270,11 +270,11 @@ public class NewItemFragment extends Fragment {
 
 		// Try to get the device location
 		//		GeneralInfo.stopGettingLocation(); // TODO - this was crashing the app so I commented it out.
-		if (GeneralInfo.location == null) {
-			Toast.makeText(getActivity(), "Cannot get device location",
-					Toast.LENGTH_LONG).show();
-			return;
-		}
+		//		if (GeneralInfo.location == null) {
+		//			Toast.makeText(getActivity(), "Cannot get device location",
+		//					Toast.LENGTH_LONG).show();
+		//			return;
+		//		}
 
 		//Data is OK, upload the item to parse.
 
@@ -288,9 +288,15 @@ public class NewItemFragment extends Fragment {
 		newItem.setMainCategory(category);
 		newItem.setKeywords(keywords);
 
+		
+		//		ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
+		//				GeneralInfo.location.getLongitude());
+
 		// location
-		ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
-				GeneralInfo.location.getLongitude());
+		// if location is 0, 0 then we have a problem. we could check for this, even though it's unlikely to happen.
+		ParseGeoPoint point = new ParseGeoPoint(
+				((NewItemActivity) getActivity()).getLatitude(),
+				((NewItemActivity) getActivity()).getLongitude());
 		newItem.setLocation(point);
 
 		// photo

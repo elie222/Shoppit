@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.view.Menu;
+import android.content.Intent;
 
 /**
  * @author Elie2
@@ -15,6 +15,8 @@ public class NewItemActivity extends Activity {
 	 
     private Item item = null;
     private byte[] photoData = null;
+    private double latitude = 0;
+    private double longitude = 0;
  
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,8 +24,12 @@ public class NewItemActivity extends Activity {
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
- 
         setContentView(R.layout.activity_new_item);
+        
+        Intent intent = getIntent();
+        latitude = intent.getDoubleExtra(MainActivity.LATITUDE_EXTRA, 0);
+        longitude = intent.getDoubleExtra(MainActivity.LONGITUDE_EXTRA, 0);
+        
         FragmentManager manager = getFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
  
@@ -43,6 +49,14 @@ public class NewItemActivity extends Activity {
 
 	public void setCurrentPhotoData(byte[] data) {
 		photoData = data;
+	}
+	
+	public double getLatitude() {
+		return latitude;
+	}
+	
+	public double getLongitude() {
+		return longitude;
 	}
  
 }

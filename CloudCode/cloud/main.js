@@ -32,6 +32,11 @@ Parse.Cloud.define("hello", function(request, response) {
 // });
 
 Parse.Cloud.define("likeItem", function (request, response) {
+    if (!request.user) {
+        response.error("Can't like an item when not logged in.");
+        return;
+    }
+
     Parse.Cloud.useMasterKey();
     var itemId = request.params.itemId;
     
@@ -42,8 +47,10 @@ Parse.Cloud.define("likeItem", function (request, response) {
 
             if (request.params.like) {
                 relation.add(request.user);
+                item.increment("likesCount", 1);
             } else {
                 relation.remove(request.user);
+                item.increment("likesCount", -1);
             }
 
             item.save(null, {
@@ -93,21 +100,24 @@ Parse.Cloud.define("likeItem", function (request, response) {
 
 Parse.Cloud.beforeSave("Item", function (request, response) {
 
-    var name = request.object.get("name");
-    var category = request.object.get("mainCategory");
-    var keywords = request.object.get("keywords");
+    if (!request.object.existed()) {
+        // search terms to find item
+        var name = request.object.get("name");
+        var category = request.object.get("mainCategory");
+        var keywords = request.object.get("keywords");
 
-    searchString = "";
-    searchString += (name.toLowerCase() + " ");
-    searchString += (category.toLowerCase() + " ");
+        searchString = "";
+        searchString += (name.toLowerCase() + " ");
+        searchString += (category.toLowerCase() + " ");
 
-    for (var index in keywords) {
-        searchString += (keywords[index].toLowerCase() + " ");
+        for (var index in keywords) {
+            searchString += (keywords[index].toLowerCase() + " ");
+        }
+
+        console.log(searchString);
+
+        request.object.set("searchString", searchString);
     }
-
-    // console.log(searchString);
-
-    request.object.set("searchString", searchString);
 
     response.success();
 });
