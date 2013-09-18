@@ -123,8 +123,9 @@ public class AddItemActivity extends ActionBarActivity {
 				}
 
 				//TODO why are name and price being saved in GeneralInfo?
-				GeneralInfo.name = name;
-				GeneralInfo.price = new DecimalFormat("0.00").format(priceVal); //Give the price this format
+				//Can't remember now, I commented this out
+				//GeneralInfo.name = name;
+				//GeneralInfo.price = new DecimalFormat("0.00").format(priceVal); //Give the price this format
 
 				//Try to get the device location
 				GeneralInfo.stopGettingLocation();

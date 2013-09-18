@@ -18,6 +18,6 @@
         android:id="@+id/action_add"
         android:icon="@drawable/device_access_camera"
         android:title="@string/add"
-        yourapp:showAsAction="ifRoom"/>
+        yourapp:showAsAction="always|collapseActionView"/>
 
 </menu>

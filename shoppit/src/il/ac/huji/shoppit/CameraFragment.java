@@ -3,13 +3,18 @@ package il.ac.huji.shoppit;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +26,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.google.zxing.*;
+import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.oned.UPCAReader;
 
 /**
  * @author Elie2
@@ -34,15 +43,23 @@ public class CameraFragment extends Fragment {
 	private SurfaceView surfaceView;
 	private ImageButton photoButton;
 	private Button barcodeButton;
+	private boolean barcodeMode = false,
+			currentlyScanning = false;
+
+	private int previewWidth = 0,
+			previewHeight = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
 			Bundle savedInstanceState) {
+
+		barcodeMode = false;
+		currentlyScanning = false;
 		View v = inflater.inflate(R.layout.fragment_camera, parent, false);
 
 		photoButton = (ImageButton) v.findViewById(R.id.camera_photo_button);
 		barcodeButton = (Button) v.findViewById(R.id.barcode_button);
-		
+
 		// hide barcode button when adding shop
 		if (getActivity().getClass() == NewShopActivity.class) {
 			barcodeButton.setVisibility(View.INVISIBLE);
@@ -59,6 +76,54 @@ public class CameraFragment extends Fragment {
 						Toast.LENGTH_LONG).show();
 			}
 		}
+
+
+		//Barcode scanning is allowed only if the camera is of type NV21.
+		//Don't really know what that is, but that's the only option I've seen when scanning
+		//for a barcode. Seems like it's the most probable option though.
+		Parameters parameters = camera.getParameters();
+		int imageFormat = parameters.getPreviewFormat();
+		if (imageFormat != ImageFormat.NV21)
+			barcodeButton.setVisibility(View.INVISIBLE);
+
+
+		//This part will search for a barcode in the image.
+		camera.setPreviewCallback(new Camera.PreviewCallback() {
+
+			@Override
+			public void onPreviewFrame(byte[] data, Camera camera) {
+				if (barcodeMode && !currentlyScanning) {
+					
+					currentlyScanning = true;
+
+					//This part gets the image from the camera in the appropriate format
+					YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, previewWidth, previewHeight, null);
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					yuvimage.compressToJpeg(new Rect(0, 0, previewWidth, previewHeight), 100, baos);
+					byte[] jdata = baos.toByteArray();
+					BitmapFactory.Options bitmapFatoryOptions = new BitmapFactory.Options();
+					bitmapFatoryOptions.inPreferredConfig = Bitmap.Config.RGB_565;
+					Bitmap bmp = BitmapFactory.decodeByteArray(jdata, 0, jdata.length, bitmapFatoryOptions);
+					LuminanceSource source = new PlanarYUVLuminanceSource(data, bmp.getWidth(), bmp.getHeight(), 0, 0, bmp.getWidth(), bmp.getHeight(), false);
+					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
+
+					//This is the actual scanning
+					try {
+						String code = new UPCAReader().decode(binBmp).getText();
+						Toast.makeText(getActivity(), code,
+								Toast.LENGTH_LONG).show();
+						camera.setPreviewCallback(null);
+
+					} catch (Exception e) {
+						// barcode not recognized in picture
+						Log.d("ERROR", e.toString());
+					}
+					
+					currentlyScanning = false;
+				}
+			}
+		});
+
 
 		photoButton.setOnClickListener(new View.OnClickListener() {
 
@@ -79,21 +144,31 @@ public class CameraFragment extends Fragment {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
 						saveScaledPhoto(data);
-						//						addPhotoToShopAndReturn(data);
+						// addPhotoToShopAndReturn(data);
 					}
 
 				});
 
 			}
 		});
-		
+
 		barcodeButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO
+
+				barcodeMode = !barcodeMode;
+				if (barcodeMode) {
+					photoButton.setVisibility(View.INVISIBLE);
+					barcodeButton.setText("Take item picture");
+				}
+				else {
+					photoButton.setVisibility(View.VISIBLE);
+					barcodeButton.setText("Scan barcode");
+				}
+
 			}
-			
+
 		});
 
 		surfaceView = (SurfaceView) v.findViewById(R.id.camera_surface_view);
@@ -114,7 +189,8 @@ public class CameraFragment extends Fragment {
 
 			public void surfaceChanged(SurfaceHolder holder, int format,
 					int width, int height) {
-				// nothing to do here
+				previewWidth = width;
+				previewHeight = height;
 			}
 
 			public void surfaceDestroyed(SurfaceHolder holder) {

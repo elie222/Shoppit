@@ -239,24 +239,25 @@ LocationListener {
 			return true;
 		case R.id.action_add:
 			if (ParseUser.getCurrentUser() != null) {
-				if (foundLocation) {
+				
+				/*if (foundLocation) {
 					Location lastLocation = mLocationClient.getLastLocation();
-
+					
 					if (lastLocation == null ) {
 						// this shouldn't ever happen really
 						Toast.makeText(mainActivity, "Error getting device location",
 								Toast.LENGTH_LONG).show();
 						return true;
-					}
+					}*/
 					
 					Intent newItemIntent = new Intent(getBaseContext(), NewItemActivity.class);
-					newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
-					newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+					//newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+					//newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
 					startActivity(newItemIntent);
-				} else {
+				/*} else {
 					Toast.makeText(mainActivity, "Error getting device location",
 							Toast.LENGTH_LONG).show();
-				}
+				}*/
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_ITEM_REQUEST_CODE);
