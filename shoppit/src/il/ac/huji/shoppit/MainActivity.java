@@ -3,6 +3,7 @@ package il.ac.huji.shoppit;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -13,12 +14,15 @@ import com.parse.ParseUser;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Build;
@@ -42,11 +46,6 @@ implements ConnectionCallbacks, OnConnectionFailedListener,
 LocationListener {
 
 	private static final String TAG = "MAIN_ACT";
-	
-	// Set to true when running on emulator to use fake location
-	private static final boolean DEBUG_MODE = true;
-	private static final double DEBUG_LAT = 50.0;
-	private static final double DEBUG_LON = 50.0;
 
 	private static final String GENERAL_SEPARATOR = "General";
 	private static final String CATEGORY_SEPARATOR = "Categories";
@@ -77,44 +76,25 @@ LocationListener {
 	// -------------
 	private LocationClient mLocationClient;
 
-	// These settings are the same as the settings for the map. They will in fact give you updates
-	// at the maximal rates currently possible.
+	// used when Google Play services is unavailable.
+	private LocationRetriever2 mFallbackLocationRetriever;
+
 	private static final LocationRequest REQUEST = LocationRequest.create()
-			.setInterval(60* 60 * 1000)		// 60 minutes
-			.setFastestInterval(60 * 1000)	// 60 seconds
+			.setInterval(60 * 1000)		// 60 seconds
+			.setFastestInterval(10 * 1000)	// 10 seconds
 			.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-	private boolean foundLocation = false;
+	// if mLocationClient has found a location.
+	private boolean foundLocationLC = false;
 
+	// if mFallbackLocationRetriever has found a location.
+	private boolean foundLocationFLR = false;
 
-
-	// You want to put this code in CategoryFragment.java
-	//This class will get the device location to fill the list of nearby items.
-	//	private LocationRetriever2 lr = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
-	//
-	//		@Override
-	//		void timerFunc() {
-	//
-	//			//This function will fill the list of nearby items
-	//			//when the timer for getting the device position has elapsed
-	//			//or as soon as the position is located.
-	//
-	//			runOnUiThread(new Runnable() {
-	//				public void run() {
-	//					//					Log.d(TAG, (GeneralInfo.location == null)+"");
-	//					//					Log.d(TAG, (GeneralInfo.location)+"");
-	//					if (GeneralInfo.location == null) { //In case of error
-	//						Toast.makeText(mainActivity, "Error getting device location",
-	//								Toast.LENGTH_LONG).show();
-	//					}
-	//
-	//					selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
-	//				}
-	//			});
-	//
-	//		}
-	//
-	//	});
+	/*
+	 * Define a request code to send to Google Play services
+	 * This code is returned in Activity.onActivityResult
+	 */
+	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -122,18 +102,11 @@ LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//Get the device location
-		//		lr.startGettingUpdates(this, 10000);
-
-
 		ParseObject.registerSubclass(Item.class);
 		ParseObject.registerSubclass(Shop.class);
 		ParseObject.registerSubclass(Comment.class);
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 		ParseFacebookUtils.initialize(getString(R.string.app_id));
-
-		//Check if the user is logged in, connect to parse if so.
-		//		checkIfLoggedIn();
 
 		mTitle = mDrawerTitle = getTitle();
 		mCategoryTitles = getResources().getStringArray(R.array.categories_array);
@@ -244,27 +217,9 @@ LocationListener {
 			return true;
 		case R.id.action_add:
 			if (ParseUser.getCurrentUser() != null) {
-				
-				if (DEBUG_MODE) {
-					Toast.makeText(mainActivity, "DEBUG MODE. Using fake location",
-							Toast.LENGTH_LONG).show();
-					Intent newItemIntent = new Intent(getBaseContext(), NewItemActivity.class);
-					newItemIntent.putExtra(LATITUDE_EXTRA, DEBUG_LAT);
-					newItemIntent.putExtra(LONGITUDE_EXTRA, DEBUG_LON);
-					startActivity(newItemIntent);
-					return true;
-				}
-				
-				if (foundLocation) {
-					Location lastLocation = mLocationClient.getLastLocation();
-					
-					if (lastLocation == null ) {
-						// this shouldn't ever happen really
-						Toast.makeText(mainActivity, "Error getting device location",
-								Toast.LENGTH_LONG).show();
-						return true;
-					}
-					
+				Location lastLocation = getLastLocation();
+
+				if (lastLocation != null) {
 					Intent newItemIntent = new Intent(getBaseContext(), NewItemActivity.class);
 					newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
 					newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
@@ -303,16 +258,16 @@ LocationListener {
 
 		if (sectionName == CATEGORY_SEPARATOR) {
 
-			if (DEBUG_MODE) {
-				Toast.makeText(mainActivity, "DEBUG MODE. Using fake location.",
-						Toast.LENGTH_LONG).show();
+			Location lastLocation = getLastLocation();
+
+			if (lastLocation != null) {
 				// update the main content by replacing fragments
 				Fragment fragment = new CategoryFragment();
 				Bundle args = new Bundle();
 
 				args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
-				args.putDouble(CategoryFragment.ARG_LATITUDE, DEBUG_LAT);
-				args.putDouble(CategoryFragment.ARG_LONGITUDE, DEBUG_LON);
+				args.putDouble(MainActivity.LATITUDE_EXTRA, lastLocation.getLatitude());
+				args.putDouble(MainActivity.LONGITUDE_EXTRA, lastLocation.getLongitude());
 				fragment.setArguments(args);
 
 				FragmentManager fragmentManager = getFragmentManager();
@@ -324,65 +279,18 @@ LocationListener {
 				mDrawerLayout.closeDrawer(mDrawerList);
 
 				selectedCategory = position;
-				
-				return;
-			} else if (!foundLocation) {
+			} else {
 				Toast.makeText(mainActivity, "Error getting device location",
 						Toast.LENGTH_LONG).show();
-				return;
-			}
-			
-			Location lastLocation = mLocationClient.getLastLocation();
-
-			if (lastLocation == null ) {
-				// this shouldn't really happen
-				Toast.makeText(mainActivity, "Error getting device location",
-						Toast.LENGTH_LONG).show();
-				return;
 			}
 
-			// update the main content by replacing fragments
-			Fragment fragment = new CategoryFragment();
-			Bundle args = new Bundle();
-
-			args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
-			args.putDouble(CategoryFragment.ARG_LATITUDE, lastLocation.getLatitude());
-			args.putDouble(CategoryFragment.ARG_LONGITUDE, lastLocation.getLongitude());
-			fragment.setArguments(args);
-
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-			// update selected item and title, then close the drawer
-			mDrawerList.setItemChecked(position, true);
-			setTitle(mCategoryTitles[positionInSection]);
-			mDrawerLayout.closeDrawer(mDrawerList);
-
-			selectedCategory = position;
 			return;
 
 		} else if (selectedName.equals("Add Shop")) { // a bit ugly...
 			// start new activity
 			if (ParseUser.getCurrentUser() != null) {
-								
-				if (DEBUG_MODE) {
-					Toast.makeText(mainActivity, "DEBUG MODE. Using fake location",
-							Toast.LENGTH_LONG).show();
-					Intent newItemIntent = new Intent(getBaseContext(), NewShopActivity.class);
-					newItemIntent.putExtra(LATITUDE_EXTRA, DEBUG_LAT);
-					newItemIntent.putExtra(LONGITUDE_EXTRA, DEBUG_LON);
-					startActivity(newItemIntent);
-				} else if (foundLocation) {
-					
-					Location lastLocation = mLocationClient.getLastLocation();
-					
-					if (lastLocation == null ) {
-						// this shouldn't ever happen really
-						Toast.makeText(mainActivity, "Error getting device location",
-								Toast.LENGTH_LONG).show();
-						return;
-					}
-					
+				Location lastLocation = getLastLocation();
+				if (lastLocation != null) {
 					Intent intent = new Intent(getBaseContext(), NewShopActivity.class);
 					intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
 					intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
@@ -390,7 +298,9 @@ LocationListener {
 				} else {
 					Toast.makeText(mainActivity, "Error getting device location",
 							Toast.LENGTH_LONG).show();
+					return;
 				}
+
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_SHOP_REQUEST_CODE);
@@ -408,18 +318,33 @@ LocationListener {
 			return;
 
 		} else if (selectedName.equals("Shops")) { // ugly again...
-			// update the main content by replacing fragments
-			Fragment fragment = new ShopListFragment();
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+			Location lastLocation = getLastLocation();
 
-			// update selected item and title, then close the drawer
-			mDrawerList.setItemChecked(position, true);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			if (lastLocation != null) {
+				// update the main content by replacing fragments
+				
+				Fragment fragment = new ShopListFragment();
+				Bundle args = new Bundle();
 
-			selectedCategory = position;
+				args.putDouble(MainActivity.LATITUDE_EXTRA, lastLocation.getLatitude());
+				args.putDouble(MainActivity.LONGITUDE_EXTRA, lastLocation.getLongitude());
+				fragment.setArguments(args);
+				
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
-			return;
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerLayout.closeDrawer(mDrawerList);
+
+				selectedCategory = position;
+
+				return;
+			} else {
+				Toast.makeText(mainActivity, "Error getting device location",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -454,6 +379,21 @@ LocationListener {
 			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
 		} else if (requestCode == ADD_SHOP_REQUEST_CODE && resultCode == RESULT_OK){
 			startActivity(new Intent(getBaseContext(), NewShopActivity.class));
+		} else if (requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST) {
+			// TODO this isn't doing anything ATM
+			/*
+			 * If the result code is Activity.RESULT_OK, try
+			 * to connect again
+			 */
+			switch (resultCode) {
+			// If Google Play services resolved the problem
+			case Activity.RESULT_OK:
+				break;
+				// If any other result was returned by Google Play services
+			default:
+				break;
+			}
+
 		}
 	}
 
@@ -476,6 +416,9 @@ LocationListener {
 		if (mLocationClient != null) {
 			mLocationClient.disconnect();
 		}
+		if (mFallbackLocationRetriever != null) {
+			mFallbackLocationRetriever.stopGettingUpdates();
+		}
 	}
 
 	private void setUpLocationClientIfNeeded() {
@@ -490,15 +433,75 @@ LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 		// we only want to do this if no location has been found before. i.e. on app startup
-		if (!foundLocation) {
-			foundLocation = true;
+		if (!foundLocationLC) {
+			foundLocationLC = true;
 			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
 		}
 	}
 
 	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-		// TODO Auto-generated method stub
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+		/*
+		 * Google Play services can resolve some errors it detects.
+		 * If the error has a resolution, try sending an Intent to
+		 * start a Google Play services activity that can resolve
+		 * error.
+		 */
+		if (connectionResult.hasResolution()) {
+			try {
+				// Start an Activity that tries to resolve the error
+				connectionResult.startResolutionForResult(
+						this,
+						CONNECTION_FAILURE_RESOLUTION_REQUEST);
+				/*
+				 * Thrown if Google Play services canceled the original
+				 * PendingIntent
+				 */
+			} catch (IntentSender.SendIntentException e) {
+				// Log the error
+				e.printStackTrace();
+			}
+		} else {
+			/*
+			 * If no resolution is available, display a dialog to the
+			 * user with the error.
+			 */
+			// TODO - use lr2 instead
+			Log.i(TAG, "Using LR2");
+
+			mFallbackLocationRetriever = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
+
+				@Override
+				void timerFunc() {
+
+					//This function will fill the list of nearby items
+					//when the timer for getting the device position has elapsed
+					//or as soon as the position is located.
+
+					runOnUiThread(new Runnable() {
+						public void run() {
+							Log.i(TAG, "LR2 - runOnUiThread");
+							//					Log.d(TAG, (GeneralInfo.location == null)+"");
+							//					Log.d(TAG, (GeneralInfo.location)+"");
+							if (GeneralInfo.location == null) { //In case of error
+								Toast.makeText(mainActivity, "Error getting device location",
+										Toast.LENGTH_LONG).show();
+							} else {
+								foundLocationFLR = true;
+								selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
+							}
+						}
+					});
+
+				}
+
+			});
+
+			// Get the device location
+			mFallbackLocationRetriever.startGettingUpdates(this, 10000);
+
+			// showErrorDialog(connectionResult.getErrorCode());
+		}
 
 	}
 
@@ -513,5 +516,96 @@ LocationListener {
 	public void onDisconnected() {
 		// do nothing
 	}
+
+	/**
+	 * Verify that Google Play services is available before making a request.
+	 *
+	 * @return true if Google Play services is available, otherwise false
+	 */
+	private boolean servicesConnected() {
+		// Check that Google Play services is available
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		// If Google Play services is available
+		if (ConnectionResult.SUCCESS == resultCode) {
+			// In debug mode, log the status
+			Log.d("Location Updates", "Google Play services is available.");
+			// Continue
+			return true;
+			// Google Play services was not available for some reason
+		} else {			
+			// Display an error dialog
+			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
+			if (dialog != null) {
+				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+				errorFragment.setDialog(dialog);
+				errorFragment.show(getFragmentManager(), "Location Updates");
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * Show a dialog returned by Google Play services for the
+	 * connection error code
+	 *
+	 * @param errorCode An error code returned from onConnectionFailed
+	 */
+	private void showErrorDialog(int errorCode) {
+
+		// Get the error dialog from Google Play services
+		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+				errorCode,
+				this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+
+		// If Google Play services can provide an error dialog
+		if (errorDialog != null) {
+
+			// Create a new DialogFragment in which to show the error dialog
+			ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+
+			// Set the dialog in the DialogFragment
+			errorFragment.setDialog(errorDialog);
+
+			// Show the error dialog in the DialogFragment
+			errorFragment.show(getFragmentManager(), "Location Updates");
+		}
+	}
+
+	// Define a DialogFragment that displays the error dialog
+	public static class ErrorDialogFragment extends DialogFragment {
+		// Global field to contain the error dialog
+		private Dialog mDialog;
+		// Default constructor. Sets the dialog field to null
+		public ErrorDialogFragment() {
+			super();
+			mDialog = null;
+		}
+		// Set the dialog to display
+		public void setDialog(Dialog dialog) {
+			mDialog = dialog;
+		}
+		// Return a Dialog to the DialogFragment.
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			return mDialog;
+		}
+	}
+
+
+	/**
+	 * This will return the last location using either the GooglePlayServives location
+	 * finder or the fallback location retriever (LocationRetriever2).
+	 * @return the last location or null.
+	 */
+	private Location getLastLocation() {
+		if (foundLocationLC) {
+			return mLocationClient.getLastLocation();
+		} else if (foundLocationFLR) {
+			return GeneralInfo.location;
+		} else {
+			return null;
+		}
+	}
+
 
 }

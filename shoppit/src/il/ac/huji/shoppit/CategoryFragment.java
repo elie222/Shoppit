@@ -16,8 +16,8 @@ public class CategoryFragment extends Fragment implements
 RadioGroup.OnCheckedChangeListener {
 
 	public static final String ARG_CATEGORY_NUMBER = "category_number";
-	public static final String ARG_LATITUDE = "latitude";
-	public static final String ARG_LONGITUDE = "longitude";
+//	public static final String ARG_LATITUDE = "latitude";
+//	public static final String ARG_LONGITUDE = "longitude";
 	public static final String MAIN_CATEGORY = "mainCategory";
 	public static final String ALL = "All";
 
@@ -51,8 +51,8 @@ RadioGroup.OnCheckedChangeListener {
 		listView = (ListView) rootView.findViewById(R.id.homeListView);
 
 		// get location from MainActivity
-		double latitude = getArguments().getDouble(ARG_LATITUDE);
-		double longitude = getArguments().getDouble(ARG_LONGITUDE);
+		double latitude = getArguments().getDouble(MainActivity.LATITUDE_EXTRA);
+		double longitude = getArguments().getDouble(MainActivity.LONGITUDE_EXTRA);
 		ParseGeoPoint currentLocation = new ParseGeoPoint(latitude, longitude);
 		
 		category = getResources().getStringArray(R.array.categories_array)[i];
