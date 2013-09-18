@@ -42,6 +42,11 @@ implements ConnectionCallbacks, OnConnectionFailedListener,
 LocationListener {
 
 	private static final String TAG = "MAIN_ACT";
+	
+	// Set to true when running on emulator to use fake location
+	private static final boolean DEBUG_MODE = true;
+	private static final double DEBUG_LAT = 50.0;
+	private static final double DEBUG_LON = 50.0;
 
 	private static final String GENERAL_SEPARATOR = "General";
 	private static final String CATEGORY_SEPARATOR = "Categories";
@@ -240,7 +245,17 @@ LocationListener {
 		case R.id.action_add:
 			if (ParseUser.getCurrentUser() != null) {
 				
-				/*if (foundLocation) {
+				if (DEBUG_MODE) {
+					Toast.makeText(mainActivity, "DEBUG MODE. Using fake location",
+							Toast.LENGTH_LONG).show();
+					Intent newItemIntent = new Intent(getBaseContext(), NewItemActivity.class);
+					newItemIntent.putExtra(LATITUDE_EXTRA, DEBUG_LAT);
+					newItemIntent.putExtra(LONGITUDE_EXTRA, DEBUG_LON);
+					startActivity(newItemIntent);
+					return true;
+				}
+				
+				if (foundLocation) {
 					Location lastLocation = mLocationClient.getLastLocation();
 					
 					if (lastLocation == null ) {
@@ -248,16 +263,16 @@ LocationListener {
 						Toast.makeText(mainActivity, "Error getting device location",
 								Toast.LENGTH_LONG).show();
 						return true;
-					}*/
+					}
 					
 					Intent newItemIntent = new Intent(getBaseContext(), NewItemActivity.class);
-					//newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
-					//newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+					newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+					newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
 					startActivity(newItemIntent);
-				/*} else {
+				} else {
 					Toast.makeText(mainActivity, "Error getting device location",
 							Toast.LENGTH_LONG).show();
-				}*/
+				}
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_ITEM_REQUEST_CODE);
@@ -288,7 +303,30 @@ LocationListener {
 
 		if (sectionName == CATEGORY_SEPARATOR) {
 
-			if (!foundLocation) {
+			if (DEBUG_MODE) {
+				Toast.makeText(mainActivity, "DEBUG MODE. Using fake location.",
+						Toast.LENGTH_LONG).show();
+				// update the main content by replacing fragments
+				Fragment fragment = new CategoryFragment();
+				Bundle args = new Bundle();
+
+				args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
+				args.putDouble(CategoryFragment.ARG_LATITUDE, DEBUG_LAT);
+				args.putDouble(CategoryFragment.ARG_LONGITUDE, DEBUG_LON);
+				fragment.setArguments(args);
+
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				setTitle(mCategoryTitles[positionInSection]);
+				mDrawerLayout.closeDrawer(mDrawerList);
+
+				selectedCategory = position;
+				
+				return;
+			} else if (!foundLocation) {
 				Toast.makeText(mainActivity, "Error getting device location",
 						Toast.LENGTH_LONG).show();
 				return;
@@ -326,7 +364,33 @@ LocationListener {
 		} else if (selectedName.equals("Add Shop")) { // a bit ugly...
 			// start new activity
 			if (ParseUser.getCurrentUser() != null) {
-				startActivity(new Intent(getBaseContext(), NewShopActivity.class));
+								
+				if (DEBUG_MODE) {
+					Toast.makeText(mainActivity, "DEBUG MODE. Using fake location",
+							Toast.LENGTH_LONG).show();
+					Intent newItemIntent = new Intent(getBaseContext(), NewShopActivity.class);
+					newItemIntent.putExtra(LATITUDE_EXTRA, DEBUG_LAT);
+					newItemIntent.putExtra(LONGITUDE_EXTRA, DEBUG_LON);
+					startActivity(newItemIntent);
+				} else if (foundLocation) {
+					
+					Location lastLocation = mLocationClient.getLastLocation();
+					
+					if (lastLocation == null ) {
+						// this shouldn't ever happen really
+						Toast.makeText(mainActivity, "Error getting device location",
+								Toast.LENGTH_LONG).show();
+						return;
+					}
+					
+					Intent intent = new Intent(getBaseContext(), NewShopActivity.class);
+					intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+					intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+					startActivity(intent);
+				} else {
+					Toast.makeText(mainActivity, "Error getting device location",
+							Toast.LENGTH_LONG).show();
+				}
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_SHOP_REQUEST_CODE);

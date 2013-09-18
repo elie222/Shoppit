@@ -15,7 +15,7 @@ public class GeneralInfo {
 	//Storing it here makes it easy for them to call a function that uploads the item.
 	static Bitmap itemImage = null;
 	static byte[] itemImageData = null;
-	static String name, price, categ1, categ2;
+//	static String name, price, categ1, categ2;
 	static Location location = null;
 	static Item itemHolder = null;
 	static Shop shopHolder = null;

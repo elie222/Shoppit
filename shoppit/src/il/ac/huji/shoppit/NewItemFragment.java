@@ -74,6 +74,7 @@ public class NewItemFragment extends Fragment {
 		currencySpinner.setAdapter(currencyAdapter);
 
 		// set up category spinner
+		// TODO - remove "All" option. add "Other" option
 		ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getActivity(),
 				R.array.categories_array, android.R.layout.simple_spinner_item);
 		categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 public class CategoryFragment extends Fragment implements
@@ -30,8 +29,10 @@ RadioGroup.OnCheckedChangeListener {
 
 	private ItemAdapter adapter;
 
-	private double latitude;
-	private double longitude;
+//	private double latitude;
+//	private double longitude;
+	private ParseGeoPoint currentLocation;
+	
 	private String category;
 
 	private int checkedRadioButtonId;
@@ -49,8 +50,11 @@ RadioGroup.OnCheckedChangeListener {
 		radioGroupSortBy = (RadioGroup) rootView.findViewById(R.id.radioGroupSortBy);
 		listView = (ListView) rootView.findViewById(R.id.homeListView);
 
-		latitude = getArguments().getDouble(ARG_LATITUDE);
-		longitude = getArguments().getDouble(ARG_LONGITUDE);
+		// get location from MainActivity
+		double latitude = getArguments().getDouble(ARG_LATITUDE);
+		double longitude = getArguments().getDouble(ARG_LONGITUDE);
+		ParseGeoPoint currentLocation = new ParseGeoPoint(latitude, longitude);
+		
 		category = getResources().getStringArray(R.array.categories_array)[i];
 
 		radioGroupSortBy.setOnCheckedChangeListener(this);
@@ -75,11 +79,12 @@ RadioGroup.OnCheckedChangeListener {
 
 				switch (checkedRadioButtonId) {
 				case R.id.radioNearby:
-					ParseGeoPoint currentLocation = new ParseGeoPoint(latitude, longitude);
 					query.whereNear("location", currentLocation);
 					query.whereWithinMiles("location", currentLocation, 40000);
 					break;
 				case R.id.radioCheapest:
+					// TODO make sure the item is within a certain distance too, or not?
+					// query.whereWithinMiles("location", currentLocation, 10);
 					query.orderByAscending("price");
 					break;
 				case R.id.radioMostLiked:
