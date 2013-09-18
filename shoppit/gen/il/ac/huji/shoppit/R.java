@@ -1295,7 +1295,7 @@ containing a value of this type.
         public static final int com_facebook_list_section_header_background=0x7f020069;
         public static final int com_facebook_loginbutton_silver=0x7f02006a;
         public static final int com_facebook_logo=0x7f02006b;
-        public static final int com_facebook_picker_default_separator_color=0x7f0200a2;
+        public static final int com_facebook_picker_default_separator_color=0x7f0200a3;
         public static final int com_facebook_picker_item_background=0x7f02006c;
         public static final int com_facebook_picker_list_focused=0x7f02006d;
         public static final int com_facebook_picker_list_longpressed=0x7f02006e;
@@ -1349,11 +1349,12 @@ containing a value of this type.
         public static final int login_button_pressed=0x7f02009e;
         public static final int my_custom_bg=0x7f02009f;
         public static final int search=0x7f0200a0;
-        public static final int user=0x7f0200a1;
+        public static final int splash_screen_bg=0x7f0200a1;
+        public static final int user=0x7f0200a2;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f060053;
-        public static final int action_add=0x7f06009f;
+        public static final int action_add=0x7f0600a0;
         public static final int action_bar=0x7f06001f;
         public static final int action_bar_activity_content=0x7f06001a;
         public static final int action_bar_container=0x7f06001e;
@@ -1362,16 +1363,16 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f060026;
         public static final int action_bar_title=0x7f060025;
         public static final int action_context_bar=0x7f060020;
-        public static final int action_forgot_password=0x7f06009c;
-        public static final int action_map=0x7f06009e;
+        public static final int action_forgot_password=0x7f06009d;
+        public static final int action_map=0x7f06009f;
         public static final int action_menu_divider=0x7f06001b;
         public static final int action_menu_presenter=0x7f06001c;
         public static final int action_mode_bar=0x7f060034;
         public static final int action_mode_bar_stub=0x7f060033;
         public static final int action_mode_close_button=0x7f060027;
-        public static final int action_search=0x7f06009d;
-        public static final int action_settings=0x7f06009a;
-        public static final int action_userinfo=0x7f0600a0;
+        public static final int action_search=0x7f06009e;
+        public static final int action_settings=0x7f06009b;
+        public static final int action_userinfo=0x7f0600a1;
         public static final int activity_chooser_view_content=0x7f060028;
         public static final int addCommentButton=0x7f06005d;
         public static final int always=0x7f060011;
@@ -1410,7 +1411,7 @@ containing a value of this type.
         public static final int commentsListView=0x7f06005c;
         public static final int content_frame=0x7f060067;
         public static final int currencySpinner=0x7f06008f;
-        public static final int currencyTextView=0x7f060099;
+        public static final int currencyTextView=0x7f06009a;
         public static final int default_activity_button=0x7f06002b;
         public static final int dialog=0x7f060014;
         public static final int disableHome=0x7f06000e;
@@ -1446,7 +1447,7 @@ containing a value of this type.
         public static final int logInUsernameEdt=0x7f060060;
         public static final int logout=0x7f060054;
         public static final int map=0x7f060069;
-        public static final int menu_item_share=0x7f06009b;
+        public static final int menu_item_share=0x7f06009c;
         public static final int middle=0x7f060017;
         public static final int nameEditText=0x7f06004e;
         public static final int nameTextView=0x7f060055;
@@ -1459,6 +1460,7 @@ containing a value of this type.
         public static final int picker_subtitle=0x7f06007e;
         public static final int priceEditText=0x7f06004d;
         public static final int priceTextView=0x7f060056;
+        public static final int progress_bar=0x7f060099;
         public static final int progress_circular=0x7f060039;
         public static final int progress_horizontal=0x7f06003a;
         public static final int radio=0x7f060032;
@@ -1598,9 +1600,10 @@ containing a value of this type.
         public static final int fragment_new_item=0x7f030037;
         public static final int fragment_new_shop=0x7f030038;
         public static final int fragment_shop_list=0x7f030039;
-        public static final int item_list=0x7f03003a;
-        public static final int shop_list=0x7f03003b;
-        public static final int support_simple_spinner_dropdown_item=0x7f03003c;
+        public static final int fragment_splash=0x7f03003a;
+        public static final int item_list=0x7f03003b;
+        public static final int shop_list=0x7f03003c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03003d;
     }
     public static final class menu {
         public static final int comment_dialog=0x7f0e0000;
