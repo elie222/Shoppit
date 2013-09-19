@@ -80,6 +80,10 @@ public class CameraFragment extends Fragment {
 		int imageFormat = parameters.getPreviewFormat();
 		if (imageFormat != ImageFormat.NV21)
 			barcodeButton.setVisibility(View.INVISIBLE);
+		
+		//Define the focus for the picture taking mode, which is the initial mode
+		parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+		camera.setParameters(parameters);
 
 
 
@@ -103,12 +107,12 @@ public class CameraFragment extends Fragment {
 					byte [] yuv = new byte[imageSize / 2 * 3];
 					encodeYUV420SP(yuv, argb, w, h);
 					bMap.recycle();*/
-					
-					
+
+
 					//This part gets the image from the camera in the appropriate format
 					Camera.Parameters parameters = camera.getParameters();
-			        Size size = parameters.getPreviewSize();
-			        int w = size.width;
+					Size size = parameters.getPreviewSize();
+					int w = size.width;
 					int h = size.height;
 					LuminanceSource source = new PlanarYUVLuminanceSource(data, w, h, 0, 0, w, h, false);
 					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
@@ -118,7 +122,7 @@ public class CameraFragment extends Fragment {
 						EAN13Reader reader = new EAN13Reader();
 						reader.reset();
 						String code = reader.decode(binBmp).getText();
-						
+
 						Toast.makeText(getActivity(), code, Toast.LENGTH_LONG).show();
 						Log.d("BARCODE", code);
 						camera.setPreviewCallback(null);
@@ -166,15 +170,21 @@ public class CameraFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
+				Parameters parameters = camera.getParameters();
+				
 				barcodeMode = !barcodeMode;
 				if (barcodeMode) {
 					photoButton.setVisibility(View.INVISIBLE);
 					barcodeButton.setText("Take item picture");
+					parameters.setFocusMode(Parameters.SCENE_MODE_BARCODE);
 				}
 				else {
 					photoButton.setVisibility(View.VISIBLE);
 					barcodeButton.setText("Scan barcode");
+					parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 				}
+
+				camera.setParameters(parameters);
 
 			}
 
@@ -211,7 +221,7 @@ public class CameraFragment extends Fragment {
 	}
 
 
-	
+
 	//We can erase this code if barcode works.
 
 	//Helper functions for getting the image from the camera in the right format
