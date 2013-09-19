@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.zxing.*;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.oned.EAN13Reader;
 import com.google.zxing.oned.UPCAReader;
 
 /**
@@ -87,38 +88,44 @@ public class CameraFragment extends Fragment {
 			barcodeButton.setVisibility(View.INVISIBLE);
 
 
+
 		//This part will search for a barcode in the image.
 		camera.setPreviewCallback(new Camera.PreviewCallback() {
 
 			@Override
 			public void onPreviewFrame(byte[] data, Camera camera) {
 				if (barcodeMode && !currentlyScanning) {
-					
+
 					currentlyScanning = true;
 
 					//This part gets the image from the camera in the appropriate format
-					YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, previewWidth, previewHeight, null);
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					yuvimage.compressToJpeg(new Rect(0, 0, previewWidth, previewHeight), 100, baos);
-					byte[] jdata = baos.toByteArray();
-					BitmapFactory.Options bitmapFatoryOptions = new BitmapFactory.Options();
-					bitmapFatoryOptions.inPreferredConfig = Bitmap.Config.RGB_565;
-					Bitmap bmp = BitmapFactory.decodeByteArray(jdata, 0, jdata.length, bitmapFatoryOptions);
-					LuminanceSource source = new PlanarYUVLuminanceSource(data, bmp.getWidth(), bmp.getHeight(), 0, 0, bmp.getWidth(), bmp.getHeight(), false);
+					Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
+					int w = bMap.getWidth();
+					int h = bMap.getHeight();
+					int imageSize = w * h;
+					int [] argb = new int[imageSize];
+					bMap.getPixels(argb, 0, w, 0, 0, w, h);
+					byte [] yuv = new byte[imageSize / 2 * 3];
+					encodeYUV420SP(yuv, argb, w, h);
+					bMap.recycle();
+					LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
 					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
 
 					//This is the actual scanning
 					try {
-						String code = new UPCAReader().decode(binBmp).getText();
-						Toast.makeText(getActivity(), code,
-								Toast.LENGTH_LONG).show();
+						EAN13Reader reader = new EAN13Reader();
+						reader.reset();
+						String code = reader.decode(binBmp).getText();
+						
+						Toast.makeText(getActivity(), code, Toast.LENGTH_LONG).show();
+						Log.d("BARCODE", code);
 						camera.setPreviewCallback(null);
 
 					} catch (Exception e) {
 						// barcode not recognized in picture
 						Log.d("ERROR", e.toString());
 					}
-					
+
 					currentlyScanning = false;
 				}
 			}
@@ -200,6 +207,58 @@ public class CameraFragment extends Fragment {
 		});
 
 		return v;
+	}
+
+
+
+	//Helper functions for getting the image from the camera in the right format
+	byte [] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
+
+		int [] argb = new int[inputWidth * inputHeight];
+
+		scaled.getPixels(argb, 0, inputWidth, 0, 0, inputWidth, inputHeight);
+
+		byte [] yuv = new byte[inputWidth*inputHeight*3/2];
+		encodeYUV420SP(yuv, argb, inputWidth, inputHeight);
+
+		scaled.recycle();
+
+		return yuv;
+	}
+
+	void encodeYUV420SP(byte[] yuv420sp, int[] argb, int width, int height) {
+		final int frameSize = width * height;
+
+		int yIndex = 0;
+		int uvIndex = frameSize;
+
+		int a, R, G, B, Y, U, V;
+		int index = 0;
+		for (int j = 0; j < height; j++) {
+			for (int i = 0; i < width; i++) {
+
+				a = (argb[index] & 0xff000000) >> 24; // a is not used obviously
+				R = (argb[index] & 0xff0000) >> 16;
+				G = (argb[index] & 0xff00) >> 8;
+				B = (argb[index] & 0xff) >> 0;
+
+				// well known RGB to YUV algorithm
+				Y = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
+				U = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
+				V = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
+
+				// NV21 has a plane of Y and interleaved planes of VU each sampled by a factor of 2
+				//    meaning for every 4 Y pixels there are 1 V and 1 U.  Note the sampling is every other
+				//    pixel AND every other scanline.
+				yuv420sp[yIndex++] = (byte) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
+				if (j % 2 == 0 && index % 2 == 0) { 
+					yuv420sp[uvIndex++] = (byte)((V<0) ? 0 : ((V > 255) ? 255 : V));
+					yuv420sp[uvIndex++] = (byte)((U<0) ? 0 : ((U > 255) ? 255 : U));
+				}
+
+				index ++;
+			}
+		}
 	}
 
 
