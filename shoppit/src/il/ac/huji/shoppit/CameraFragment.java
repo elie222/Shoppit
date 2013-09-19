@@ -211,9 +211,11 @@ public class CameraFragment extends Fragment {
 	}
 
 
+	
+	//We can erase this code if barcode works.
 
 	//Helper functions for getting the image from the camera in the right format
-	byte [] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
+	/*byte [] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
 
 		int [] argb = new int[inputWidth * inputHeight];
 
@@ -260,7 +262,7 @@ public class CameraFragment extends Fragment {
 				index ++;
 			}
 		}
-	}
+	}*/
 
 
 
