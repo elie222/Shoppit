@@ -3,7 +3,6 @@ package il.ac.huji.shoppit;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -11,10 +10,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +28,6 @@ import android.widget.Toast;
 import com.google.zxing.*;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.oned.EAN13Reader;
-import com.google.zxing.oned.UPCAReader;
 
 /**
  * @author Elie2
@@ -46,9 +43,6 @@ public class CameraFragment extends Fragment {
 	private Button barcodeButton;
 	private boolean barcodeMode = false,
 			currentlyScanning = false;
-
-	private int previewWidth = 0,
-			previewHeight = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
@@ -98,8 +92,9 @@ public class CameraFragment extends Fragment {
 
 					currentlyScanning = true;
 
-					//This part gets the image from the camera in the appropriate format
-					Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
+					//When we see that barcode works this code can be erased
+					/*Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
+					Log.d("HERE", bMap+"");
 					int w = bMap.getWidth();
 					int h = bMap.getHeight();
 					int imageSize = w * h;
@@ -107,8 +102,15 @@ public class CameraFragment extends Fragment {
 					bMap.getPixels(argb, 0, w, 0, 0, w, h);
 					byte [] yuv = new byte[imageSize / 2 * 3];
 					encodeYUV420SP(yuv, argb, w, h);
-					bMap.recycle();
-					LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
+					bMap.recycle();*/
+					
+					
+					//This part gets the image from the camera in the appropriate format
+					Camera.Parameters parameters = camera.getParameters();
+			        Size size = parameters.getPreviewSize();
+			        int w = size.width;
+					int h = size.height;
+					LuminanceSource source = new PlanarYUVLuminanceSource(data, w, h, 0, 0, w, h, false);
 					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
 
 					//This is the actual scanning
@@ -196,8 +198,7 @@ public class CameraFragment extends Fragment {
 
 			public void surfaceChanged(SurfaceHolder holder, int format,
 					int width, int height) {
-				previewWidth = width;
-				previewHeight = height;
+				// nothing here
 			}
 
 			public void surfaceDestroyed(SurfaceHolder holder) {

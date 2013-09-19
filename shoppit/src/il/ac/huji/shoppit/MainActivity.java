@@ -219,15 +219,15 @@ LocationListener {
 			if (ParseUser.getCurrentUser() != null) {
 				Location lastLocation = getLastLocation();
 
-				if (lastLocation != null) {
+				//if (lastLocation != null) {
 					Intent newItemIntent = new Intent(getBaseContext(), NewItemActivity.class);
-					newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
-					newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+				//	newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+				//	newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
 					startActivity(newItemIntent);
-				} else {
-					Toast.makeText(mainActivity, "Error getting device location",
-							Toast.LENGTH_LONG).show();
-				}
+				//} else {
+				//	Toast.makeText(mainActivity, "Error getting device location",
+				//			Toast.LENGTH_LONG).show();
+				//}
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_ITEM_REQUEST_CODE);
