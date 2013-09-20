@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
@@ -96,25 +97,13 @@ public class CameraFragment extends Fragment {
 
 					currentlyScanning = true;
 
-					//When we see that barcode works this code can be erased
-					/*Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
-					Log.d("HERE", bMap+"");
-					int w = bMap.getWidth();
-					int h = bMap.getHeight();
-					int imageSize = w * h;
-					int [] argb = new int[imageSize];
-					bMap.getPixels(argb, 0, w, 0, 0, w, h);
-					byte [] yuv = new byte[imageSize / 2 * 3];
-					encodeYUV420SP(yuv, argb, w, h);
-					bMap.recycle();*/
-
-
 					//This part gets the image from the camera in the appropriate format
 					Camera.Parameters parameters = camera.getParameters();
 					Size size = parameters.getPreviewSize();
-					int w = size.width;
-					int h = size.height;
-					LuminanceSource source = new PlanarYUVLuminanceSource(data, w, h, 0, 0, w, h, false);
+					YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(),
+							size.width, size.height, null);
+					LuminanceSource source = new PlanarYUVLuminanceSource(yuv.getYuvData(),
+							size.width, size.height, 0, 0, size.width, size.height, false);
 					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
 
 					//This is the actual scanning
