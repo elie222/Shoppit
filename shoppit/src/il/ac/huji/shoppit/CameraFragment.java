@@ -170,21 +170,21 @@ public class CameraFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				Parameters parameters = camera.getParameters();
+				//Parameters parameters = camera.getParameters();
 				
 				barcodeMode = !barcodeMode;
 				if (barcodeMode) {
 					photoButton.setVisibility(View.INVISIBLE);
 					barcodeButton.setText("Take item picture");
-					parameters.setFocusMode(Parameters.SCENE_MODE_BARCODE);
+					//parameters.setFocusMode(Parameters.SCENE_MODE_BARCODE);
 				}
 				else {
 					photoButton.setVisibility(View.VISIBLE);
 					barcodeButton.setText("Scan barcode");
-					parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+					//parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 				}
 
-				camera.setParameters(parameters);
+				//camera.setParameters(parameters);
 
 			}
 
