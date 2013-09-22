@@ -9,7 +9,6 @@
         android:id="@+id/icon"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
-        android:background="@android:color/holo_blue_bright"
         android:paddingBottom="5dp" />
 
     <TextView

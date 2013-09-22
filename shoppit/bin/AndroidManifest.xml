@@ -45,23 +45,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="il.ac.huji.shoppit.TakePictureActivity"
-            android:label="@string/take_pic"
-            android:theme="@style/Theme.AppCompat.Light" >
-        </activity>
-        <activity
-            android:name="il.ac.huji.shoppit.AddItemActivity"
-            android:label="@string/item_info"
-            android:theme="@style/Theme.AppCompat.Light" >
-        </activity>
-        <activity
             android:name="il.ac.huji.shoppit.LoginActivity"
             android:label="@string/logIn"
-            android:theme="@style/Theme.AppCompat.Light" >
-        </activity>
-        <activity
-            android:name="il.ac.huji.shoppit.InfoActivity"
-            android:label="@string/user_info"
             android:theme="@style/Theme.AppCompat.Light" >
         </activity>
         <activity
@@ -109,7 +94,8 @@
 
         <activity
             android:name="il.ac.huji.shoppit.NewShopActivity"
-            android:label="@string/title_activity_new_item" >
+            android:label="@string/title_activity_new_item"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="il.ac.huji.shoppit.CommentDialog"
@@ -130,7 +116,8 @@
         </activity>
         <activity
             android:name="il.ac.huji.shoppit.NewItemActivity"
-            android:label="@string/title_activity_new_item" >
+            android:label="@string/title_activity_new_item"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="il.ac.huji.shoppit.MapActivity"
