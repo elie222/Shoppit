@@ -77,5 +77,6 @@
     <string name="title_activity_comment_dialog">Comment</string>
     <string name="title_activity_login_dialog_fragment">Log in</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_camera_testing">CameraTestingActivity</string>
 
 </resources>

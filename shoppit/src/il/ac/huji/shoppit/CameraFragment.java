@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -245,7 +247,8 @@ public class CameraFragment extends Fragment {
 			public void surfaceCreated(SurfaceHolder holder) {
 				try {
 					if (camera != null) {
-						camera.setDisplayOrientation(90);
+//						camera.setDisplayOrientation(90);
+						setCameraDisplayOrientation(getActivity(), 0, camera);
 						camera.setPreviewDisplay(holder);
 						camera.startPreview();
 					}
@@ -256,7 +259,32 @@ public class CameraFragment extends Fragment {
 
 			public void surfaceChanged(SurfaceHolder holder, int format,
 					int width, int height) {
-				// nothing here
+				
+				// If your preview can change or rotate, take care of those events here.
+				// Make sure to stop the preview before resizing or reformatting it.
+
+				if (surfaceView.getHolder().getSurface() == null) {
+					// preview surface does not exist
+					return;
+				}
+				Log.d(TAG, "Here");
+				// stop preview before making changes
+				try {
+					camera.stopPreview();
+				} catch (Exception e) {
+					// ignore: tried to stop a non-existent preview
+				}
+				// set preview size and make any resize, rotate or
+				// reformatting changes here
+				// start preview with new settings
+				try {
+					setCameraDisplayOrientation(getActivity(), 0, camera);
+					camera.setPreviewDisplay(holder);
+					camera.startPreview();
+
+				} catch (Exception e) {
+					Log.d(TAG, "Error starting camera preview: " + e.getMessage());
+				}
 			}
 
 			public void surfaceDestroyed(SurfaceHolder holder) {
@@ -438,5 +466,29 @@ public class CameraFragment extends Fragment {
 		}
 		super.onPause();
 	}
+	
+	public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+	     android.hardware.Camera.CameraInfo info =
+	             new android.hardware.Camera.CameraInfo();
+	     android.hardware.Camera.getCameraInfo(cameraId, info);
+	     int rotation = activity.getWindowManager().getDefaultDisplay()
+	             .getRotation();
+	     int degrees = 0;
+	     switch (rotation) {
+	         case Surface.ROTATION_0: degrees = 0; break;
+	         case Surface.ROTATION_90: degrees = 90; break;
+	         case Surface.ROTATION_180: degrees = 180; break;
+	         case Surface.ROTATION_270: degrees = 270; break;
+	     }
+
+	     int result;
+	     if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+	         result = (info.orientation + degrees) % 360;
+	         result = (360 - result) % 360;  // compensate the mirror
+	     } else {  // back-facing
+	         result = (info.orientation - degrees + 360) % 360;
+	     }
+	     camera.setDisplayOrientation(result);
+	 }
 
 }
