@@ -96,6 +96,10 @@ public class CameraFragment extends Fragment {
 
 			@Override
 			public void onPreviewFrame(byte[] data, Camera camera) {
+
+				// TODO we need to rotate the data here. but this line crashes the program
+				// byte [] rotatedData = rotatePhoto(data);
+
 				if (barcodeMode && !currentlyScanning) {
 
 					currentlyScanning = true;
@@ -103,6 +107,7 @@ public class CameraFragment extends Fragment {
 					//This part gets the image from the camera in the appropriate format
 					Camera.Parameters parameters = camera.getParameters();
 					Size size = parameters.getPreviewSize();
+					// TODO data isn't rotated.
 					LuminanceSource source = new PlanarYUVLuminanceSource(data,
 							size.width, size.height, 0, 0, size.width, size.height, false);
 					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
@@ -147,13 +152,15 @@ public class CameraFragment extends Fragment {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
 
+						byte[] rotatedData = rotatePhoto(data);
+
 						if (!barcodeMode)
-							saveScaledPhoto(data);
+							addPhotoToShopAndReturn(rotatedData);
 						else {
 
 							//TEST CODE
 							File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
-							Bitmap finalBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+							Bitmap finalBitmap = BitmapFactory.decodeByteArray(rotatedData, 0, rotatedData.length);
 							FileOutputStream out = null;
 							try {
 								outFile.createNewFile();
@@ -165,25 +172,25 @@ public class CameraFragment extends Fragment {
 								out.close();
 							} catch (Exception e) {}
 							finalBitmap.recycle();
-							
+
 							Bitmap bMap = BitmapFactory.decodeFile(outFile.getAbsolutePath());
 							Log.d("Q", outFile.getAbsolutePath());
-							
+
 							int w = bMap.getWidth();
 							int h = bMap.getHeight();
 							int [] argb = new int[w * h];
 							bMap.getPixels(argb, 0, w, 0, 0, w, h);
-					        byte [] yuv = new byte[w*h*3/2];
-					        encodeYUV420SP(yuv, argb, w, h);
-					        bMap.recycle();
-							
+							byte [] yuv = new byte[w*h*3/2];
+							encodeYUV420SP(yuv, argb, w, h);
+							bMap.recycle();
+
 							LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
 							BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
-							
+
 							EAN13Reader reader = new EAN13Reader();
 							reader.reset();
 							Result result = null;
-							
+
 							try {
 								result = reader.decode(binBmp);
 								Log.d("BARCODE", result.getText());
@@ -194,9 +201,9 @@ public class CameraFragment extends Fragment {
 							}
 							Toast.makeText(getActivity(), result == null ? "No barcode found" :
 								result.toString(), Toast.LENGTH_LONG).show();
-							
-							outFile.delete();
-							
+
+							//							outFile.delete();
+
 						}
 						// addPhotoToShopAndReturn(data);
 					}
@@ -292,30 +299,45 @@ public class CameraFragment extends Fragment {
 			for (int i = 0; i < width; i++) {
 
 				a = (argb[index] & 0xff000000) >> 24; // a is not used obviously
-				R = (argb[index] & 0xff0000) >> 16;
-				G = (argb[index] & 0xff00) >> 8;
-				B = (argb[index] & 0xff) >> 0;
+			R = (argb[index] & 0xff0000) >> 16;
+			G = (argb[index] & 0xff00) >> 8;
+			B = (argb[index] & 0xff) >> 0;
 
-				// well known RGB to YUV algorithm
-				Y = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
-				U = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
-				V = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
+			// well known RGB to YUV algorithm
+			Y = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
+			U = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
+			V = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
 
-				// NV21 has a plane of Y and interleaved planes of VU each sampled by a factor of 2
-				//    meaning for every 4 Y pixels there are 1 V and 1 U.  Note the sampling is every other
-				//    pixel AND every other scanline.
-				yuv420sp[yIndex++] = (byte) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
-				if (j % 2 == 0 && index % 2 == 0) { 
-					yuv420sp[uvIndex++] = (byte)((V<0) ? 0 : ((V > 255) ? 255 : V));
-					yuv420sp[uvIndex++] = (byte)((U<0) ? 0 : ((U > 255) ? 255 : U));
-				}
+			// NV21 has a plane of Y and interleaved planes of VU each sampled by a factor of 2
+			//    meaning for every 4 Y pixels there are 1 V and 1 U.  Note the sampling is every other
+			//    pixel AND every other scanline.
+			yuv420sp[yIndex++] = (byte) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
+			if (j % 2 == 0 && index % 2 == 0) { 
+				yuv420sp[uvIndex++] = (byte)((V<0) ? 0 : ((V > 255) ? 255 : V));
+				yuv420sp[uvIndex++] = (byte)((U<0) ? 0 : ((U > 255) ? 255 : U));
+			}
 
-				index ++;
+			index ++;
 			}
 		}
 	}
 
+	private byte[] rotatePhoto(byte[] data) {
+		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
 
+		Matrix matrix = new Matrix();
+		matrix.postRotate(90);
+		Bitmap rotatedShopImage = Bitmap.createBitmap(image, 0,
+				0, image.getWidth(), image.getHeight(),
+				matrix, true);
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+
+		byte[] rotatedData = bos.toByteArray();
+
+		return rotatedData;
+	}
 
 	/* we don't actually want this scaling/resizing, since it makes the picture too small,
 	 * but we might want to do some other scaling, so I've left the code in for now.
@@ -346,24 +368,23 @@ public class CameraFragment extends Fragment {
 	//		addPhotoToShopAndReturn(scaledData);
 	//	}
 
-	private void saveScaledPhoto(byte[] data) {
-
-		// Resize photo from camera byte array
-		Bitmap shopImage = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-		Matrix matrix = new Matrix();
-		matrix.postRotate(90);
-		Bitmap rotatedShopImage = Bitmap.createBitmap(shopImage, 0,
-				0, shopImage.getWidth(), shopImage.getHeight(),
-				matrix, true);
-
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-
-		byte[] scaledData = bos.toByteArray();
-
-		addPhotoToShopAndReturn(scaledData);
-	}
+	//	private void saveScaledPhoto(byte[] data) {
+	//
+	//		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+	//
+	//		Matrix matrix = new Matrix();
+	//		matrix.postRotate(90);
+	//		Bitmap rotatedShopImage = Bitmap.createBitmap(image, 0,
+	//				0, image.getWidth(), image.getHeight(),
+	//				matrix, true);
+	//
+	//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	//		rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+	//
+	//		byte[] scaledData = bos.toByteArray();
+	//
+	//		addPhotoToShopAndReturn(scaledData);
+	//	}
 
 	private void addPhotoToShopAndReturn(byte[] data) {
 
