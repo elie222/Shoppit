@@ -1,6 +1,8 @@
 package il.ac.huji.shoppit;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.app.Fragment;
@@ -15,6 +17,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -81,7 +84,7 @@ public class CameraFragment extends Fragment {
 		int imageFormat = parameters.getPreviewFormat();
 		if (imageFormat != ImageFormat.NV21)
 			barcodeButton.setVisibility(View.INVISIBLE);
-		
+
 		//Define the focus for the picture taking mode, which is the initial mode
 		parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 		camera.setParameters(parameters);
@@ -100,9 +103,7 @@ public class CameraFragment extends Fragment {
 					//This part gets the image from the camera in the appropriate format
 					Camera.Parameters parameters = camera.getParameters();
 					Size size = parameters.getPreviewSize();
-					YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(),
-							size.width, size.height, null);
-					LuminanceSource source = new PlanarYUVLuminanceSource(yuv.getYuvData(),
+					LuminanceSource source = new PlanarYUVLuminanceSource(data,
 							size.width, size.height, 0, 0, size.width, size.height, false);
 					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
 
@@ -145,7 +146,58 @@ public class CameraFragment extends Fragment {
 
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
-						saveScaledPhoto(data);
+
+						if (!barcodeMode)
+							saveScaledPhoto(data);
+						else {
+
+							//TEST CODE
+							File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
+							Bitmap finalBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+							FileOutputStream out = null;
+							try {
+								outFile.createNewFile();
+								out = new FileOutputStream(outFile);
+								finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+								out.flush();
+							} catch (Exception e) {}
+							try {
+								out.close();
+							} catch (Exception e) {}
+							finalBitmap.recycle();
+							
+							Bitmap bMap = BitmapFactory.decodeFile(outFile.getAbsolutePath());
+							Log.d("Q", outFile.getAbsolutePath());
+							
+							int w = bMap.getWidth();
+							int h = bMap.getHeight();
+							int [] argb = new int[w * h];
+							bMap.getPixels(argb, 0, w, 0, 0, w, h);
+					        byte [] yuv = new byte[w*h*3/2];
+					        encodeYUV420SP(yuv, argb, w, h);
+					        bMap.recycle();
+							
+							LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
+							BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
+							
+							EAN13Reader reader = new EAN13Reader();
+							reader.reset();
+							Result result = null;
+							
+							try {
+								result = reader.decode(binBmp);
+								Log.d("BARCODE", result.getText());
+							} catch (NotFoundException e1) {
+								e1.printStackTrace();
+							} catch (FormatException e1) {
+								e1.printStackTrace();
+							}
+							Toast.makeText(getActivity(), result == null ? "No barcode found" :
+								result.toString(), Toast.LENGTH_LONG).show();
+							
+							outFile.delete();
+							
+						}
 						// addPhotoToShopAndReturn(data);
 					}
 
@@ -160,15 +212,15 @@ public class CameraFragment extends Fragment {
 			public void onClick(View v) {
 
 				//Parameters parameters = camera.getParameters();
-				
+
 				barcodeMode = !barcodeMode;
 				if (barcodeMode) {
-					photoButton.setVisibility(View.INVISIBLE);
+					//photoButton.setVisibility(View.INVISIBLE);
 					barcodeButton.setText("Take item picture");
 					//parameters.setFocusMode(Parameters.SCENE_MODE_BARCODE);
 				}
 				else {
-					photoButton.setVisibility(View.VISIBLE);
+					//photoButton.setVisibility(View.VISIBLE);
 					barcodeButton.setText("Scan barcode");
 					//parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 				}
@@ -214,7 +266,7 @@ public class CameraFragment extends Fragment {
 	//We can erase this code if barcode works.
 
 	//Helper functions for getting the image from the camera in the right format
-	/*byte [] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
+	byte [] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
 
 		int [] argb = new int[inputWidth * inputHeight];
 
@@ -261,7 +313,7 @@ public class CameraFragment extends Fragment {
 				index ++;
 			}
 		}
-	}*/
+	}
 
 
 
