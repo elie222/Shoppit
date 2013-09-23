@@ -105,6 +105,7 @@ LocationListener {
 		ParseObject.registerSubclass(Item.class);
 		ParseObject.registerSubclass(Shop.class);
 		ParseObject.registerSubclass(Comment.class);
+		ParseObject.registerSubclass(Report.class);
 		Parse.initialize(this, "jAcoqyTFZ83HhbvfAaGQUe9hcu8lf0IOhyyYVKj5", "6gYN5nmVPMPpwyL0qNLOJbqShosYV0JR7Owp2Oli");
 		ParseFacebookUtils.initialize(getString(R.string.app_id));
 

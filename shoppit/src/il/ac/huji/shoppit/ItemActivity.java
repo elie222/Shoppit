@@ -58,7 +58,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_item);
-		
+
 		// enable up button (the caret in the top-left hand corner of the screen that allows going up an activity.
 		// Has different functionality to the back button.)
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -151,7 +151,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		ParseUser user = ParseUser.getCurrentUser();
 
 		if (user!= null) {
-			
+
 			ParseQuery<ParseUser> queryUserLikes = mItem.getLikesRelation().getQuery();
 			queryUserLikes.whereEqualTo("objectId", user.get("objectId"));
 
@@ -170,20 +170,20 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 					}
 				}
 			});
-			
+
 			// for debugging, but i think everything's fine
-//			queryUserLikes.findInBackground(new FindCallback<ParseUser>() {
-//				
-//				@Override
-//				public void done(List<ParseUser> objects, ParseException e) {
-//					// TODO Auto-generated method stub
-//					for (int i=0; i<objects.size(); i++) {
-//						Log.i("List of users", objects.get(i).toString());
-//					}
-//					
-//				}
-//				
-//			});
+			//			queryUserLikes.findInBackground(new FindCallback<ParseUser>() {
+			//				
+			//				@Override
+			//				public void done(List<ParseUser> objects, ParseException e) {
+			//					// TODO Auto-generated method stub
+			//					for (int i=0; i<objects.size(); i++) {
+			//						Log.i("List of users", objects.get(i).toString());
+			//					}
+			//					
+			//				}
+			//				
+			//			});
 		}
 
 		ParseFile photoFile = mItem.getPhotoFile();
@@ -255,29 +255,36 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 		commentsListView.setAdapter(adapter);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	    // Respond to the action bar's Up/Home button
-	    case android.R.id.home:
-	        NavUtils.navigateUpFromSameTask(this);
-	        return true;
-	    case R.id.menu_item_map:
+		switch (item.getItemId()) {
+		// Respond to the action bar's Up/Home button
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		case R.id.menu_item_map:
 			Intent intent = new Intent(getBaseContext(), MapActivity.class);
-			
+
 			if (mItem.getLocation() != null) {
 				GeneralInfo.itemHolder = mItem;
 				intent.putExtra(MapActivity.SHOW_ITEM_EXTRA, true);
-//				intent.putExtra(MapActivity.LAT_EXTRA, mItem.getLocation().getLatitude());
-//				intent.putExtra(MapActivity.LON_EXTRA, mItem.getLocation().getLongitude());
+				//				intent.putExtra(MapActivity.LAT_EXTRA, mItem.getLocation().getLatitude());
+				//				intent.putExtra(MapActivity.LON_EXTRA, mItem.getLocation().getLongitude());
 			}
 
 			startActivity(intent);
 			return true;
-	    }
-	    
-	    return super.onOptionsItemSelected(item);
+		case R.id.menu_item_report:
+			FragmentManager fm = getFragmentManager();
+			ReportDialogFragment reportDialog = new ReportDialogFragment();
+			reportDialog.setRetainInstance(true);
+			reportDialog.show(fm, "report_dialog_fragment");
+			
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	public Item getItem() {
