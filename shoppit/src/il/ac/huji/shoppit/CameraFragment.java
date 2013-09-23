@@ -99,35 +99,21 @@ public class CameraFragment extends Fragment {
 			@Override
 			public void onPreviewFrame(byte[] data, Camera camera) {
 
-				// TODO we need to rotate the data here. but this line crashes the program
-				// byte [] rotatedData = rotatePhoto(data);
-
 				if (barcodeMode && !currentlyScanning) {
 
 					currentlyScanning = true;
 
-					//This part gets the image from the camera in the appropriate format
-					Camera.Parameters parameters = camera.getParameters();
-					Size size = parameters.getPreviewSize();
-					// TODO data isn't rotated.
-					LuminanceSource source = new PlanarYUVLuminanceSource(data,
-							size.width, size.height, 0, 0, size.width, size.height, false);
-					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
+					//Rotate the image
+					Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
+					Matrix matrix = new Matrix();
+					matrix.postRotate(90);
+					bMap = Bitmap.createBitmap(bMap, 0,
+							0, bMap.getWidth(), bMap.getHeight(), matrix, true);
 
-					//This is the actual scanning
-					try {
-						EAN13Reader reader = new EAN13Reader();
-						reader.reset();
-						String code = reader.decode(binBmp).getText();
-
-						Toast.makeText(getActivity(), code, Toast.LENGTH_LONG).show();
-						Log.d("BARCODE", code);
-						camera.setPreviewCallback(null);
-
-					} catch (Exception e) {
-						// barcode not recognized in picture
-						Log.d("ERROR", e.toString());
-					}
+					//Try to find a barcode
+					String result = decodeBitmap(bMap);
+					Toast.makeText(getActivity(), result == null ? "No barcode found" :
+						result, Toast.LENGTH_LONG).show();
 
 					currentlyScanning = false;
 				}
@@ -154,11 +140,15 @@ public class CameraFragment extends Fragment {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
 
+						//Crop the image and get the new cropped data
+						Bitmap image = crop(data);
+						data = getNV21(image.getWidth(), image.getHeight(), image);
+
 						byte[] rotatedData = rotatePhoto(data);
 
-						if (!barcodeMode)
-							addPhotoToShopAndReturn(rotatedData);
-						else {
+						//if (!barcodeMode)
+						addPhotoToShopAndReturn(rotatedData);
+						/*else {
 
 							//TEST CODE
 							File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
@@ -206,8 +196,7 @@ public class CameraFragment extends Fragment {
 
 							//							outFile.delete();
 
-						}
-						// addPhotoToShopAndReturn(data);
+						}*/
 					}
 
 				});
@@ -220,21 +209,15 @@ public class CameraFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				//Parameters parameters = camera.getParameters();
-
 				barcodeMode = !barcodeMode;
 				if (barcodeMode) {
-					//photoButton.setVisibility(View.INVISIBLE);
+					photoButton.setVisibility(View.INVISIBLE);
 					barcodeButton.setText("Take item picture");
-					//parameters.setFocusMode(Parameters.SCENE_MODE_BARCODE);
 				}
 				else {
-					//photoButton.setVisibility(View.VISIBLE);
+					photoButton.setVisibility(View.VISIBLE);
 					barcodeButton.setText("Scan barcode");
-					//parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 				}
-
-				//camera.setParameters(parameters);
 
 			}
 
@@ -247,7 +230,7 @@ public class CameraFragment extends Fragment {
 			public void surfaceCreated(SurfaceHolder holder) {
 				try {
 					if (camera != null) {
-//						camera.setDisplayOrientation(90);
+						//						camera.setDisplayOrientation(90);
 						setCameraDisplayOrientation(getActivity(), 0, camera);
 						camera.setPreviewDisplay(holder);
 						camera.startPreview();
@@ -259,7 +242,7 @@ public class CameraFragment extends Fragment {
 
 			public void surfaceChanged(SurfaceHolder holder, int format,
 					int width, int height) {
-				
+
 				// If your preview can change or rotate, take care of those events here.
 				// Make sure to stop the preview before resizing or reformatting it.
 
@@ -350,6 +333,7 @@ public class CameraFragment extends Fragment {
 		}
 	}
 
+
 	private byte[] rotatePhoto(byte[] data) {
 		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
 
@@ -366,6 +350,65 @@ public class CameraFragment extends Fragment {
 
 		return rotatedData;
 	}
+
+
+	private Bitmap crop(byte[] data) {
+
+		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+		if (image.getWidth() >= image.getHeight()) {
+			return Bitmap.createBitmap(image, 
+					image.getWidth()/2 - image.getHeight()/2,
+					0,
+					image.getHeight(), 
+					image.getHeight()
+					);
+		}
+		else {
+			return Bitmap.createBitmap(
+					image,
+					0, 
+					image.getHeight()/2 - image.getWidth()/2,
+					image.getWidth(),
+					image.getWidth() 
+					);
+		}
+	}
+
+
+	/**
+	 * Returns the barcode in the image, or null if not found.
+	 * @param image
+	 * @return
+	 */
+	String decodeBitmap(Bitmap image) {
+
+		int w = image.getWidth();
+		int h = image.getHeight();
+		int [] argb = new int[w * h];
+		image.getPixels(argb, 0, w, 0, 0, w, h);
+		byte [] yuv = new byte[w*h*3/2];
+		encodeYUV420SP(yuv, argb, w, h);
+		//bMap.recycle();
+		LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
+		BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
+
+		EAN13Reader reader = new EAN13Reader();
+		reader.reset();
+		Result result = null;
+
+		try {
+			result = reader.decode(binBmp);
+			Log.d("BARCODE", result.getText());
+			return result.getText();
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+
+		return null;
+
+	}
+
 
 	/* we don't actually want this scaling/resizing, since it makes the picture too small,
 	 * but we might want to do some other scaling, so I've left the code in for now.
@@ -466,29 +509,29 @@ public class CameraFragment extends Fragment {
 		}
 		super.onPause();
 	}
-	
-	public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
-	     android.hardware.Camera.CameraInfo info =
-	             new android.hardware.Camera.CameraInfo();
-	     android.hardware.Camera.getCameraInfo(cameraId, info);
-	     int rotation = activity.getWindowManager().getDefaultDisplay()
-	             .getRotation();
-	     int degrees = 0;
-	     switch (rotation) {
-	         case Surface.ROTATION_0: degrees = 0; break;
-	         case Surface.ROTATION_90: degrees = 90; break;
-	         case Surface.ROTATION_180: degrees = 180; break;
-	         case Surface.ROTATION_270: degrees = 270; break;
-	     }
 
-	     int result;
-	     if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-	         result = (info.orientation + degrees) % 360;
-	         result = (360 - result) % 360;  // compensate the mirror
-	     } else {  // back-facing
-	         result = (info.orientation - degrees + 360) % 360;
-	     }
-	     camera.setDisplayOrientation(result);
-	 }
+	public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+		android.hardware.Camera.CameraInfo info =
+				new android.hardware.Camera.CameraInfo();
+		android.hardware.Camera.getCameraInfo(cameraId, info);
+		int rotation = activity.getWindowManager().getDefaultDisplay()
+				.getRotation();
+		int degrees = 0;
+		switch (rotation) {
+		case Surface.ROTATION_0: degrees = 0; break;
+		case Surface.ROTATION_90: degrees = 90; break;
+		case Surface.ROTATION_180: degrees = 180; break;
+		case Surface.ROTATION_270: degrees = 270; break;
+		}
+
+		int result;
+		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+			result = (info.orientation + degrees) % 360;
+			result = (360 - result) % 360;  // compensate the mirror
+		} else {  // back-facing
+			result = (info.orientation - degrees + 360) % 360;
+		}
+		camera.setDisplayOrientation(result);
+	}
 
 }
