@@ -41,7 +41,6 @@
     <string name="drawer_close">close drawer</string>
     <string name="share">Share</string>
     <string name="keyword_hint">(Optional) space separated</string>
-    <string name="show_on_map">Show on map</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
@@ -77,6 +76,7 @@
     <string name="title_activity_new_item">New item</string>
     <string name="title_activity_comment_dialog">Comment</string>
     <string name="title_activity_login_dialog_fragment">Log in</string>
-    <string name="title_activity_map">Map</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_camera_testing">CameraTestingActivity</string>
 
 </resources>

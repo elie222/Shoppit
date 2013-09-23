@@ -11,7 +11,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -38,8 +37,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
 // TODO - add shops to map instead, or as well?
@@ -51,18 +48,13 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 	private final static String TAG = "MAP_ACTIVITY";
 
-	public final static String LAT_EXTRA = "LAT_EXTRA";
-	public final static String LON_EXTRA = "LON_EXTRA";
-
 	private GoogleMap mMap;
 	private LocationClient mLocationClient;
 
-	//	private static final LatLng SOMEWHERE_IN_JLEM = new LatLng(31.7644, 35.2116);
-	private static final LatLng SOMEWHERE_IN_JLEM = new LatLng(0, 0);
-	private LatLng itemLocation;
+	private static final LatLng SOMEWHERE_IN_JLEM = new LatLng(31.7644, 35.2116);
 
 	private Marker mCurrentLocationMarker;
-	//	private Marker mSomewhereInJlem;
+//	private Marker mSomewhereInJlem;
 	private HashMap<Marker, Item> mMarkerItemMap;
 
 	// These settings are the same as the settings for the map. They will in fact give you updates
@@ -77,19 +69,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 		// Show the Up button in the action bar.
-
-		double NO_ITEM = -1000.0;
-
-		Double itemLat = getIntent().getDoubleExtra(LAT_EXTRA, NO_ITEM);
-		Double itemLon = getIntent().getDoubleExtra(LON_EXTRA, NO_ITEM);
-
-		if (itemLat == NO_ITEM && itemLon == NO_ITEM) {
-			// no location specified
-			itemLocation = null;
-		} else {
-			itemLocation = new LatLng(itemLat, itemLon);
-		}
-
 		setupActionBar();
 	}
 
@@ -132,31 +111,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		mMap.setOnInfoWindowClickListener(this);
 		mMap.setOnMarkerDragListener(this);
 
-		// to add an image to the info window
-		//		mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
-		//	        @Override
-		//	        public View getInfoWindow(Marker arg0) {
-		//	            return null;
-		//	        }
-		//	        @Override
-		//	        public View getInfoContents(Marker marker) {
-		//	            View myContentView = getLayoutInflater().inflate(R.layout.custom_marker, null);
-		//	            TextView tvTitle = ((TextView) myContentView.findViewById(R.id.title));
-		//	            tvTitle.setText(marker.getTitle());
-		//	            TextView tvSnippet = ((TextView) myContentView.findViewById(R.id.snippet));
-		//	            tvSnippet.setText(marker.getSnippet());
-		//	            
-		//	            Item item = mMarkerItemMap.get(marker);
-		//
-		//	    		if (item != null) {
-		//		            ImageView ivPhoto = ((ImageView) myContentView.findViewById(R.id.image));
-		//		            ivPhoto.setImageBitmap(item.getPhotoFile());
-		//	    		}
-		//	            
-		//	            return myContentView;
-		//	        }
-		//	    });
-
 		// Pan to see all markers in view.
 		// Cannot zoom to bounds until the map has a size.
 		final View mapView = getFragmentManager().findFragmentById(R.id.map).getView();
@@ -167,52 +121,15 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 				@SuppressLint("NewApi") // We check which build version we are using.
 				@Override
 				public void onGlobalLayout() {
-
-					Location myLoc = mLocationClient.getLastLocation();
-
-					if (myLoc != null) {
-						LatLng myLatLng = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
-
-						if (itemLocation != null) {
-							LatLngBounds bounds = new LatLngBounds.Builder()
-							.include(itemLocation)
-							.include(myLatLng)
-							.build();
-
-							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-								mapView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-							} else {
-								mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-							}
-
-							mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
-						} else {
-							LatLngBounds bounds = new LatLngBounds.Builder()
-							.include(myLatLng)
-							.build();
-
-							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-								mapView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-							} else {
-								mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-							}
-
-							mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
-						}
+					LatLngBounds bounds = new LatLngBounds.Builder()
+					.include(SOMEWHERE_IN_JLEM)
+					.build();
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+						mapView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 					} else {
-						LatLngBounds bounds = new LatLngBounds.Builder()
-						.include(SOMEWHERE_IN_JLEM)
-						.build();
-
-						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-							mapView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-						} else {
-							mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-						}
-
-						mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+						mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 					}
-
+					mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
 				}
 			});
 		}
@@ -222,11 +139,11 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		// TODO add photos to markers. see here: https://developers.google.com/maps/documentation/android/marker#info_windows
 
 		// Uses a colored icon.
-		//		mSomewhereInJlem = mMap.addMarker(new MarkerOptions()
-		//		.position(SOMEWHERE_IN_JLEM)
-		//		.title("Jerusalem")
-		//		.snippet("Population: 804,400")
-		//		.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+//		mSomewhereInJlem = mMap.addMarker(new MarkerOptions()
+//		.position(SOMEWHERE_IN_JLEM)
+//		.title("Jerusalem")
+//		.snippet("Population: 804,400")
+//		.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 		ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
 		ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(SOMEWHERE_IN_JLEM.latitude, SOMEWHERE_IN_JLEM.longitude);
@@ -309,7 +226,7 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 	@Override
 	public boolean onMyLocationButtonClick() {
-		//		Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
 		// Return false so that we don't consume the event and the default behavior still occurs
 		// (the camera animates to the user's current position).
 		return false;
@@ -319,8 +236,8 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 	public void onLocationChanged(Location location) {
 		// do nothing
 
-		//		String msg = "Location = " + location;
-		//		Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+//		String msg = "Location = " + location;
+//		Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
 		//		if (mLocationClient != null && mLocationClient.isConnected()) {
 		//            String msg = "Location = " + mLocationClient.getLastLocation();

@@ -81,7 +81,7 @@ LocationListener {
 
 	private static final LocationRequest REQUEST = LocationRequest.create()
 			.setInterval(60 * 1000)		// 60 seconds
-			.setFastestInterval(1 * 1000)	// 1 second
+			.setFastestInterval(10 * 1000)	// 10 seconds
 			.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
 	// if mLocationClient has found a location.
@@ -322,14 +322,14 @@ LocationListener {
 
 			if (lastLocation != null) {
 				// update the main content by replacing fragments
-
+				
 				Fragment fragment = new ShopListFragment();
 				Bundle args = new Bundle();
 
 				args.putDouble(MainActivity.LATITUDE_EXTRA, lastLocation.getLatitude());
 				args.putDouble(MainActivity.LONGITUDE_EXTRA, lastLocation.getLongitude());
 				fragment.setArguments(args);
-
+				
 				FragmentManager fragmentManager = getFragmentManager();
 				fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
@@ -397,52 +397,17 @@ LocationListener {
 		}
 	}
 
+	//	@Override
+	//	protected void onPause() {
+	//		super.onPause();
+	//		lr.stopGettingUpdates();
+	//	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		// Check that Google Play services is available
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		
-		// If Google Play services is available
-		if (ConnectionResult.SUCCESS == resultCode) {
-			
-			Log.d("Location Updates", "Google Play services is available.");
-			setUpLocationClientIfNeeded();
-			mLocationClient.connect();
-			
-		} else {
-			mFallbackLocationRetriever = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
-
-				@Override
-				void timerFunc() {
-
-					//This function will fill the list of nearby items
-					//when the timer for getting the device position has elapsed
-					//or as soon as the position is located.
-
-					runOnUiThread(new Runnable() {
-						public void run() {
-							Log.i(TAG, "LR2 - runOnUiThread");
-							//					Log.d(TAG, (GeneralInfo.location == null)+"");
-							//					Log.d(TAG, (GeneralInfo.location)+"");
-							if (GeneralInfo.location == null) { //In case of error
-								Toast.makeText(mainActivity, "Error getting device location",
-										Toast.LENGTH_LONG).show();
-							} else {
-								foundLocationFLR = true;
-								selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
-							}
-						}
-					});
-
-				}
-
-			});
-
-			// Get the device location
-			mFallbackLocationRetriever.startGettingUpdates(this, 10000);
-		}
+		setUpLocationClientIfNeeded();
+		mLocationClient.connect();
 	}
 
 	@Override
@@ -501,8 +466,41 @@ LocationListener {
 			 * If no resolution is available, display a dialog to the
 			 * user with the error.
 			 */
+			// TODO - use lr2 instead
+			Log.i(TAG, "Using LR2");
 
-			showErrorDialog(connectionResult.getErrorCode());
+			mFallbackLocationRetriever = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
+
+				@Override
+				void timerFunc() {
+
+					//This function will fill the list of nearby items
+					//when the timer for getting the device position has elapsed
+					//or as soon as the position is located.
+
+					runOnUiThread(new Runnable() {
+						public void run() {
+							Log.i(TAG, "LR2 - runOnUiThread");
+							//					Log.d(TAG, (GeneralInfo.location == null)+"");
+							//					Log.d(TAG, (GeneralInfo.location)+"");
+							if (GeneralInfo.location == null) { //In case of error
+								Toast.makeText(mainActivity, "Error getting device location",
+										Toast.LENGTH_LONG).show();
+							} else {
+								foundLocationFLR = true;
+								selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
+							}
+						}
+					});
+
+				}
+
+			});
+
+			// Get the device location
+			mFallbackLocationRetriever.startGettingUpdates(this, 10000);
+
+			// showErrorDialog(connectionResult.getErrorCode());
 		}
 
 	}
