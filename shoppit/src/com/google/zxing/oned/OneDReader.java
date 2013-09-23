@@ -50,9 +50,9 @@ public abstract class OneDReader implements Reader {
 	reset();
 	//Set the decoding process to "try harder", which should check for image rotation and
 	//search for a barcode anywhere in the image and not only its center.
-	Map<DecodeHintType,Boolean> hints = new HashMap<DecodeHintType,Boolean>();
-	hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-    return decode(image, hints);
+	//Map<DecodeHintType,Boolean> hints = new HashMap<DecodeHintType,Boolean>();
+	//hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+    return decode(image, null);
   }
 
   // Note that we don't try rotation without the try harder flag, even if rotation was supported.
