@@ -1,10 +1,7 @@
 package il.ac.huji.shoppit;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -13,12 +10,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -103,17 +100,27 @@ public class CameraFragment extends Fragment {
 
 					currentlyScanning = true;
 
-					//Rotate the image
-					Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
-					Matrix matrix = new Matrix();
-					matrix.postRotate(90);
-					bMap = Bitmap.createBitmap(bMap, 0,
-							0, bMap.getWidth(), bMap.getHeight(), matrix, true);
+					//Construct the image and rotate it
+					Bitmap bMap;
+					{
+						Parameters params = camera.getParameters();
+						Size size = params.getPictureSize();
+						int width = size.width,
+								height = size.height;
+						YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, width, height, null);
+						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						yuvimage.compressToJpeg(new Rect(0, 0, width, height), 100, baos);
+						byte[] jdata = baos.toByteArray();
+						bMap = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
+					}
 
 					//Try to find a barcode
 					String result = decodeBitmap(bMap);
-					Toast.makeText(getActivity(), result == null ? "No barcode found" :
-						result, Toast.LENGTH_LONG).show();
+					if (result != null) {
+						Toast.makeText(getActivity(), result,
+								Toast.LENGTH_LONG).show();
+						camera.setPreviewCallback(null);
+					}
 
 					currentlyScanning = false;
 				}
@@ -140,14 +147,14 @@ public class CameraFragment extends Fragment {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
 
-						//Crop the image and get the new cropped data
-						Bitmap image = crop(data);
-						data = getNV21(image.getWidth(), image.getHeight(), image);
-
-						byte[] rotatedData = rotatePhoto(data);
+						//Crop and rotate the image and get the new data
+						Bitmap image = rotate(crop(data));
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						image.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+						data = bos.toByteArray();
 
 						//if (!barcodeMode)
-						addPhotoToShopAndReturn(rotatedData);
+						addPhotoToShopAndReturn(data);
 						/*else {
 
 							//TEST CODE
@@ -166,7 +173,6 @@ public class CameraFragment extends Fragment {
 							finalBitmap.recycle();
 
 							Bitmap bMap = BitmapFactory.decodeFile(outFile.getAbsolutePath());
-							Log.d("Q", outFile.getAbsolutePath());
 
 							int w = bMap.getWidth();
 							int h = bMap.getHeight();
@@ -246,7 +252,7 @@ public class CameraFragment extends Fragment {
 				// If your preview can change or rotate, take care of those events here.
 				// Make sure to stop the preview before resizing or reformatting it.
 
-				if (surfaceView.getHolder().getSurface() == null) {
+				/*if (surfaceView.getHolder().getSurface() == null) {
 					// preview surface does not exist
 					return;
 				}
@@ -267,7 +273,7 @@ public class CameraFragment extends Fragment {
 
 				} catch (Exception e) {
 					Log.d(TAG, "Error starting camera preview: " + e.getMessage());
-				}
+				}*/
 			}
 
 			public void surfaceDestroyed(SurfaceHolder holder) {
@@ -334,21 +340,12 @@ public class CameraFragment extends Fragment {
 	}
 
 
-	private byte[] rotatePhoto(byte[] data) {
-		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-
+	private Bitmap rotate(Bitmap image) {
 		Matrix matrix = new Matrix();
 		matrix.postRotate(90);
-		Bitmap rotatedShopImage = Bitmap.createBitmap(image, 0,
+		return Bitmap.createBitmap(image, 0,
 				0, image.getWidth(), image.getHeight(),
 				matrix, true);
-
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-
-		byte[] rotatedData = bos.toByteArray();
-
-		return rotatedData;
 	}
 
 
