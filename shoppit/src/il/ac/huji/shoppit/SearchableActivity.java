@@ -46,7 +46,7 @@ public class SearchableActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.search, menu);
+		getMenuInflater().inflate(R.menu.search, menu);
 		return true;
 	}
 	
@@ -56,6 +56,8 @@ public class SearchableActivity extends ListActivity {
 	    // Respond to the action bar's Up/Home button
 	    case android.R.id.home:
 	        NavUtils.navigateUpFromSameTask(this);
+	        return true;
+	    case R.id.action_map:
 	        return true;
 	    }
 	    return super.onOptionsItemSelected(item);

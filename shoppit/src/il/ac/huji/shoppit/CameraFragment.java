@@ -94,9 +94,6 @@ public class CameraFragment extends Fragment {
 		parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 		camera.setParameters(parameters);
 
-
-
-		//This part will search for a barcode in the image.
 		camera.setPreviewCallback(new Camera.PreviewCallback() {
 
 			@Override
@@ -133,6 +130,7 @@ public class CameraFragment extends Fragment {
 							Log.d("ERROR SAVING", e.getMessage());
 						}*/
 					}
+
 
 					//Try to find a barcode
 					String result = decodeBitmap(bMap);
@@ -391,7 +389,7 @@ public class CameraFragment extends Fragment {
 	 * they are saved. Since we never need a full-size image in our app, we'll
 	 * save a scaled one right away.
 	 */
-	@SuppressWarnings("unused")
+	//@SuppressWarnings("unused")
 	private void saveScaledPhoto(byte[] data) {
 
 		// Resize photo from camera byte array

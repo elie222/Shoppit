@@ -12,7 +12,7 @@
     <item
         android:id="@+id/action_map"
         android:icon="@drawable/location_map"
-        android:title="@string/shops"
+        android:title="@string/map"
         yourapp:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_add"

@@ -15,11 +15,13 @@ import android.widget.RadioGroup;
 public class CategoryFragment extends Fragment implements
 RadioGroup.OnCheckedChangeListener {
 
-	public static final String ARG_CATEGORY_NUMBER = "category_number";
+//	public static final String ARG_CATEGORY_NUMBER = "category_number";
+	public static final String ARG_CATEGORY_NAME = "category_name";
+
 //	public static final String ARG_LATITUDE = "latitude";
 //	public static final String ARG_LONGITUDE = "longitude";
 	public static final String MAIN_CATEGORY = "mainCategory";
-	public static final String ALL = "All";
+//	public static final String ALL = "All";
 
 	// FOR DEBUGGING
 	protected static final String TAG = "CAT_FRAG";
@@ -45,7 +47,8 @@ RadioGroup.OnCheckedChangeListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		final View rootView = inflater.inflate(R.layout.fragment_category, container, false);
-		final int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
+//		final int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
+		final String categoryName = getArguments().getString(ARG_CATEGORY_NAME);
 
 		radioGroupSortBy = (RadioGroup) rootView.findViewById(R.id.radioGroupSortBy);
 		listView = (ListView) rootView.findViewById(R.id.homeListView);
@@ -55,7 +58,7 @@ RadioGroup.OnCheckedChangeListener {
 		double longitude = getArguments().getDouble(MainActivity.LONGITUDE_EXTRA);
 		currentLocation = new ParseGeoPoint(latitude, longitude);
 		
-		category = getResources().getStringArray(R.array.categories_array)[i];
+		category = categoryName;
 
 		radioGroupSortBy.setOnCheckedChangeListener(this);
 
@@ -73,7 +76,7 @@ RadioGroup.OnCheckedChangeListener {
 
 				ParseQuery<Item> query = new ParseQuery<Item>("Item");
 								
-				if (!category.equals(ALL)) {
+				if (!category.equals(getResources().getString(R.string.all))) {
 					query.whereEqualTo(MAIN_CATEGORY, category);
 				}
 

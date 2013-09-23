@@ -63,7 +63,7 @@ LocationListener {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] mCategoryTitles;
-	private String[] mGeneralNavBarTitles;
+//	private String[] mGeneralNavBarTitles;
 
 	private NavDrawerAdapter mNavDrawerAdapter;
 
@@ -110,7 +110,7 @@ LocationListener {
 
 		mTitle = mDrawerTitle = getTitle();
 		mCategoryTitles = getResources().getStringArray(R.array.categories_array);
-		mGeneralNavBarTitles = getResources().getStringArray(R.array.general_navbar_array);
+//		mGeneralNavBarTitles = getResources().getStringArray(R.array.general_navbar_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -120,9 +120,14 @@ LocationListener {
 		//		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mCategoryTitles));
 		mNavDrawerAdapter = new NavDrawerAdapter(getBaseContext());
 		mNavDrawerAdapter.addSeparatorItem(CATEGORY_SEPARATOR);
+		mNavDrawerAdapter.addItem(getResources().getString(R.string.all));
 		mNavDrawerAdapter.addItems(mCategoryTitles);
 		mNavDrawerAdapter.addSeparatorItem(GENERAL_SEPARATOR);
-		mNavDrawerAdapter.addItems(mGeneralNavBarTitles);
+		mNavDrawerAdapter.addItem(getResources().getString(R.string.shops));
+		mNavDrawerAdapter.addItem(getResources().getString(R.string.add_shop));
+		mNavDrawerAdapter.addItem(getResources().getString(R.string.settings));
+		mNavDrawerAdapter.addItem(getResources().getString(R.string.profile));
+		mNavDrawerAdapter.addItem(getResources().getString(R.string.logout));
 
 		mDrawerList.setAdapter(mNavDrawerAdapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -163,7 +168,7 @@ LocationListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_activity_actions, menu);
+		inflater.inflate(R.menu.main, menu);
 
 		// Get the SearchView and set the searchable configuration
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -254,7 +259,7 @@ LocationListener {
 		String sectionName = mNavDrawerAdapter.getSectionName(position);
 		String selectedName = mNavDrawerAdapter.getItemName(position);
 		//Log.i("MAIN ACT", selectedName);
-		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
+//		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
 
 		if (sectionName == CATEGORY_SEPARATOR) {
 
@@ -265,7 +270,8 @@ LocationListener {
 				Fragment fragment = new CategoryFragment();
 				Bundle args = new Bundle();
 
-				args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
+//				args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
+				args.putString(CategoryFragment.ARG_CATEGORY_NAME, selectedName);
 				args.putDouble(MainActivity.LATITUDE_EXTRA, lastLocation.getLatitude());
 				args.putDouble(MainActivity.LONGITUDE_EXTRA, lastLocation.getLongitude());
 				fragment.setArguments(args);
@@ -275,7 +281,7 @@ LocationListener {
 
 				// update selected item and title, then close the drawer
 				mDrawerList.setItemChecked(position, true);
-				setTitle(mCategoryTitles[positionInSection]);
+				setTitle(selectedName);
 				mDrawerLayout.closeDrawer(mDrawerList);
 
 				selectedCategory = position;
@@ -286,7 +292,7 @@ LocationListener {
 
 			return;
 
-		} else if (selectedName.equals("Add Shop")) { // a bit ugly...
+		} else if (selectedName.equals(getResources().getString(R.string.add_shop ))) {
 			// start new activity
 			if (ParseUser.getCurrentUser() != null) {
 				Location lastLocation = getLastLocation();
@@ -309,7 +315,7 @@ LocationListener {
 			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
 
-		} else if (selectedName.equals("Log out")) { // ugly again...
+		} else if (selectedName.equals(getResources().getString(R.string.logout))) {
 
 			ParseUser.logOut();
 

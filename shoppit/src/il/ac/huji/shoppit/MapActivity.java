@@ -31,12 +31,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.SearchView;
 import android.support.v4.app.NavUtils;
 
 // TODO - add shops to map instead, or as well?
@@ -80,25 +85,12 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 		// Show the Up button in the action bar.
-
-		//		double NO_ITEM = -1000.0;
-		//
-		//		Double itemLat = getIntent().getDoubleExtra(LAT_EXTRA, NO_ITEM);
-		//		Double itemLon = getIntent().getDoubleExtra(LON_EXTRA, NO_ITEM);
-		//
-		//		if (itemLat == NO_ITEM && itemLon == NO_ITEM) {
-		//			// no location specified
-		//			itemLocation = null;
-		//		} else {
-		//			itemLocation = new LatLng(itemLat, itemLon);
-		//		}
-
+		setupActionBar();
+		
 		if (getIntent().getBooleanExtra(SHOW_ITEM_EXTRA, false)) {
 			mItem = GeneralInfo.itemHolder;
 			mItemLatLng = new LatLng(mItem.getLocation().getLatitude(), mItem.getLocation().getLongitude());
 		}
-
-		setupActionBar();
 	}
 
 	@Override
@@ -151,19 +143,17 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 				@Override
 				public void onGlobalLayout() {
 
-					//					if (itemLocation != null) {
-					//						LatLngBounds bounds = new LatLngBounds.Builder()
-					//						.include(itemLocation)
-					//						.build();
-					//
-					//						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-					//							mapView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-					//						} else {
-					//							mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-					//						}
-					//
-					//						mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
-					//					}
+					LatLng currentLatLng = new LatLng(mLocationClient.getLastLocation().getLatitude(), 
+							mLocationClient.getLastLocation().getLongitude());
+
+					if (mItemLatLng != null) {
+						// zoom can be between 2.0 and 21.0
+						mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mItemLatLng, 15));
+
+						mItemMarker.showInfoWindow();
+					} else {
+						mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+					}
 
 				}
 			});
@@ -252,6 +242,20 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		getMenuInflater().inflate(R.menu.map, menu);
 		return true;
 	}
+	
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		MenuInflater inflater = getMenuInflater();
+//		inflater.inflate(R.menu.map, menu);
+//
+//		// Get the SearchView and set the searchable configuration
+//		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+//		searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
+//		//		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+//
+//		return super.onCreateOptionsMenu(menu);
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -280,61 +284,12 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		// do nothing
-
-		//		String msg = "Location = " + location;
-		//		Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-
-		//		if (mLocationClient != null && mLocationClient.isConnected()) {
-		//            String msg = "Location = " + mLocationClient.getLastLocation();
-		//            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-		//            
-		//    		LatLng currentLatLng = new LatLng(mLocationClient.getLastLocation().getLatitude(), 
-		//    				mLocationClient.getLastLocation().getLongitude());
-		//			
-		//    		mSomewhereInJlem = mMap.addMarker(new MarkerOptions()
-		//    		.position(currentLatLng)
-		//    		.title("Current location")
-		//    		.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-		//        }
-
-		//		if (mCurrentLocationMarker != null) {
-		//			mCurrentLocationMarker.remove();
-		//		}
-
-
-		//		setUpMapIfNeeded();
-
-		//		mCurrentLocationMarker = mMap.addMarker(new MarkerOptions()
-		//		.position(currentLatLng)
-		//		.title("Current location")
-		//		.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
 		if (!movedCameraToInitialPosition && location != null) {
 			
-			setUpMapIfNeeded();
-			
 			movedCameraToInitialPosition = true;
-
-			LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-			LatLngBounds bounds = null;
-
-			if (mItemLatLng != null) {
-				bounds = new LatLngBounds.Builder()
-				.include(currentLatLng)
-				.include(mItemLatLng)
-				.build();
-
-				mItemMarker.showInfoWindow();
-			} else {
-				// TODO include 30 nearest markers in bounds
-				bounds = new LatLngBounds.Builder()
-				.include(currentLatLng)
-				.build();
-			}
-
-			mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+			
+			setUpMapIfNeeded();
 		}
 
 	}
