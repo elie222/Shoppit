@@ -50,6 +50,8 @@ public class CameraFragment extends Fragment {
 
 	public static final String TAG = "CameraFragment";
 
+	private static final int IMAGE_WIDTH = 480;
+
 	private Camera camera;
 	private SurfaceView surfaceView;
 	private ImageButton photoButton;
@@ -101,6 +103,18 @@ public class CameraFragment extends Fragment {
 		if (imageFormat != ImageFormat.NV21)
 			barcodeButton.setVisibility(View.INVISIBLE);
 
+		//Set the size of the captured image to be as large as possible.
+		int bestWidth = 0,
+				bestHeight = 0;
+		List<Size> sizes = parameters.getSupportedPictureSizes();
+		for (Size s: sizes) {
+			if (s.width > bestWidth) {
+				bestWidth = s.width;
+				bestHeight = s.height;
+			}
+		}
+		parameters.setPictureSize(bestWidth, bestHeight);
+
 		//Define the focus for the picture taking mode, which is the initial mode
 		parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 		camera.setParameters(parameters);
@@ -119,10 +133,8 @@ public class CameraFragment extends Fragment {
 
 					// Draw a rectangle
 					Activity activity = getActivity();
-					int screenW = activity.getWindowManager()
-					        .getDefaultDisplay().getWidth();
-					int screenH = activity.getWindowManager()
-					        .getDefaultDisplay().getHeight();
+					int screenW = activity.getWindowManager().getDefaultDisplay().getWidth();
+					int screenH = activity.getWindowManager().getDefaultDisplay().getHeight();
 
 					Bitmap bitmap = Bitmap.createBitmap(previewW, previewH, Bitmap.Config.ARGB_8888);
 					Canvas canvas = new Canvas(bitmap);
@@ -159,8 +171,8 @@ public class CameraFragment extends Fragment {
 
 					//This part gets the image from the camera in the appropriate format
 					Camera.Parameters parameters = camera.getParameters();
-			        Size size = parameters.getPreviewSize();
-			        int w = size.width;
+					Size size = parameters.getPreviewSize();
+					int w = size.width;
 					int h = size.height;
 
 					LuminanceSource source = new PlanarYUVLuminanceSource(data, w, h, 0, 0, w, h, false);
@@ -208,9 +220,15 @@ public class CameraFragment extends Fragment {
 
 						//Crop and rotate the image and get the new data
 						Bitmap image = rotate(crop(data));
+						
+						// scale the image
+						Bitmap imageScaled = Bitmap.createScaledBitmap(image, IMAGE_WIDTH, IMAGE_WIDTH, false);
+						
 						ByteArrayOutputStream bos = new ByteArrayOutputStream();
-						image.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+						imageScaled.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 						data = bos.toByteArray();
+
+						Log.d("SIZE", imageScaled.getWidth()+" "+imageScaled.getHeight());
 
 						addPhotoToShopAndReturn(data);
 
@@ -431,6 +449,21 @@ public class CameraFragment extends Fragment {
 
 	}
 
+	private byte[] scale(byte[] data) {
+
+
+		// Resize photo from camera byte array
+		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+		Bitmap imageScaled = Bitmap.createScaledBitmap(image, IMAGE_WIDTH, IMAGE_WIDTH, false);
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		imageScaled.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+
+		byte[] scaledData = bos.toByteArray();
+
+		return scaledData;
+	}
+
 
 	/* we don't actually want this scaling/resizing, since it makes the picture too small,
 	 * but we might want to do some other scaling, so I've left the code in for now.
@@ -484,6 +517,9 @@ public class CameraFragment extends Fragment {
 
 		if (getActivity().getClass() == NewShopActivity.class) {
 			Log.i(TAG, "NewShopActivity");
+			
+//			byte[] scaledData = scale(data);
+
 			((NewShopActivity) getActivity()).setCurrentPhotoData(data);
 
 			FragmentManager fm = getActivity().getFragmentManager();
@@ -526,6 +562,7 @@ public class CameraFragment extends Fragment {
 	@Override
 	public void onPause() {
 		if (camera != null) {
+			camera.setPreviewCallback(null);
 			camera.stopPreview();
 			camera.release();
 			camera = null;
