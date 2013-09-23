@@ -403,15 +403,21 @@ LocationListener {
 
 		// Check that Google Play services is available
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		
+
 		// If Google Play services is available
 		if (ConnectionResult.SUCCESS == resultCode) {
 			
+			Toast.makeText(mainActivity, "Google Play services is available.",
+					Toast.LENGTH_LONG).show();
+
 			Log.d("Location Updates", "Google Play services is available.");
 			setUpLocationClientIfNeeded();
 			mLocationClient.connect();
-			
+
 		} else {
+			Toast.makeText(mainActivity, "Google Play services is unavailable. Using LR2.",
+					Toast.LENGTH_LONG).show();
+			
 			mFallbackLocationRetriever = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
 
 				@Override
@@ -427,7 +433,7 @@ LocationListener {
 							//					Log.d(TAG, (GeneralInfo.location == null)+"");
 							//					Log.d(TAG, (GeneralInfo.location)+"");
 							if (GeneralInfo.location == null) { //In case of error
-								Toast.makeText(mainActivity, "Error getting device location",
+								Toast.makeText(mainActivity, "LR2 - Error getting device location.",
 										Toast.LENGTH_LONG).show();
 							} else {
 								foundLocationFLR = true;
@@ -468,7 +474,7 @@ LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 		// we only want to do this if no location has been found before. i.e. on app startup
-		if (!foundLocationLC) {
+		if (!foundLocationLC && location != null) {
 			foundLocationLC = true;
 			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
 		}

@@ -53,7 +53,7 @@ RadioGroup.OnCheckedChangeListener {
 		// get location from MainActivity
 		double latitude = getArguments().getDouble(MainActivity.LATITUDE_EXTRA);
 		double longitude = getArguments().getDouble(MainActivity.LONGITUDE_EXTRA);
-		ParseGeoPoint currentLocation = new ParseGeoPoint(latitude, longitude);
+		currentLocation = new ParseGeoPoint(latitude, longitude);
 		
 		category = getResources().getStringArray(R.array.categories_array)[i];
 
