@@ -113,6 +113,7 @@ public class LoginActivity extends ActionBarActivity {
 
 			@Override
 			public void done(ParseUser user, ParseException err) {
+				Log.e(TAG, err.getLocalizedMessage());
 				LoginActivity.this.progressDialog.dismiss();
 				if (user == null) {
 					Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");

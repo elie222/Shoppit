@@ -57,7 +57,7 @@ public class CameraFragment extends Fragment {
 	private ImageView rectangle;
 	private boolean barcodeMode = false,
 			currentlyScanning = false;
-	
+
 	private int previewW = 0,
 			previewH = 0;
 
@@ -72,7 +72,7 @@ public class CameraFragment extends Fragment {
 		photoButton = (ImageButton) v.findViewById(R.id.camera_photo_button);
 		barcodeButton = (Button) v.findViewById(R.id.barcode_button);
 		rectangle = (ImageView) v.findViewById(R.id.rect);
-		
+
 		rectangle.setVisibility(View.INVISIBLE);
 
 		// hide barcode button when adding shop
@@ -105,6 +105,9 @@ public class CameraFragment extends Fragment {
 		parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 		camera.setParameters(parameters);
 
+
+
+		//This part will search for a barcode in the image.
 		camera.setPreviewCallback(new Camera.PreviewCallback() {
 
 			@Override
@@ -114,75 +117,39 @@ public class CameraFragment extends Fragment {
 
 					currentlyScanning = true;
 
-<<<<<<< HEAD
-					//Construct the image and rotate it
-					Bitmap bMap;
-					{
-						Parameters params = camera.getParameters();
-						Size size = params.getPictureSize();
-						int width = size.width,
-								height = size.height;
-						YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, width, height, null);
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-						yuvimage.compressToJpeg(new Rect(0, 0, width, height), 100, baos);
-						byte[] jdata = baos.toByteArray();
-						bMap = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
-						bMap = rotate(bMap);
-
-						//TODO uncomment this if reading fails
-						/*try {
-							File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
-							Log.d("SAVING TO", outFile.getAbsolutePath());
-							outFile.createNewFile();
-							FileOutputStream out = new FileOutputStream(outFile);
-							bMap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-							out.flush();
-							out.close();
-						} catch (Exception e) {
-							Log.d("ERROR SAVING", e.getMessage());
-						}*/
-					}
-
-
-					//Try to find a barcode
-					String result = decodeBitmap(bMap);
-					if (result != null) {
-						Toast.makeText(getActivity(), result,
-								Toast.LENGTH_LONG).show();
-=======
 					// Draw a rectangle
 					Activity activity = getActivity();
 					int screenW = activity.getWindowManager()
 					        .getDefaultDisplay().getWidth();
 					int screenH = activity.getWindowManager()
 					        .getDefaultDisplay().getHeight();
-					
+
 					Bitmap bitmap = Bitmap.createBitmap(previewW, previewH, Bitmap.Config.ARGB_8888);
 					Canvas canvas = new Canvas(bitmap);
 					rectangle.setImageBitmap(bitmap);
-					
+
 					Paint paint = new Paint();
 					paint.setStrokeWidth(10);
-					
+
 					float ratio = screenW * 1.0f / screenH;
 					float rectHeight = screenW * 0.7f;
 					float rectWidth = rectHeight * ratio;
-					
+
 					float leftx = (previewW - rectWidth) / 2;
 					float topy = (previewH - rectHeight) / 2;
 					float rightx = leftx + rectWidth;
 					float bottomy = topy + rectHeight;
-					
+
 					//Make the screen dark outside the rectangle
 					paint.setColor(Color.BLACK);
 					paint.setStyle(Paint.Style.FILL);
 					paint.setAlpha(170);
-					
+
 					canvas.drawRect(0, 0, previewW, topy, paint);
 					canvas.drawRect(0, bottomy, previewW, previewH, paint);
 					canvas.drawRect(0, topy, leftx, bottomy, paint);
 					canvas.drawRect(rightx, topy, previewW, bottomy, paint);
-					
+
 					//Draw the red rectangle
 					paint.setColor(Color.RED);
 					paint.setStyle(Paint.Style.STROKE);
@@ -195,7 +162,7 @@ public class CameraFragment extends Fragment {
 			        Size size = parameters.getPreviewSize();
 			        int w = size.width;
 					int h = size.height;
-					
+
 					LuminanceSource source = new PlanarYUVLuminanceSource(data, w, h, 0, 0, w, h, false);
 					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
 
@@ -204,10 +171,9 @@ public class CameraFragment extends Fragment {
 						EAN13Reader reader = new EAN13Reader();
 						reader.reset();
 						String code = reader.decode(binBmp).getText();
-						
+
 						Toast.makeText(getActivity(), code, Toast.LENGTH_LONG).show();
 						Log.d("BARCODE", code);
->>>>>>> 8e0382735dc2a756c6ead515c99d9603becc9d3a
 						camera.setPreviewCallback(null);
 
 					} catch (Exception e) {
@@ -424,8 +390,8 @@ public class CameraFragment extends Fragment {
 					);
 		}
 	}
-	
-	
+
+
 	/*private Bitmap crop(byte[] data, int x, int y, int width, int height) {
 		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
 		return Bitmap.createBitmap(image, x, y, width, height);
@@ -473,7 +439,7 @@ public class CameraFragment extends Fragment {
 	 * they are saved. Since we never need a full-size image in our app, we'll
 	 * save a scaled one right away.
 	 */
-	//@SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	private void saveScaledPhoto(byte[] data) {
 
 		// Resize photo from camera byte array
