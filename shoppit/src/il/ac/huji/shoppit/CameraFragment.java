@@ -1,6 +1,8 @@
 package il.ac.huji.shoppit;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import android.app.Activity;
@@ -117,6 +119,19 @@ public class CameraFragment extends Fragment {
 						byte[] jdata = baos.toByteArray();
 						bMap = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
 						bMap = rotate(bMap);
+
+						//TODO uncomment this if reading fails
+						/*try {
+							File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
+							Log.d("SAVING TO", outFile.getAbsolutePath());
+							outFile.createNewFile();
+							FileOutputStream out = new FileOutputStream(outFile);
+							bMap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+							out.flush();
+							out.close();
+						} catch (Exception e) {
+							Log.d("ERROR SAVING", e.getMessage());
+						}*/
 					}
 
 					//Try to find a barcode
@@ -152,76 +167,15 @@ public class CameraFragment extends Fragment {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
 
-						//byte[] rotatedData = rotatePhoto(data);
-						byte[] rotatedData = data;
+						//Crop and rotate the image and get the new data
+						Bitmap image = rotate(crop(data));
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						image.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+						data = bos.toByteArray();
 
-						if (!barcodeMode) {
-							//TODO something went wrong here when syncing
-							//							rotatedData = rotatePhoto(data);
-							//							addPhotoToShopAndReturn(rotatedData);
-						} else {
-
-							//Crop and rotate the image and get the new data
-							Bitmap image = rotate(crop(data));
-							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							image.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-							data = bos.toByteArray();
-
-							//if (!barcodeMode)
-							addPhotoToShopAndReturn(data);
-							/*else {
-
-								//TEST CODE
-								File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
-								Bitmap finalBitmap = BitmapFactory.decodeByteArray(rotatedData, 0, rotatedData.length);
-								FileOutputStream out = null;
-								try {
-									outFile.createNewFile();
-									out = new FileOutputStream(outFile);
-									finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-									out.flush();
-								} catch (Exception e) {}
-								try {
-									out.close();
-								} catch (Exception e) {}
-								finalBitmap.recycle();
-
-								Bitmap bMap = BitmapFactory.decodeFile(outFile.getAbsolutePath());
-
-								int w = bMap.getWidth();
-								int h = bMap.getHeight();
-								int [] argb = new int[w * h];
-								bMap.getPixels(argb, 0, w, 0, 0, w, h);
-								byte [] yuv = new byte[w*h*3/2];
-								encodeYUV420SP(yuv, argb, w, h);
-								bMap.recycle();
-
-								LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
-								BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
-
-								EAN13Reader reader = new EAN13Reader();
-								reader.reset();
-								Result result = null;
-
-								try {
-									result = reader.decode(binBmp);
-									Log.d("BARCODE", result.getText());
-								} catch (NotFoundException e1) {
-									e1.printStackTrace();
-								} catch (FormatException e1) {
-									e1.printStackTrace();
-								}
-								Toast.makeText(getActivity(), result == null ? "No barcode found" :
-									result.toString(), Toast.LENGTH_LONG).show();
-
-								//							outFile.delete();
-
-							}*/
-						}
+						addPhotoToShopAndReturn(data);
 
 					}
-
-
 
 				});
 
