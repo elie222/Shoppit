@@ -11,8 +11,11 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
@@ -31,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -50,8 +54,12 @@ public class CameraFragment extends Fragment {
 	private SurfaceView surfaceView;
 	private ImageButton photoButton;
 	private Button barcodeButton;
+	private ImageView rectangle;
 	private boolean barcodeMode = false,
 			currentlyScanning = false;
+	
+	private int previewW = 0,
+			previewH = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
@@ -63,6 +71,9 @@ public class CameraFragment extends Fragment {
 
 		photoButton = (ImageButton) v.findViewById(R.id.camera_photo_button);
 		barcodeButton = (Button) v.findViewById(R.id.barcode_button);
+		rectangle = (ImageView) v.findViewById(R.id.rect);
+		
+		rectangle.setVisibility(View.INVISIBLE);
 
 		// hide barcode button when adding shop
 		if (getActivity().getClass() == NewShopActivity.class) {
@@ -106,40 +117,68 @@ public class CameraFragment extends Fragment {
 
 					currentlyScanning = true;
 
-					//Construct the image and rotate it
-					Bitmap bMap;
-					{
-						Parameters params = camera.getParameters();
-						Size size = params.getPictureSize();
-						int width = size.width,
-								height = size.height;
-						YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, width, height, null);
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-						yuvimage.compressToJpeg(new Rect(0, 0, width, height), 100, baos);
-						byte[] jdata = baos.toByteArray();
-						bMap = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
-						bMap = rotate(bMap);
+					// Draw a rectangle
+					Activity activity = getActivity();
+					int screenW = activity.getWindowManager()
+					        .getDefaultDisplay().getWidth();
+					int screenH = activity.getWindowManager()
+					        .getDefaultDisplay().getHeight();
+					
+					Bitmap bitmap = Bitmap.createBitmap(previewW, previewH, Bitmap.Config.ARGB_8888);
+					Canvas canvas = new Canvas(bitmap);
+					rectangle.setImageBitmap(bitmap);
+					
+					Paint paint = new Paint();
+					paint.setStrokeWidth(10);
+					
+					float ratio = screenW * 1.0f / screenH;
+					float rectHeight = screenW * 0.7f;
+					float rectWidth = rectHeight * ratio;
+					
+					float leftx = (previewW - rectWidth) / 2;
+					float topy = (previewH - rectHeight) / 2;
+					float rightx = leftx + rectWidth;
+					float bottomy = topy + rectHeight;
+					
+					//Make the screen dark outside the rectangle
+					paint.setColor(Color.BLACK);
+					paint.setStyle(Paint.Style.FILL);
+					paint.setAlpha(170);
+					
+					canvas.drawRect(0, 0, previewW, topy, paint);
+					canvas.drawRect(0, bottomy, previewW, previewH, paint);
+					canvas.drawRect(0, topy, leftx, bottomy, paint);
+					canvas.drawRect(rightx, topy, previewW, bottomy, paint);
+					
+					//Draw the red rectangle
+					paint.setColor(Color.RED);
+					paint.setStyle(Paint.Style.STROKE);
+					paint.setAlpha(255);
+					canvas.drawRect(leftx, topy, rightx, bottomy, paint);
+					rectangle.setVisibility(View.VISIBLE);
 
-						//TODO uncomment this if reading fails
-						/*try {
-							File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
-							Log.d("SAVING TO", outFile.getAbsolutePath());
-							outFile.createNewFile();
-							FileOutputStream out = new FileOutputStream(outFile);
-							bMap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-							out.flush();
-							out.close();
-						} catch (Exception e) {
-							Log.d("ERROR SAVING", e.getMessage());
-						}*/
-					}
+					//This part gets the image from the camera in the appropriate format
+					Camera.Parameters parameters = camera.getParameters();
+			        Size size = parameters.getPreviewSize();
+			        int w = size.width;
+					int h = size.height;
+					
+					LuminanceSource source = new PlanarYUVLuminanceSource(data, w, h, 0, 0, w, h, false);
+					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
 
-					//Try to find a barcode
-					String result = decodeBitmap(bMap);
-					if (result != null) {
-						Toast.makeText(getActivity(), result,
-								Toast.LENGTH_LONG).show();
+					//This is the actual scanning
+					try {
+						EAN13Reader reader = new EAN13Reader();
+						reader.reset();
+						String code = reader.decode(binBmp).getText();
+						
+						Toast.makeText(getActivity(), code, Toast.LENGTH_LONG).show();
+						Log.d("BARCODE", code);
 						camera.setPreviewCallback(null);
+
+					} catch (Exception e) {
+						// barcode not recognized in picture
+						Log.d("ERROR", e.toString());
 					}
 
 					currentlyScanning = false;
@@ -195,6 +234,7 @@ public class CameraFragment extends Fragment {
 					barcodeButton.setText("Take item picture");
 				} else {
 					photoButton.setVisibility(View.VISIBLE);
+					rectangle.setVisibility(View.INVISIBLE);
 					barcodeButton.setText("Scan barcode");
 				}
 
@@ -226,6 +266,8 @@ public class CameraFragment extends Fragment {
 			public void surfaceChanged(SurfaceHolder holder, int format,
 					int width, int height) {
 
+				previewW = width;
+				previewH = height;
 				// If your preview can change or rotate, take care of those events here.
 				// Make sure to stop the preview before resizing or reformatting it.
 
@@ -348,6 +390,12 @@ public class CameraFragment extends Fragment {
 					);
 		}
 	}
+	
+	
+	/*private Bitmap crop(byte[] data, int x, int y, int width, int height) {
+		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+		return Bitmap.createBitmap(image, x, y, width, height);
+	}*/
 
 
 	/**

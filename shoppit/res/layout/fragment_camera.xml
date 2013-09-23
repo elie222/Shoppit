@@ -12,6 +12,16 @@
         android:layout_above="@+id/camera_photo_button"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_horizontal" />
+    
+    <ImageView
+        android:id="@+id/rect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/camera_surface_view"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
 
     <ImageButton
         android:id="@+id/camera_photo_button"
@@ -31,5 +41,6 @@
         android:layout_margin="10dp"
         android:paddingLeft="3dp"
         android:paddingRight="3dp" />
+
 
 </RelativeLayout>
