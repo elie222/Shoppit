@@ -246,7 +246,7 @@ public class CameraFragment extends Fragment {
 		});
 
 		surfaceView = (SurfaceView) v.findViewById(R.id.camera_surface_view);
-		//		create43RatioSurface();
+				create43RatioSurface();
 
 		SurfaceHolder holder = surfaceView.getHolder();
 		holder.addCallback(new Callback() {
@@ -499,26 +499,26 @@ public class CameraFragment extends Fragment {
 		camera.setDisplayOrientation(result);
 	}
 
-	//	private void create43RatioSurface() {
-	//	    DisplayMetrics metrics = getResources().getDisplayMetrics();
-	//	    int height = 0;
-	//	    int width = 0;
-	//
-	//	    if(metrics.widthPixels < metrics.heightPixels){
-	//	        width = metrics.widthPixels;
-	//	        height = width;
-	////	        height= (metrics.widthPixels/4) * 3 ;
-	//	    } else {
-	//	        height = metrics.heightPixels;
-	//	        width = height;
-	////	        width= (metrics.heightPixels/4) * 3 ;
-	//	    }
-	//
-	//	    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
-	//	    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-	//	    layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-	//
-	//	    surfaceView.setLayoutParams(layoutParams);        
-	//	}
+		private void create43RatioSurface() {
+		    DisplayMetrics metrics = getResources().getDisplayMetrics();
+		    int height = 0;
+		    int width = 0;
+	
+		    if(metrics.widthPixels < metrics.heightPixels){
+		        width = metrics.widthPixels;
+		        height = width;
+	//	        height= (metrics.widthPixels/4) * 3 ;
+		    } else {
+		        height = metrics.heightPixels;
+		        width = height;
+	//	        width= (metrics.heightPixels/4) * 3 ;
+		    }
+	
+		    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+		    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+		    layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+	
+		    surfaceView.setLayoutParams(layoutParams);        
+		}
 
 }
