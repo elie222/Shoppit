@@ -26,6 +26,8 @@ public class SearchableActivity extends ListActivity {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			final String queryString = intent.getStringExtra(SearchManager.QUERY);
 			
+			setTitle("Search results for: \"" + queryString + "\"");
+			
 			ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
 				public ParseQuery<Item> create() {
 					ParseQuery<Item> query = new ParseQuery<Item>("Item");

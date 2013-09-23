@@ -280,7 +280,7 @@ LocationListener {
 
 				selectedCategory = position;
 			} else {
-				Toast.makeText(mainActivity, "Error getting device location",
+				Toast.makeText(mainActivity, "Error getting device location - location is null",
 						Toast.LENGTH_LONG).show();
 			}
 

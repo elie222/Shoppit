@@ -267,8 +267,10 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 			Intent intent = new Intent(getBaseContext(), MapActivity.class);
 			
 			if (mItem.getLocation() != null) {
-				intent.putExtra(MapActivity.LAT_EXTRA, mItem.getLocation().getLatitude());
-				intent.putExtra(MapActivity.LON_EXTRA, mItem.getLocation().getLongitude());
+				GeneralInfo.itemHolder = mItem;
+				intent.putExtra(MapActivity.SHOW_ITEM_EXTRA, true);
+//				intent.putExtra(MapActivity.LAT_EXTRA, mItem.getLocation().getLatitude());
+//				intent.putExtra(MapActivity.LON_EXTRA, mItem.getLocation().getLongitude());
 			}
 
 			startActivity(intent);
