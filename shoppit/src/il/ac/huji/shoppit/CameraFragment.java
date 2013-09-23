@@ -112,6 +112,7 @@ public class CameraFragment extends Fragment {
 						yuvimage.compressToJpeg(new Rect(0, 0, width, height), 100, baos);
 						byte[] jdata = baos.toByteArray();
 						bMap = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
+						bMap = rotate(bMap);
 					}
 
 					//Try to find a barcode
