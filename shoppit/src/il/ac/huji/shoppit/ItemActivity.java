@@ -251,8 +251,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 			}
 		};
 
-		ParseQueryAdapter<Comment> adapter = new ParseQueryAdapter<Comment>(this, queryFactory);
-		adapter.setTextKey("comment"); // TODO - show comment author too
+		CommentAdapter adapter = new CommentAdapter(this, queryFactory);
 
 		commentsListView.setAdapter(adapter);
 	}
@@ -264,7 +263,18 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 	    case android.R.id.home:
 	        NavUtils.navigateUpFromSameTask(this);
 	        return true;
+	    case R.id.menu_item_map:
+			Intent intent = new Intent(getBaseContext(), MapActivity.class);
+			
+			if (mItem.getLocation() != null) {
+				intent.putExtra(MapActivity.LAT_EXTRA, mItem.getLocation().getLatitude());
+				intent.putExtra(MapActivity.LON_EXTRA, mItem.getLocation().getLongitude());
+			}
+
+			startActivity(intent);
+			return true;
 	    }
+	    
 	    return super.onOptionsItemSelected(item);
 	}
 

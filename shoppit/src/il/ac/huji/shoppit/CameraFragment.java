@@ -1,10 +1,8 @@
 package il.ac.huji.shoppit;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.util.List;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -13,12 +11,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.zxing.*;
@@ -99,34 +100,31 @@ public class CameraFragment extends Fragment {
 			@Override
 			public void onPreviewFrame(byte[] data, Camera camera) {
 
-				// TODO we need to rotate the data here. but this line crashes the program
-				// byte [] rotatedData = rotatePhoto(data);
-
 				if (barcodeMode && !currentlyScanning) {
 
 					currentlyScanning = true;
 
-					//This part gets the image from the camera in the appropriate format
-					Camera.Parameters parameters = camera.getParameters();
-					Size size = parameters.getPreviewSize();
-					// TODO data isn't rotated.
-					LuminanceSource source = new PlanarYUVLuminanceSource(data,
-							size.width, size.height, 0, 0, size.width, size.height, false);
-					BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
+					//Construct the image and rotate it
+					Bitmap bMap;
+					{
+						Parameters params = camera.getParameters();
+						Size size = params.getPictureSize();
+						int width = size.width,
+								height = size.height;
+						YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, width, height, null);
+						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						yuvimage.compressToJpeg(new Rect(0, 0, width, height), 100, baos);
+						byte[] jdata = baos.toByteArray();
+						bMap = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
+						bMap = rotate(bMap);
+					}
 
-					//This is the actual scanning
-					try {
-						EAN13Reader reader = new EAN13Reader();
-						reader.reset();
-						String code = reader.decode(binBmp).getText();
-
-						Toast.makeText(getActivity(), code, Toast.LENGTH_LONG).show();
-						Log.d("BARCODE", code);
+					//Try to find a barcode
+					String result = decodeBitmap(bMap);
+					if (result != null) {
+						Toast.makeText(getActivity(), result,
+								Toast.LENGTH_LONG).show();
 						camera.setPreviewCallback(null);
-
-					} catch (Exception e) {
-						// barcode not recognized in picture
-						Log.d("ERROR", e.toString());
 					}
 
 					currentlyScanning = false;
@@ -154,65 +152,82 @@ public class CameraFragment extends Fragment {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
 
-						byte[] rotatedData = rotatePhoto(data);
+						//byte[] rotatedData = rotatePhoto(data);
+						byte[] rotatedData = data;
 
-						if (!barcodeMode)
-							addPhotoToShopAndReturn(rotatedData);
-						else {
+						if (!barcodeMode) {
+							//TODO something went wrong here when syncing
+							//							rotatedData = rotatePhoto(data);
+							//							addPhotoToShopAndReturn(rotatedData);
+						} else {
 
-							//TEST CODE
-							File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
-							Bitmap finalBitmap = BitmapFactory.decodeByteArray(rotatedData, 0, rotatedData.length);
-							FileOutputStream out = null;
-							try {
-								outFile.createNewFile();
-								out = new FileOutputStream(outFile);
-								finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-								out.flush();
-							} catch (Exception e) {}
-							try {
-								out.close();
-							} catch (Exception e) {}
-							finalBitmap.recycle();
+							//Crop and rotate the image and get the new data
+							Bitmap image = rotate(crop(data));
+							ByteArrayOutputStream bos = new ByteArrayOutputStream();
+							image.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+							data = bos.toByteArray();
 
-							Bitmap bMap = BitmapFactory.decodeFile(outFile.getAbsolutePath());
-							Log.d("Q", outFile.getAbsolutePath());
+							//if (!barcodeMode)
+							addPhotoToShopAndReturn(data);
+							/*else {
 
-							int w = bMap.getWidth();
-							int h = bMap.getHeight();
-							int [] argb = new int[w * h];
-							bMap.getPixels(argb, 0, w, 0, 0, w, h);
-							byte [] yuv = new byte[w*h*3/2];
-							encodeYUV420SP(yuv, argb, w, h);
-							bMap.recycle();
+								//TEST CODE
+								File outFile = new File(Environment.getExternalStorageDirectory(), "barcode.jpg");
+								Bitmap finalBitmap = BitmapFactory.decodeByteArray(rotatedData, 0, rotatedData.length);
+								FileOutputStream out = null;
+								try {
+									outFile.createNewFile();
+									out = new FileOutputStream(outFile);
+									finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+									out.flush();
+								} catch (Exception e) {}
+								try {
+									out.close();
+								} catch (Exception e) {}
+								finalBitmap.recycle();
 
-							LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
-							BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
+								Bitmap bMap = BitmapFactory.decodeFile(outFile.getAbsolutePath());
 
-							EAN13Reader reader = new EAN13Reader();
-							reader.reset();
-							Result result = null;
+								int w = bMap.getWidth();
+								int h = bMap.getHeight();
+								int [] argb = new int[w * h];
+								bMap.getPixels(argb, 0, w, 0, 0, w, h);
+								byte [] yuv = new byte[w*h*3/2];
+								encodeYUV420SP(yuv, argb, w, h);
+								bMap.recycle();
 
-							try {
-								result = reader.decode(binBmp);
-								Log.d("BARCODE", result.getText());
-							} catch (NotFoundException e1) {
-								e1.printStackTrace();
-							} catch (FormatException e1) {
-								e1.printStackTrace();
-							}
-							Toast.makeText(getActivity(), result == null ? "No barcode found" :
-								result.toString(), Toast.LENGTH_LONG).show();
+								LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
+								BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
 
-							//							outFile.delete();
+								EAN13Reader reader = new EAN13Reader();
+								reader.reset();
+								Result result = null;
 
+								try {
+									result = reader.decode(binBmp);
+									Log.d("BARCODE", result.getText());
+								} catch (NotFoundException e1) {
+									e1.printStackTrace();
+								} catch (FormatException e1) {
+									e1.printStackTrace();
+								}
+								Toast.makeText(getActivity(), result == null ? "No barcode found" :
+									result.toString(), Toast.LENGTH_LONG).show();
+
+								//							outFile.delete();
+
+							}*/
 						}
-						// addPhotoToShopAndReturn(data);
+
 					}
+
+
 
 				});
 
 			}
+
+
 		});
 
 		barcodeButton.setOnClickListener(new View.OnClickListener() {
@@ -220,34 +235,30 @@ public class CameraFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				//Parameters parameters = camera.getParameters();
-
 				barcodeMode = !barcodeMode;
 				if (barcodeMode) {
-					//photoButton.setVisibility(View.INVISIBLE);
+					photoButton.setVisibility(View.INVISIBLE);
 					barcodeButton.setText("Take item picture");
-					//parameters.setFocusMode(Parameters.SCENE_MODE_BARCODE);
-				}
-				else {
-					//photoButton.setVisibility(View.VISIBLE);
+				} else {
+					photoButton.setVisibility(View.VISIBLE);
 					barcodeButton.setText("Scan barcode");
-					//parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 				}
-
-				//camera.setParameters(parameters);
 
 			}
 
 		});
 
 		surfaceView = (SurfaceView) v.findViewById(R.id.camera_surface_view);
+		//		create43RatioSurface();
+
 		SurfaceHolder holder = surfaceView.getHolder();
 		holder.addCallback(new Callback() {
 
 			public void surfaceCreated(SurfaceHolder holder) {
 				try {
 					if (camera != null) {
-//						camera.setDisplayOrientation(90);
+						// camera.setDisplayOrientation(90);
+						//						camera.setDisplayOrientation(90);
 						setCameraDisplayOrientation(getActivity(), 0, camera);
 						camera.setPreviewDisplay(holder);
 						camera.startPreview();
@@ -257,13 +268,14 @@ public class CameraFragment extends Fragment {
 				}
 			}
 
+			// now that we've fixed the camera orientation to portrait, this won't actually ever be called.
 			public void surfaceChanged(SurfaceHolder holder, int format,
 					int width, int height) {
-				
+
 				// If your preview can change or rotate, take care of those events here.
 				// Make sure to stop the preview before resizing or reformatting it.
 
-				if (surfaceView.getHolder().getSurface() == null) {
+				/*if (surfaceView.getHolder().getSurface() == null) {
 					// preview surface does not exist
 					return;
 				}
@@ -284,7 +296,7 @@ public class CameraFragment extends Fragment {
 
 				} catch (Exception e) {
 					Log.d(TAG, "Error starting camera preview: " + e.getMessage());
-				}
+				}*/
 			}
 
 			public void surfaceDestroyed(SurfaceHolder holder) {
@@ -350,22 +362,73 @@ public class CameraFragment extends Fragment {
 		}
 	}
 
-	private byte[] rotatePhoto(byte[] data) {
-		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
 
+	private Bitmap rotate(Bitmap image) {
 		Matrix matrix = new Matrix();
 		matrix.postRotate(90);
-		Bitmap rotatedShopImage = Bitmap.createBitmap(image, 0,
+		return Bitmap.createBitmap(image, 0,
 				0, image.getWidth(), image.getHeight(),
 				matrix, true);
-
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-
-		byte[] rotatedData = bos.toByteArray();
-
-		return rotatedData;
 	}
+
+
+	private Bitmap crop(byte[] data) {
+
+		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+		if (image.getWidth() >= image.getHeight()) {
+			return Bitmap.createBitmap(image, 
+					image.getWidth()/2 - image.getHeight()/2,
+					0,
+					image.getHeight(), 
+					image.getHeight()
+					);
+		}
+		else {
+			return Bitmap.createBitmap(
+					image,
+					0, 
+					image.getHeight()/2 - image.getWidth()/2,
+					image.getWidth(),
+					image.getWidth() 
+					);
+		}
+	}
+
+
+	/**
+	 * Returns the barcode in the image, or null if not found.
+	 * @param image
+	 * @return
+	 */
+	String decodeBitmap(Bitmap image) {
+
+		int w = image.getWidth();
+		int h = image.getHeight();
+		int [] argb = new int[w * h];
+		image.getPixels(argb, 0, w, 0, 0, w, h);
+		byte [] yuv = new byte[w*h*3/2];
+		encodeYUV420SP(yuv, argb, w, h);
+		//bMap.recycle();
+		LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
+		BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
+
+		EAN13Reader reader = new EAN13Reader();
+		reader.reset();
+		Result result = null;
+
+		try {
+			result = reader.decode(binBmp);
+			Log.d("BARCODE", result.getText());
+			return result.getText();
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+
+		return null;
+
+	}
+
 
 	/* we don't actually want this scaling/resizing, since it makes the picture too small,
 	 * but we might want to do some other scaling, so I've left the code in for now.
@@ -374,45 +437,46 @@ public class CameraFragment extends Fragment {
 	 * they are saved. Since we never need a full-size image in our app, we'll
 	 * save a scaled one right away.
 	 */
-	//	@SuppressWarnings("unused")
-	//	private void saveScaledPhoto(byte[] data) {
-	//		
-	//		// Resize photo from camera byte array
-	//		Bitmap shopImage = BitmapFactory.decodeByteArray(data, 0, data.length);
-	//		Bitmap shopImageScaled = Bitmap.createScaledBitmap(shopImage, 200, 200
-	//				* shopImage.getHeight() / shopImage.getWidth(), false);
-	//
-	//		Matrix matrix = new Matrix();
-	//		matrix.postRotate(90);
-	//		Bitmap rotatedScaledShopImage = Bitmap.createBitmap(shopImageScaled, 0,
-	//				0, shopImageScaled.getWidth(), shopImageScaled.getHeight(),
-	//				matrix, true);
-	//
-	//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	//		rotatedScaledShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-	//
-	//		byte[] scaledData = bos.toByteArray();
-	//		
-	//		addPhotoToShopAndReturn(scaledData);
-	//	}
+	@SuppressWarnings("unused")
+	private void saveScaledPhoto(byte[] data) {
 
-	//	private void saveScaledPhoto(byte[] data) {
-	//
-	//		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-	//
-	//		Matrix matrix = new Matrix();
-	//		matrix.postRotate(90);
-	//		Bitmap rotatedShopImage = Bitmap.createBitmap(image, 0,
-	//				0, image.getWidth(), image.getHeight(),
-	//				matrix, true);
-	//
-	//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	//		rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-	//
-	//		byte[] scaledData = bos.toByteArray();
-	//
-	//		addPhotoToShopAndReturn(scaledData);
-	//	}
+		// Resize photo from camera byte array
+		Bitmap shopImage = BitmapFactory.decodeByteArray(data, 0, data.length);
+		Bitmap shopImageScaled = Bitmap.createBitmap(shopImage, 0,0,200,200);
+		//			Bitmap shopImageScaled = Bitmap.createScaledBitmap(shopImage, 200, 200
+		//					* shopImage.getHeight() / shopImage.getWidth(), false);
+
+		Matrix matrix = new Matrix();
+		matrix.postRotate(90);
+		Bitmap rotatedScaledShopImage = Bitmap.createBitmap(shopImageScaled, 0,
+				0, shopImageScaled.getWidth(), shopImageScaled.getHeight(),
+				matrix, true);
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		rotatedScaledShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+
+		byte[] scaledData = bos.toByteArray();
+
+		addPhotoToShopAndReturn(scaledData);
+	}
+
+	//		private void saveScaledPhoto(byte[] data) {
+	//	
+	//			Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+	//	
+	//			Matrix matrix = new Matrix();
+	//			matrix.postRotate(90);
+	//			Bitmap rotatedShopImage = Bitmap.createBitmap(image, 0,
+	//					0, image.getWidth(), image.getHeight(),
+	//					matrix, true);
+	//	
+	//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	//			rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+	//	
+	//			byte[] scaledData = bos.toByteArray();
+	//	
+	//			addPhotoToShopAndReturn(scaledData);
+	//		}
 
 	private void addPhotoToShopAndReturn(byte[] data) {
 
@@ -466,29 +530,50 @@ public class CameraFragment extends Fragment {
 		}
 		super.onPause();
 	}
-	
-	public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
-	     android.hardware.Camera.CameraInfo info =
-	             new android.hardware.Camera.CameraInfo();
-	     android.hardware.Camera.getCameraInfo(cameraId, info);
-	     int rotation = activity.getWindowManager().getDefaultDisplay()
-	             .getRotation();
-	     int degrees = 0;
-	     switch (rotation) {
-	         case Surface.ROTATION_0: degrees = 0; break;
-	         case Surface.ROTATION_90: degrees = 90; break;
-	         case Surface.ROTATION_180: degrees = 180; break;
-	         case Surface.ROTATION_270: degrees = 270; break;
-	     }
 
-	     int result;
-	     if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-	         result = (info.orientation + degrees) % 360;
-	         result = (360 - result) % 360;  // compensate the mirror
-	     } else {  // back-facing
-	         result = (info.orientation - degrees + 360) % 360;
-	     }
-	     camera.setDisplayOrientation(result);
-	 }
+	public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+		android.hardware.Camera.CameraInfo info =
+				new android.hardware.Camera.CameraInfo();
+		android.hardware.Camera.getCameraInfo(cameraId, info);
+		int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+		int degrees = 0;
+		switch (rotation) {
+		case Surface.ROTATION_0: degrees = 0; break;
+		case Surface.ROTATION_90: degrees = 90; break;
+		case Surface.ROTATION_180: degrees = 180; break;
+		case Surface.ROTATION_270: degrees = 270; break;
+		}
+
+		int result;
+		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+			result = (info.orientation + degrees) % 360;
+			result = (360 - result) % 360;  // compensate the mirror
+		} else {  // back-facing
+			result = (info.orientation - degrees + 360) % 360;
+		}
+		camera.setDisplayOrientation(result);
+	}
+
+	//	private void create43RatioSurface() {
+	//		DisplayMetrics metrics = getResources().getDisplayMetrics();
+	//		int height = 0;
+	//		int width = 0;
+	//
+	//		if(metrics.widthPixels < metrics.heightPixels){
+	//			width = metrics.widthPixels;
+	//			height = width;
+	//			//	        height= (metrics.widthPixels/4) * 3 ;
+	//		} else {
+	//			height = metrics.heightPixels;
+	//			width = height;
+	//			//	        width= (metrics.heightPixels/4) * 3 ;
+	//		}
+	//
+	//		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+	//		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+	//		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+	//
+	//		surfaceView.setLayoutParams(layoutParams);        
+	//	}
 
 }
