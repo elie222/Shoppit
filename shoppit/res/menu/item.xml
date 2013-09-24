@@ -5,14 +5,15 @@
         android:id="@+id/menu_item_map"
         android:icon="@drawable/location_map"
         android:title="@string/show_on_map"
-        yourapp:showAsAction="always"/>
+        android:showAsAction="always"/>
     <item
         android:id="@+id/menu_item_share"
         android:actionProviderClass="android.widget.ShareActionProvider"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/share"/>
     <item
         android:id="@+id/menu_item_report"
+        android:icon="@drawable/alerts_and_states_error"
         android:showAsAction="ifRoom"
         android:title="@string/report"/>
 
