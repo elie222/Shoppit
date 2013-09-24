@@ -1,5 +1,8 @@
 package il.ac.huji.shoppit;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
@@ -23,6 +26,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Build;
@@ -31,6 +38,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,7 +71,7 @@ LocationListener {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] mCategoryTitles;
-//	private String[] mGeneralNavBarTitles;
+	//	private String[] mGeneralNavBarTitles;
 
 	private NavDrawerAdapter mNavDrawerAdapter;
 
@@ -102,6 +110,22 @@ LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// Add code to print out the key hash
+		//	    try {
+		//	        PackageInfo info = getPackageManager().getPackageInfo(
+		//	                "il.ac.huji.shoppit", 
+		//	                PackageManager.GET_SIGNATURES);
+		//	        for (Signature signature : info.signatures) {
+		//	            MessageDigest md = MessageDigest.getInstance("SHA");
+		//	            md.update(signature.toByteArray());
+		//	            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+		//	            }
+		//	    } catch (NameNotFoundException e) {
+		//
+		//	    } catch (NoSuchAlgorithmException e) {
+		//
+		//	    }
+
 		ParseObject.registerSubclass(Item.class);
 		ParseObject.registerSubclass(Shop.class);
 		ParseObject.registerSubclass(Comment.class);
@@ -111,7 +135,7 @@ LocationListener {
 
 		mTitle = mDrawerTitle = getTitle();
 		mCategoryTitles = getResources().getStringArray(R.array.categories_array);
-//		mGeneralNavBarTitles = getResources().getStringArray(R.array.general_navbar_array);
+		//		mGeneralNavBarTitles = getResources().getStringArray(R.array.general_navbar_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -260,7 +284,7 @@ LocationListener {
 		String sectionName = mNavDrawerAdapter.getSectionName(position);
 		String selectedName = mNavDrawerAdapter.getItemName(position);
 		//Log.i("MAIN ACT", selectedName);
-//		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
+		//		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
 
 		if (sectionName == CATEGORY_SEPARATOR) {
 
@@ -271,7 +295,7 @@ LocationListener {
 				Fragment fragment = new CategoryFragment();
 				Bundle args = new Bundle();
 
-//				args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
+				//				args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
 				args.putString(CategoryFragment.ARG_CATEGORY_NAME, selectedName);
 				args.putDouble(MainActivity.LATITUDE_EXTRA, lastLocation.getLatitude());
 				args.putDouble(MainActivity.LONGITUDE_EXTRA, lastLocation.getLongitude());
@@ -413,7 +437,7 @@ LocationListener {
 
 		// If Google Play services is available
 		if (ConnectionResult.SUCCESS == resultCode) {
-			
+
 			Toast.makeText(mainActivity, "Google Play services is available.",
 					Toast.LENGTH_LONG).show();
 
@@ -424,7 +448,7 @@ LocationListener {
 		} else {
 			Toast.makeText(mainActivity, "Google Play services is unavailable. Using LR2.",
 					Toast.LENGTH_LONG).show();
-			
+
 			mFallbackLocationRetriever = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
 
 				@Override

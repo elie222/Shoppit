@@ -3,6 +3,7 @@ package il.ac.huji.shoppit;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -202,6 +203,8 @@ public class NewItemFragment extends Fragment {
 	}
 
 	private void addItem() {
+		
+		final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Adding item...", true);
 
 		String name = nameEditText.getText().toString().trim().replaceAll("[ \t]+", " ");
 		String price = priceEditText.getText().toString();
@@ -313,6 +316,7 @@ public class NewItemFragment extends Fragment {
 		newItem.saveInBackground(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
+				progressDialog.dismiss();
 				if (e == null) {
 					Toast.makeText(getActivity(), "Item added successfully",
 							Toast.LENGTH_LONG).show();
