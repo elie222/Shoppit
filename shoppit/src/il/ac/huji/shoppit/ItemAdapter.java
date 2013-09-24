@@ -49,19 +49,7 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 		priceTextView.setText(String.valueOf(item.getPrice()));
 		currencyTextView.setText(String.valueOf(item.getCurrency()));
 		
-		// if we wanted to set the image size programmatically. 
-//		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
-//		imageView.setLayoutParams(layoutParams);
-		
-//		ViewTreeObserver vto = itemImage.getViewTreeObserver();
-//		vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//		    public boolean onPreDraw() {
-//		        int finalHeight = itemImage.getMeasuredHeight();
-//		        int finalWidth = itemImage.getMeasuredWidth();
-//		        Log.i(TAG, "Height: " + finalHeight + " Width: " + finalWidth);
-//		        return true;
-//		    }
-//		});
+		imageView.setPlaceholder(mContext.getResources().getDrawable(R.drawable.placeholder));
 		
 		ParseFile photoFile = item.getPhotoFile();
 

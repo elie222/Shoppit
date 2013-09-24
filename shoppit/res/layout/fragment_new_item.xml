@@ -5,16 +5,24 @@
     <LinearLayout
         android:id="@+id/LinearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:text="@string/add_new_item"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
             android:id="@+id/photoImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="item image preview" />
+            android:contentDescription="@string/item_image_preview" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,7 +32,7 @@
                 android:id="@+id/nameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name" />
+                android:text="@string/name" />
 
             <EditText
                 android:id="@+id/nameEditText"
@@ -32,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="text" >
+                android:inputType="textCapSentences" >
 
                 <requestFocus />
             </EditText>
@@ -46,7 +54,7 @@
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price" />
+                android:text="@string/price" />
 
             <EditText
                 android:id="@+id/priceEditText"
@@ -71,7 +79,7 @@
                 android:id="@+id/categoryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Category" />
+                android:text="@string/category" />
 
             <Spinner
                 android:id="@+id/categorySpinner"
@@ -88,7 +96,7 @@
                 android:id="@+id/keywordsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Keywords" />
+                android:text="@string/keywords" />
 
             <EditText
                 android:id="@+id/keywordsEditText"
@@ -97,7 +105,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="@string/keyword_hint"
-                android:inputType="text" />
+                android:inputType="textCapWords" />
         </LinearLayout>
 
         <RelativeLayout

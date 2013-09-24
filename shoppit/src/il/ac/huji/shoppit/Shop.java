@@ -30,6 +30,14 @@ public class Shop extends ParseObject {
 		put("name", name);
 	}
 	
+	public String getDescription() {
+		return getString("description");
+	}
+
+	public void setDescription(String description) {
+		put("description", description);
+	}
+	
 	public ParseUser getAuthor() {
 		return getParseUser("author");
 	}

@@ -19,6 +19,7 @@ public final class R {
     public static final class array {
         public static final int categories_array=0x7f0d0001;
         public static final int currencies_array=0x7f0d0002;
+        public static final int location_options_array=0x7f0d0004;
         public static final int report_reasons_array=0x7f0d0003;
         public static final int sort_options=0x7f0d0000;
     }
@@ -1297,7 +1298,7 @@ containing a value of this type.
         public static final int com_facebook_list_section_header_background=0x7f02006b;
         public static final int com_facebook_loginbutton_silver=0x7f02006c;
         public static final int com_facebook_logo=0x7f02006d;
-        public static final int com_facebook_picker_default_separator_color=0x7f0200a8;
+        public static final int com_facebook_picker_default_separator_color=0x7f0200aa;
         public static final int com_facebook_picker_item_background=0x7f02006e;
         public static final int com_facebook_picker_list_focused=0x7f02006f;
         public static final int com_facebook_picker_list_longpressed=0x7f020070;
@@ -1350,16 +1351,18 @@ containing a value of this type.
         public static final int login_button_normal=0x7f02009f;
         public static final int login_button_pressed=0x7f0200a0;
         public static final int my_custom_bg=0x7f0200a1;
-        public static final int rating_bad=0x7f0200a2;
-        public static final int rating_favorite=0x7f0200a3;
-        public static final int rating_good=0x7f0200a4;
-        public static final int search=0x7f0200a5;
-        public static final int splash_screen_bg=0x7f0200a6;
-        public static final int user=0x7f0200a7;
+        public static final int placeholder=0x7f0200a2;
+        public static final int placeholder_with_border=0x7f0200a3;
+        public static final int rating_bad=0x7f0200a4;
+        public static final int rating_favorite=0x7f0200a5;
+        public static final int rating_good=0x7f0200a6;
+        public static final int search=0x7f0200a7;
+        public static final int splash_screen_bg=0x7f0200a8;
+        public static final int user=0x7f0200a9;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f07005d;
-        public static final int action_add=0x7f0700a4;
+        public static final int action_add=0x7f0700a5;
         public static final int action_bar=0x7f07001f;
         public static final int action_bar_activity_content=0x7f07001a;
         public static final int action_bar_container=0x7f07001e;
@@ -1368,15 +1371,15 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f070026;
         public static final int action_bar_title=0x7f070025;
         public static final int action_context_bar=0x7f070020;
-        public static final int action_forgot_password=0x7f0700a1;
-        public static final int action_map=0x7f0700a3;
+        public static final int action_forgot_password=0x7f0700a2;
+        public static final int action_map=0x7f0700a4;
         public static final int action_menu_divider=0x7f07001b;
         public static final int action_menu_presenter=0x7f07001c;
         public static final int action_mode_bar=0x7f070034;
         public static final int action_mode_bar_stub=0x7f070033;
         public static final int action_mode_close_button=0x7f070027;
-        public static final int action_search=0x7f0700a2;
-        public static final int action_settings=0x7f07009d;
+        public static final int action_search=0x7f0700a3;
+        public static final int action_settings=0x7f07009e;
         public static final int activity_chooser_view_content=0x7f070028;
         public static final int addCommentButton=0x7f07005b;
         public static final int always=0x7f070011;
@@ -1386,7 +1389,7 @@ containing a value of this type.
         public static final int camera_photo_button=0x7f070087;
         public static final int camera_preview=0x7f070084;
         public static final int camera_surface_view=0x7f070085;
-        public static final int cancel_button=0x7f070096;
+        public static final int cancel_button=0x7f070097;
         public static final int categorySpinner=0x7f07004a;
         public static final int categoryTextView=0x7f070056;
         public static final int checkbox=0x7f070030;
@@ -1416,8 +1419,9 @@ containing a value of this type.
         public static final int commentsListView=0x7f07005a;
         public static final int content_frame=0x7f070066;
         public static final int currencySpinner=0x7f070090;
-        public static final int currencyTextView=0x7f07009b;
+        public static final int currencyTextView=0x7f07009c;
         public static final int default_activity_button=0x7f07002b;
+        public static final int descriptionEditText=0x7f070094;
         public static final int dialog=0x7f070014;
         public static final int disableHome=0x7f07000e;
         public static final int doneButton=0x7f070050;
@@ -1447,14 +1451,15 @@ containing a value of this type.
         public static final int likesCountTextView=0x7f070058;
         public static final int listMode=0x7f070007;
         public static final int list_item=0x7f07002c;
+        public static final int locationSpinner=0x7f070095;
         public static final int logInBtn=0x7f070061;
         public static final int logInPasswordEdt=0x7f070060;
         public static final int logInUsernameEdt=0x7f07005f;
         public static final int map=0x7f070068;
-        public static final int menu_item_map=0x7f07009e;
-        public static final int menu_item_report=0x7f0700a0;
-        public static final int menu_item_share=0x7f07009f;
-        public static final int menu_switch_cam=0x7f07009c;
+        public static final int menu_item_map=0x7f07009f;
+        public static final int menu_item_report=0x7f0700a1;
+        public static final int menu_item_share=0x7f0700a0;
+        public static final int menu_switch_cam=0x7f07009d;
         public static final int middle=0x7f070017;
         public static final int nameEditText=0x7f07004e;
         public static final int nameTextView=0x7f070053;
@@ -1463,16 +1468,16 @@ containing a value of this type.
         public static final int normal=0x7f070001;
         public static final int photoImageView=0x7f07008f;
         public static final int photoParseImageView=0x7f070055;
-        public static final int photo_button=0x7f070094;
+        public static final int photo_button=0x7f070096;
         public static final int picker_subtitle=0x7f070079;
         public static final int priceEditText=0x7f07004d;
         public static final int priceTextView=0x7f070054;
-        public static final int progress_bar=0x7f07009a;
+        public static final int progress_bar=0x7f07009b;
         public static final int progress_circular=0x7f070039;
         public static final int progress_horizontal=0x7f07003a;
         public static final int radio=0x7f070032;
         public static final int radioCheapest=0x7f07008b;
-        public static final int radioGroup1=0x7f070098;
+        public static final int radioGroup1=0x7f070099;
         public static final int radioGroupSortBy=0x7f070089;
         public static final int radioMostLiked=0x7f07008c;
         public static final int radioNearby=0x7f07008a;
@@ -1480,7 +1485,7 @@ containing a value of this type.
         public static final int right_container=0x7f070037;
         public static final int right_icon=0x7f070038;
         public static final int satellite=0x7f070002;
-        public static final int save_button=0x7f070095;
+        public static final int save_button=0x7f070098;
         public static final int search_badge=0x7f07003d;
         public static final int search_bar=0x7f07003c;
         public static final int search_button=0x7f07003e;
@@ -1492,10 +1497,9 @@ containing a value of this type.
         public static final int search_src_text=0x7f070042;
         public static final int search_voice_btn=0x7f070046;
         public static final int separator=0x7f070083;
-        public static final int shop_description=0x7f070093;
-        public static final int shop_name=0x7f070092;
-        public static final int shop_preview_image=0x7f070097;
-        public static final int shopsListView=0x7f070099;
+        public static final int shopNameEditText=0x7f070093;
+        public static final int shop_preview_image=0x7f070092;
+        public static final int shopsListView=0x7f07009a;
         public static final int shortcut=0x7f070031;
         public static final int showCustom=0x7f07000d;
         public static final int showHome=0x7f07000a;
@@ -1623,10 +1627,8 @@ containing a value of this type.
         public static final int login_dialog=0x7f0e0005;
         public static final int main=0x7f0e0006;
         public static final int map=0x7f0e0007;
-        public static final int new_item=0x7f0e0008;
-        public static final int new_shop=0x7f0e0009;
-        public static final int search=0x7f0e000a;
-        public static final int shop=0x7f0e000b;
+        public static final int search=0x7f0e0008;
+        public static final int shop=0x7f0e0009;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1669,17 +1671,19 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f080039;
-        public static final int action_forgot_password=0x7f080079;
+        public static final int action_forgot_password=0x7f080085;
         public static final int action_search=0x7f080046;
         public static final int action_settings=0x7f08003d;
-        public static final int action_sign_in_register=0x7f080077;
-        public static final int action_sign_in_short=0x7f080078;
+        public static final int action_sign_in_register=0x7f080083;
+        public static final int action_sign_in_short=0x7f080084;
         /**  <string name="logout">Log Out</string> 
          */
         public static final int add=0x7f08004d;
         public static final int add_comment=0x7f080059;
-        public static final int add_shop=0x7f080064;
-        public static final int all=0x7f080068;
+        public static final int add_new_item=0x7f08007f;
+        public static final int add_photo=0x7f08007b;
+        public static final int add_shop=0x7f08006a;
+        public static final int all=0x7f08006e;
         public static final int app_id=0x7f08003c;
         public static final int app_name=0x7f08003b;
         /**   Title for notification shown when GooglePlayServices needs to be
@@ -1708,6 +1712,7 @@ containing a value of this type.
         public static final int barcode=0x7f080044;
         public static final int cancel=0x7f080052;
         public static final int categ=0x7f080041;
+        public static final int category=0x7f080069;
         public static final int com_facebook_choose_friends=0x7f080024;
         public static final int com_facebook_dialogloginactivity_ok_button=0x7f080015;
         public static final int com_facebook_internet_permission_error_message=0x7f080028;
@@ -1790,40 +1795,49 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f08000e;
+        public static final int description=0x7f080065;
         public static final int done=0x7f080050;
         public static final int drawer_close=0x7f08005f;
         public static final int drawer_open=0x7f08005e;
         public static final int enter_comment_hint=0x7f08005c;
-        public static final int error_field_required=0x7f08007e;
-        public static final int error_incorrect_password=0x7f08007d;
-        public static final int error_invalid_email=0x7f08007b;
-        public static final int error_invalid_password=0x7f08007c;
+        public static final int error_field_required=0x7f08008a;
+        public static final int error_incorrect_password=0x7f080089;
+        public static final int error_invalid_email=0x7f080087;
+        public static final int error_invalid_password=0x7f080088;
         public static final int hello_world=0x7f08003e;
+        public static final int image=0x7f08007a;
         public static final int info=0x7f08004c;
+        public static final int item_image_preview=0x7f08007e;
         public static final int item_info=0x7f08004f;
         public static final int item_label=0x7f080055;
         public static final int keyword_hint=0x7f080062;
+        public static final int keywords=0x7f08007d;
+        public static final int location=0x7f08007c;
         public static final int logIn=0x7f08004b;
-        public static final int login_progress_signing_in=0x7f08007a;
-        public static final int logout=0x7f080067;
+        public static final int login_progress_signing_in=0x7f080086;
+        public static final int logout=0x7f08006d;
         public static final int map=0x7f080043;
+        public static final int name=0x7f080067;
         public static final int nearby_items=0x7f08003f;
         public static final int ok=0x7f080053;
+        public static final int optional_hint=0x7f080066;
         public static final int password=0x7f080049;
         public static final int post=0x7f08005b;
         public static final int post_comment=0x7f08005a;
-        public static final int profile=0x7f080066;
+        public static final int price=0x7f080068;
+        public static final int profile=0x7f08006c;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f080075;
-        public static final int prompt_password=0x7f080076;
+        public static final int prompt_email=0x7f080081;
+        public static final int prompt_password=0x7f080082;
         public static final int report=0x7f080061;
         public static final int save=0x7f080054;
         public static final int search=0x7f080042;
         public static final int search_hint=0x7f08005d;
-        public static final int settings=0x7f080065;
+        public static final int settings=0x7f08006b;
         public static final int share=0x7f080060;
         public static final int shop_label=0x7f080056;
+        public static final int shop_name=0x7f080064;
         /**  navbar 
 
          <string-array name="general_navbar_array">
@@ -1841,18 +1855,18 @@ containing a value of this type.
         public static final int skip=0x7f080045;
         public static final int soty_by=0x7f080040;
         public static final int take_pic=0x7f08004e;
-        public static final int title_activity_comment_dialog=0x7f080071;
-        public static final int title_activity_item=0x7f08006c;
-        public static final int title_activity_login=0x7f080074;
-        public static final int title_activity_login_dialog_fragment=0x7f080072;
-        public static final int title_activity_main_activity_new=0x7f080069;
-        public static final int title_activity_map=0x7f080073;
-        public static final int title_activity_nav_drawer=0x7f08006d;
-        public static final int title_activity_new_item=0x7f08006f;
-        public static final int title_activity_new_shop=0x7f080070;
-        public static final int title_activity_search=0x7f08006b;
-        public static final int title_activity_search_results=0x7f08006a;
-        public static final int title_activity_shop=0x7f08006e;
+        public static final int title_activity_comment_dialog=0x7f080077;
+        public static final int title_activity_item=0x7f080072;
+        public static final int title_activity_login=0x7f080080;
+        public static final int title_activity_login_dialog_fragment=0x7f080078;
+        public static final int title_activity_main_activity_new=0x7f08006f;
+        public static final int title_activity_map=0x7f080079;
+        public static final int title_activity_nav_drawer=0x7f080073;
+        public static final int title_activity_new_item=0x7f080075;
+        public static final int title_activity_new_shop=0x7f080076;
+        public static final int title_activity_search=0x7f080071;
+        public static final int title_activity_search_results=0x7f080070;
+        public static final int title_activity_shop=0x7f080074;
         public static final int user_info=0x7f080047;
         public static final int username=0x7f080048;
     }

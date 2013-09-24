@@ -1,10 +1,8 @@
 package il.ac.huji.shoppit;
 
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ShareActionProvider;
+import android.view.Window;
+import android.view.WindowManager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -17,58 +15,55 @@ import android.content.Intent;
  * NewShopFragment and CameraFragment. Pictures for shops are optional.
  */
 public class NewShopActivity extends Activity {
-	 
-    private Shop shop = null;
-    private byte[] photoData = null;
- 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-    	shop = new Shop();
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        super.onCreate(savedInstanceState);
-        
-        getActionBar().setDisplayHomeAsUpEnabled(true);
- 
-        setContentView(R.layout.activity_new_shop);
-        FragmentManager manager = getFragmentManager();
-        Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
- 
-        if (fragment == null) {
-            fragment = new NewShopFragment();
-            manager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
-        }
-    }
-    
+
+	private Shop shop = null;
+	private byte[] photoData = null;
+
+	private double latitude = 0;
+	private double longitude = 0;
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.new_shop, menu);
-		return true;
+	public void onCreate(Bundle savedInstanceState) {
+
+		shop = new Shop();
+
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		super.onCreate(savedInstanceState);
+
+		Intent intent = getIntent();
+		latitude = intent.getDoubleExtra(MainActivity.LATITUDE_EXTRA, 0);
+		longitude = intent.getDoubleExtra(MainActivity.LONGITUDE_EXTRA, 0);
+
+		setContentView(R.layout.activity_new_shop);
+		FragmentManager manager = getFragmentManager();
+		Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);
+
+		if (fragment == null) {
+			fragment = new NewShopFragment();
+			manager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
+		}
 	}
-    
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	    // Respond to the action bar's Up/Home button
-	    case android.R.id.home:
-	        NavUtils.navigateUpFromSameTask(this);
-	        return true;
-	    }
-	    
-	    return super.onOptionsItemSelected(item);
+
+	public Shop getCurrentShop() {
+		return shop;
 	}
- 
-    public Shop getCurrentShop() {
-        return shop;
-    }
-    
-    public byte[] getCurrentPhotoData() {
-    	return photoData;
-    }
+
+	public byte[] getCurrentPhotoData() {
+		return photoData;
+	}
 
 	public void setCurrentPhotoData(byte[] data) {
 		photoData = data;
 	}
- 
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
 }

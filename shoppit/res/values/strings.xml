@@ -43,6 +43,12 @@
     <string name="report">Report</string>
     <string name="keyword_hint">(Optional) space separated</string>
     <string name="show_on_map">Show on map</string>
+    <string name="shop_name">Shop name</string>
+    <string name="description">Description</string>
+    <string name="optional_hint">(Optional)</string>
+    <string name="name">Name</string>
+    <string name="price">Price</string>
+    <string name="category">Category</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
@@ -89,6 +95,9 @@
         <item>Fake item</item>
         <item>Other</item>
     </string-array>
+    <string-array name="location_options_array">
+        <item>Current location</item>
+    </string-array>
 
     <string name="title_activity_main_activity_new">Welcome</string>
     <string name="title_activity_search_results">Search results</string>
@@ -101,5 +110,11 @@
     <string name="title_activity_comment_dialog">Comment</string>
     <string name="title_activity_login_dialog_fragment">Log in</string>
     <string name="title_activity_map">Map</string>
+    <string name="image">Image</string>
+    <string name="add_photo">Add photo</string>
+    <string name="location">Location</string>
+    <string name="keywords">Keywords</string>
+    <string name="item_image_preview">item image preview</string>
+    <string name="add_new_item">Add New Item</string>
 
 </resources>

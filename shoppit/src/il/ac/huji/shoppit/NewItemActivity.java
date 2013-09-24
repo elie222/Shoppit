@@ -32,8 +32,8 @@ public class NewItemActivity extends Activity {
         setContentView(R.layout.activity_new_item);
         
         Intent intent = getIntent();
-        latitude = intent.getDoubleExtra(MainActivity.LATITUDE_EXTRA, 0.0);
-        longitude = intent.getDoubleExtra(MainActivity.LONGITUDE_EXTRA, 0.0);
+        latitude = intent.getDoubleExtra(MainActivity.LATITUDE_EXTRA, 0);
+        longitude = intent.getDoubleExtra(MainActivity.LONGITUDE_EXTRA, 0);
         
         FragmentManager manager = getFragmentManager();
         Fragment fragment = manager.findFragmentById(R.id.fragmentContainer);

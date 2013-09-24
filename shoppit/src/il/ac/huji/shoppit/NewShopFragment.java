@@ -12,11 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.parse.ParseACL;
@@ -38,11 +39,14 @@ import com.parse.SaveCallback;
  */
 public class NewShopFragment extends Fragment {
 
-	private ImageButton photoButton;
-	private Button saveButton;
-	private Button cancelButton;
-	private TextView nameTextView;
 	private ImageView shopPreview;
+	private EditText nameEditText;
+	private EditText descriptionEditText;
+	private Spinner locationSpinner;
+	private ImageButton photoButton;
+	private Button cancelButton;
+	private Button saveButton;
+
 	private byte[] photoData;
 
 	@Override
@@ -53,49 +57,95 @@ public class NewShopFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent,
 			Bundle SavedInstanceState) {
+
 		View v = inflater.inflate(R.layout.fragment_new_shop, parent, false);
 
-		nameTextView = ((EditText) v.findViewById(R.id.shop_name));
-
+		shopPreview = (ImageView) v.findViewById(R.id.shop_preview_image);
+		nameEditText = (EditText) v.findViewById(R.id.shopNameEditText);
+		descriptionEditText = (EditText) v.findViewById(R.id.descriptionEditText);
+		locationSpinner = (Spinner) v.findViewById(R.id.locationSpinner);
 		photoButton = ((ImageButton) v.findViewById(R.id.photo_button));
+		cancelButton = ((Button) v.findViewById(R.id.cancel_button));
+		saveButton = ((Button) v.findViewById(R.id.save_button));
+
+		// Until the user has taken a photo, hide the preview
+		//		shopPreview.setVisibility(View.INVISIBLE);
+
+		// set up location spinner - has only one option atm ("Current location").
+		ArrayAdapter<CharSequence> locationAdapter = ArrayAdapter.createFromResource(getActivity(),
+				R.array.location_options_array, android.R.layout.simple_spinner_item);
+		locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		locationSpinner.setAdapter(locationAdapter);
+
 		photoButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				InputMethodManager imm = (InputMethodManager) getActivity()
 						.getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(nameTextView.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(nameEditText.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(descriptionEditText.getWindowToken(), 0);
 				startCamera();
 			}
 		});
 
-		saveButton = ((Button) v.findViewById(R.id.save_button));
+		cancelButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				getActivity().setResult(Activity.RESULT_CANCELED);
+				getActivity().finish();
+			}
+		});
+
 		saveButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO check data is valid
+
+				final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Adding shop...", true);
 				
-				final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Adding item...", true);
+				String name = nameEditText.getText().toString();
+				String description = descriptionEditText.getText().toString();
+				
+				if (name.length() == 0) {
+					Toast.makeText(getActivity(), "Please enter the shop's name",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+
+				if (name.length() < 3) {
+					Toast.makeText(getActivity(), "Shop name is too short",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+
+				if (name.length() > 30) {
+					Toast.makeText(getActivity(), "Shop name is too long",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+				// no need to check shop description. Anything goes really.
+
+				saveButton.setEnabled(false);
 
 				Shop shop = ((NewShopActivity) getActivity()).getCurrentShop();
 
-				shop.setName(nameTextView.getText().toString());
+				shop.setName(name);
+				shop.setDescription(description);
 				shop.setAuthor(ParseUser.getCurrentUser());
 
 				ParseFile photoFile = new ParseFile("photo.jpg", photoData);
 				shop.setPhotoFile(photoFile);
 
-//				ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
-//						GeneralInfo.location.getLongitude());
-				
-				// TODO
-				ParseGeoPoint point = new ParseGeoPoint();
-				
+				ParseGeoPoint point = new ParseGeoPoint(
+						((NewShopActivity)getActivity()).getLatitude(),
+						((NewShopActivity)getActivity()).getLongitude());
 				shop.setLocation(point);
 
 				// everyone can read the shop, only the current user can edit it.
-				// TODO - write a cloud code function to enable other users to like the object.
 				ParseACL shopACL = new ParseACL(ParseUser.getCurrentUser());
 				shopACL.setPublicReadAccess(true);
 				shop.setACL(shopACL);
@@ -126,20 +176,6 @@ public class NewShopFragment extends Fragment {
 			}
 		});
 
-		cancelButton = ((Button) v.findViewById(R.id.cancel_button));
-		cancelButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				getActivity().setResult(Activity.RESULT_CANCELED);
-				getActivity().finish();
-			}
-		});
-
-		// Until the user has taken a photo, hide the preview
-		shopPreview = (ImageView) v.findViewById(R.id.shop_preview_image);
-		shopPreview.setVisibility(View.INVISIBLE);
-
 		return v;
 	}
 
@@ -155,13 +191,13 @@ public class NewShopFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		photoData = ((NewShopActivity) getActivity()).getCurrentPhotoData();
-		
+
 		if (photoData != null) {
 			Bitmap shopImageBitmap = BitmapFactory.decodeByteArray(photoData, 0, photoData.length);
 			shopPreview.setImageBitmap(shopImageBitmap);
-			shopPreview.setVisibility(View.VISIBLE);
+			// shopPreview.setVisibility(View.VISIBLE);
 		}
 	}
 

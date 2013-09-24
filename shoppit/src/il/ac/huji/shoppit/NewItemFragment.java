@@ -36,10 +36,6 @@ import com.parse.SaveCallback;
  */
 public class NewItemFragment extends Fragment {
 
-	//	private ImageButton photoButton;
-	//	private Button saveButton;
-	//	private Button cancelButton;
-
 	private ImageView photoImageView;
 	private EditText nameEditText;
 	private EditText priceEditText;
@@ -75,7 +71,6 @@ public class NewItemFragment extends Fragment {
 		currencySpinner.setAdapter(currencyAdapter);
 
 		// set up category spinner
-		// TODO - remove "All" option. add "Other" option
 		ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getActivity(),
 				R.array.categories_array, android.R.layout.simple_spinner_item);
 		categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -90,89 +85,6 @@ public class NewItemFragment extends Fragment {
 			}
 
 		});
-
-
-
-
-		//		photoButton = ((ImageButton) v.findViewById(R.id.photo_button));
-		//		photoButton.setOnClickListener(new View.OnClickListener() {
-		//
-		//			@Override
-		//			public void onClick(View v) {
-		//				InputMethodManager imm = (InputMethodManager) getActivity()
-		//						.getSystemService(Context.INPUT_METHOD_SERVICE);
-		//				imm.hideSoftInputFromWindow(nameEditText.getWindowToken(), 0);
-		//				startCamera();
-		//			}
-		//		});
-		//
-		//		saveButton = ((Button) v.findViewById(R.id.save_button));
-		//		saveButton.setOnClickListener(new View.OnClickListener() {
-		//
-		//			@Override
-		//			public void onClick(View v) {
-		//				// TODO check data is valid
-		//
-		//				Item item = ((NewItemActivity) getActivity()).getCurrentItem();
-		//
-		//				item.setName(nameEditText.getText().toString());
-		//				item.setAuthor(ParseUser.getCurrentUser());
-		//
-		//				ParseFile photoFile = new ParseFile("photo.jpg", photoData);
-		//				item.setPhotoFile(photoFile);
-		//
-		////				ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
-		////						GeneralInfo.location.getLongitude());
-		//				
-		//				// TODO
-		//				ParseGeoPoint point = new ParseGeoPoint();
-		//				
-		//				item.setLocation(point);
-		//
-		//				// everyone can read the item, only the current user can edit it.
-		//				// TODO - write a cloud code function to enable other users to like the object.
-		//				ParseACL itemACL = new ParseACL(ParseUser.getCurrentUser());
-		//				itemACL.setPublicReadAccess(true);
-		//				item.setACL(itemACL);
-		//
-		//				// Save the item and return
-		//				item.saveInBackground(new SaveCallback() {
-		//
-		//					@Override
-		//					public void done(ParseException e) {
-		//						if (e == null) {
-		//							Toast.makeText(
-		//									getActivity().getApplicationContext(),
-		//									"Successfully added item",
-		//									Toast.LENGTH_SHORT).show();
-		//							getActivity().setResult(Activity.RESULT_OK);
-		//							getActivity().finish();
-		//						} else {
-		//							Toast.makeText(
-		//									getActivity().getApplicationContext(),
-		//									"Error saving: " + e.getMessage(),
-		//									Toast.LENGTH_SHORT).show();
-		//						}
-		//					}
-		//
-		//				});
-		//
-		//			}
-		//		});
-		//
-		//		cancelButton = ((Button) v.findViewById(R.id.cancel_button));
-		//		cancelButton.setOnClickListener(new View.OnClickListener() {
-		//
-		//			@Override
-		//			public void onClick(View v) {
-		//				getActivity().setResult(Activity.RESULT_CANCELED);
-		//				getActivity().finish();
-		//			}
-		//		});
-		//
-		//		// Until the user has taken a photo, hide the preview
-		//		itemPreview = (ImageView) v.findViewById(R.id.photoImageView);
-		//		itemPreview.setVisibility(View.INVISIBLE);
 
 		return v;
 	}
@@ -219,7 +131,7 @@ public class NewItemFragment extends Fragment {
 		//Perform sanity checks
 
 		if (name.length() == 0) {
-			Toast.makeText(getActivity(), "Please fill the item name",
+			Toast.makeText(getActivity(), "Please enter the item's name",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -237,7 +149,7 @@ public class NewItemFragment extends Fragment {
 		}
 
 		if (price.length() == 0) {
-			Toast.makeText(getActivity(), "Please fill the item price",
+			Toast.makeText(getActivity(), "Please enter the item's price",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -272,17 +184,9 @@ public class NewItemFragment extends Fragment {
 			return;
 		}
 
-		// Try to get the device location
-		//		GeneralInfo.stopGettingLocation(); // TODO - this was crashing the app so I commented it out.
-		//		if (GeneralInfo.location == null) {
-		//			Toast.makeText(getActivity(), "Cannot get device location",
-		//					Toast.LENGTH_LONG).show();
-		//			return;
-		//		}
-
-		//Data is OK, upload the item to parse.
-
 		doneButton.setEnabled(false);
+		
+		//Data is OK, upload the item to parse.
 
 		Item newItem = new Item();
 		newItem.setName(name);
@@ -292,10 +196,6 @@ public class NewItemFragment extends Fragment {
 		newItem.setMainCategory(category);
 		newItem.setKeywords(keywords);
 
-		
-		//		ParseGeoPoint point = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
-		//				GeneralInfo.location.getLongitude());
-
 		// location
 		// if location is 0, 0 then we have a problem. we could check for this, even though it's unlikely to happen.
 		ParseGeoPoint point = new ParseGeoPoint(
@@ -304,7 +204,7 @@ public class NewItemFragment extends Fragment {
 		newItem.setLocation(point);
 
 		// photo
-		ParseFile photoFile = new ParseFile("photo.jpg", photoData); // TODO items being uploaded rotated
+		ParseFile photoFile = new ParseFile("photo.jpg", photoData);
 		newItem.setPhotoFile(photoFile);
 
 		// Permissions
