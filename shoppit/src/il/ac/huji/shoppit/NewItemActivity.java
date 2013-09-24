@@ -1,6 +1,8 @@
 package il.ac.huji.shoppit;
 
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -20,9 +22,12 @@ public class NewItemActivity extends Activity {
  
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	
     	item = new Item();
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+    	requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
         

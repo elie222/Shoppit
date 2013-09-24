@@ -1383,7 +1383,7 @@ containing a value of this type.
         public static final int authorTextView=0x7f07007f;
         public static final int barcode_button=0x7f070088;
         public static final int beginning=0x7f070016;
-        public static final int camera_photo_button=0x7f070086;
+        public static final int camera_photo_button=0x7f070087;
         public static final int camera_preview=0x7f070084;
         public static final int camera_surface_view=0x7f070085;
         public static final int cancel_button=0x7f070096;
@@ -1476,7 +1476,7 @@ containing a value of this type.
         public static final int radioGroupSortBy=0x7f070089;
         public static final int radioMostLiked=0x7f07008c;
         public static final int radioNearby=0x7f07008a;
-        public static final int rect=0x7f070087;
+        public static final int rect=0x7f070086;
         public static final int right_container=0x7f070037;
         public static final int right_icon=0x7f070038;
         public static final int satellite=0x7f070002;

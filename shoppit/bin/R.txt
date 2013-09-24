@@ -400,7 +400,7 @@ int id always 0x7f070011
 int id authorTextView 0x7f07007f
 int id barcode_button 0x7f070088
 int id beginning 0x7f070016
-int id camera_photo_button 0x7f070086
+int id camera_photo_button 0x7f070087
 int id camera_preview 0x7f070084
 int id camera_surface_view 0x7f070085
 int id cancel_button 0x7f070096
@@ -493,7 +493,7 @@ int id radioGroup1 0x7f070098
 int id radioGroupSortBy 0x7f070089
 int id radioMostLiked 0x7f07008c
 int id radioNearby 0x7f07008a
-int id rect 0x7f070087
+int id rect 0x7f070086
 int id right_container 0x7f070037
 int id right_icon 0x7f070038
 int id satellite 0x7f070002
