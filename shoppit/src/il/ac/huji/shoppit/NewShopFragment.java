@@ -3,6 +3,7 @@ package il.ac.huji.shoppit;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -74,6 +75,8 @@ public class NewShopFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO check data is valid
+				
+				final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Adding item...", true);
 
 				Shop shop = ((NewShopActivity) getActivity()).getCurrentShop();
 
@@ -102,6 +105,7 @@ public class NewShopFragment extends Fragment {
 
 					@Override
 					public void done(ParseException e) {
+						progressDialog.dismiss();
 						if (e == null) {
 							Toast.makeText(
 									getActivity().getApplicationContext(),
