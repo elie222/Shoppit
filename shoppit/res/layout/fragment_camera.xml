@@ -27,9 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
-        android:src="@drawable/camera"
-        android:alpha="0.8" />
+        android:src="@drawable/camera" />
 
 <!--     <ImageButton
         android:id="@+id/camera_photo_button"
@@ -51,10 +49,9 @@
         android:layout_margin="10dp"
         android:layout_marginRight="17dp"
         android:layout_marginTop="169dp"
-        android:background="@android:color/white"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="Scan barcode"
-        android:alpha="0.8" />
+        android:alpha="1" />
 
 </RelativeLayout>
