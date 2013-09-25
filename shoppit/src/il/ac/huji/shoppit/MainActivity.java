@@ -1,8 +1,5 @@
 package il.ac.huji.shoppit;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
@@ -26,10 +23,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Build;
@@ -38,7 +31,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -88,7 +80,7 @@ LocationListener {
 	private LocationRetriever2 mFallbackLocationRetriever;
 
 	private static final LocationRequest REQUEST = LocationRequest.create()
-			.setInterval(60 * 1000)		// 60 seconds
+			.setInterval(10 * 1000)		// 10 seconds
 			.setFastestInterval(1 * 1000)	// 1 second
 			.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
@@ -504,6 +496,9 @@ LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
+		Toast.makeText(mainActivity, "Location changed: " + location,
+				Toast.LENGTH_LONG).show();
+		
 		// we only want to do this if no location has been found before. i.e. on app startup
 		if (!foundLocationLC && location != null) {
 			foundLocationLC = true;

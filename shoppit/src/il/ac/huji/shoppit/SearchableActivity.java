@@ -15,6 +15,8 @@ public class SearchableActivity extends ListActivity {
 
 	private ItemAdapter adapter;
 	
+	private String mQueryString;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,14 +26,14 @@ public class SearchableActivity extends ListActivity {
 		// Get the intent, verify the action and get the query
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			final String queryString = intent.getStringExtra(SearchManager.QUERY);
+			mQueryString = intent.getStringExtra(SearchManager.QUERY);
 			
-			setTitle("Search results for: \"" + queryString + "\"");
+			setTitle("Search results for: \"" + mQueryString + "\"");
 			
 			ParseQueryAdapter.QueryFactory<Item> queryFactory = new ParseQueryAdapter.QueryFactory<Item>() {
 				public ParseQuery<Item> create() {
 					ParseQuery<Item> query = new ParseQuery<Item>("Item");
-					query.whereContains("searchString", queryString.toLowerCase());
+					query.whereContains("searchString", mQueryString.toLowerCase());
 					
 					return query;
 				}
@@ -58,6 +60,9 @@ public class SearchableActivity extends ListActivity {
 	        NavUtils.navigateUpFromSameTask(this);
 	        return true;
 	    case R.id.action_map:
+			Intent intent = new Intent(getBaseContext(), MapActivity.class);
+			intent.putExtra(MapActivity.QUERY_EXTRA, mQueryString);
+			startActivity(intent);
 	        return true;
 	    }
 	    return super.onOptionsItemSelected(item);

@@ -25,6 +25,7 @@ import com.parse.FindCallback;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseException;
+import com.parse.ParseQueryAdapter;
 
 import android.location.Location;
 import android.os.Build;
@@ -56,6 +57,7 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 	//	public final static String LAT_EXTRA = "LAT_EXTRA";
 	//	public final static String LON_EXTRA = "LON_EXTRA";
 	public final static String SHOW_ITEM_EXTRA = "SHOW_ITEM_EXTRA";
+	public final static String QUERY_EXTRA = "QUERY_EXTRA";
 
 	private final static int ITEMS_TO_SHOW = 30;
 
@@ -68,6 +70,8 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 	private Item mItem = null;
 	private LatLng mItemLatLng = null;
 	private Marker mItemMarker = null;
+	
+	private String mQueryString = null;
 
 	private boolean movedCameraToInitialPosition = false;
 
@@ -91,6 +95,8 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 			mItem = GeneralInfo.itemHolder;
 			mItemLatLng = new LatLng(mItem.getLocation().getLatitude(), mItem.getLocation().getLongitude());
 		}
+		
+		mQueryString = getIntent().getStringExtra(QUERY_EXTRA);
 	}
 
 	@Override
@@ -177,8 +183,48 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 			.snippet(mItem.getPrice() + " " + mItem.getCurrency())
 			.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
+		} else if (mQueryString != null) {
+			
+			ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+			// this is wrong!
+			// ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(LAT, LONG);
+			// query.whereNear("location", userLocation); // TODO why's this line cause a bug here?
+			query.whereContains("searchString", mQueryString.toLowerCase());
+			query.setLimit(ITEMS_TO_SHOW);
+
+			query.findInBackground(new FindCallback<Item>() {
+
+				@Override
+				public void done(List<Item> items, ParseException e) {
+					if (e == null) {
+						Log.d(TAG, "Retrieved " + items.size() + " items");
+
+						mMarkerItemMap = new HashMap<Marker, Item>();
+
+						// add item markers to map
+						for (int i = 0; i < items.size(); i++) {
+							Item item = items.get(i);
+							Marker marker = mMap.addMarker(new MarkerOptions()
+							.position(new LatLng(item.getLocation().getLatitude(),
+									item.getLocation().getLongitude()))
+									.title(item.getName())
+									.snippet(item.getPrice() + " " + item.getCurrency())
+									// this gives each marker a different colour
+									// .icon(BitmapDescriptorFactory.defaultMarker(i * 360 / items.size())));
+									.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+							mMarkerItemMap.put(marker, item);
+						}
+
+					} else {
+						Log.d(TAG, "Error: " + e.getMessage());
+					}	
+				}
+
+			});
 		} else {
 			ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+			// TODO!!! this is wrong!
 			ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(SOMEWHERE_IN_JLEM.latitude, SOMEWHERE_IN_JLEM.longitude);
 			query.whereNear("location", userLocation);
 			query.setLimit(ITEMS_TO_SHOW);

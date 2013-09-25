@@ -49,6 +49,7 @@
     <string name="name">Name</string>
     <string name="price">Price</string>
     <string name="category">Category</string>
+    <string name="show_results_on_map">Show results on map</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
