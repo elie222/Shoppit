@@ -198,6 +198,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 			
 		}
 
+		imageView.setPlaceholder(getResources().getDrawable(R.drawable.placeholder));
 		ParseFile photoFile = mItem.getPhotoFile();
 		if (photoFile != null) {
 			imageView.setParseFile(photoFile);
