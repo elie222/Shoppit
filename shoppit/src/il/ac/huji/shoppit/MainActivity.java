@@ -440,38 +440,45 @@ LocationListener {
 		} else {
 			Toast.makeText(mainActivity, "Google Play services is unavailable. Using LR2.",
 					Toast.LENGTH_LONG).show();
+			
+			startUpFallbackLocationRetriever();
 
-			mFallbackLocationRetriever = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
-
-				@Override
-				void timerFunc() {
-
-					//This function will fill the list of nearby items
-					//when the timer for getting the device position has elapsed
-					//or as soon as the position is located.
-
-					runOnUiThread(new Runnable() {
-						public void run() {
-							Log.i(TAG, "LR2 - runOnUiThread");
-							//					Log.d(TAG, (GeneralInfo.location == null)+"");
-							//					Log.d(TAG, (GeneralInfo.location)+"");
-							if (GeneralInfo.location == null) { //In case of error
-								Toast.makeText(mainActivity, "LR2 - Error getting device location.",
-										Toast.LENGTH_LONG).show();
-							} else {
-								foundLocationFLR = true;
-								selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
-							}
-						}
-					});
-
-				}
-
-			});
-
-			// Get the device location
-			mFallbackLocationRetriever.startGettingUpdates(this, 10000);
 		}
+	}
+
+	private void startUpFallbackLocationRetriever() {
+
+		mFallbackLocationRetriever = new LocationRetriever2(new LocationRetriever2.TimerFunc() {
+
+			@Override
+			void timerFunc() {
+
+				//This function will fill the list of nearby items
+				//when the timer for getting the device position has elapsed
+				//or as soon as the position is located.
+
+				runOnUiThread(new Runnable() {
+					public void run() {
+						Log.i(TAG, "LR2 - runOnUiThread");
+						//					Log.d(TAG, (GeneralInfo.location == null)+"");
+						//					Log.d(TAG, (GeneralInfo.location)+"");
+						if (GeneralInfo.location == null) { //In case of error
+							Toast.makeText(mainActivity, "LR2 - Error getting device location.",
+									Toast.LENGTH_LONG).show();
+						} else {
+							foundLocationFLR = true;
+							selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
+						}
+					}
+				});
+
+			}
+
+		});
+
+		// Get the device location
+		mFallbackLocationRetriever.startGettingUpdates(this, 10000);
+		
 	}
 
 	@Override
@@ -533,7 +540,9 @@ LocationListener {
 			 * If no resolution is available, display a dialog to the
 			 * user with the error.
 			 */
+			startUpFallbackLocationRetriever();
 
+			//TODO
 			showErrorDialog(connectionResult.getErrorCode());
 		}
 
@@ -551,32 +560,32 @@ LocationListener {
 		// do nothing
 	}
 
-	/**
-	 * Verify that Google Play services is available before making a request.
-	 *
-	 * @return true if Google Play services is available, otherwise false
-	 */
-	private boolean servicesConnected() {
-		// Check that Google Play services is available
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		// If Google Play services is available
-		if (ConnectionResult.SUCCESS == resultCode) {
-			// In debug mode, log the status
-			Log.d("Location Updates", "Google Play services is available.");
-			// Continue
-			return true;
-			// Google Play services was not available for some reason
-		} else {			
-			// Display an error dialog
-			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
-			if (dialog != null) {
-				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-				errorFragment.setDialog(dialog);
-				errorFragment.show(getFragmentManager(), "Location Updates");
-			}
-			return false;
-		}
-	}
+//	/**
+//	 * Verify that Google Play services is available before making a request.
+//	 *
+//	 * @return true if Google Play services is available, otherwise false
+//	 */
+//	private boolean servicesConnected() {
+//		// Check that Google Play services is available
+//		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+//		// If Google Play services is available
+//		if (ConnectionResult.SUCCESS == resultCode) {
+//			// In debug mode, log the status
+//			Log.d("Location Updates", "Google Play services is available.");
+//			// Continue
+//			return true;
+//			// Google Play services was not available for some reason
+//		} else {			
+//			// Display an error dialog
+//			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
+//			if (dialog != null) {
+//				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+//				errorFragment.setDialog(dialog);
+//				errorFragment.show(getFragmentManager(), "Location Updates");
+//			}
+//			return false;
+//		}
+//	}
 
 	/**
 	 * Show a dialog returned by Google Play services for the
