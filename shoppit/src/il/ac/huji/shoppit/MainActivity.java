@@ -542,8 +542,7 @@ LocationListener {
 			 */
 			startUpFallbackLocationRetriever();
 
-			//TODO
-			showErrorDialog(connectionResult.getErrorCode());
+			//showErrorDialog(connectionResult.getErrorCode());
 		}
 
 	}

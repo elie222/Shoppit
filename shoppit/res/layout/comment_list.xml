@@ -9,13 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingRight="10dp"
-        android:textStyle="bold"
-        android:text="Author" />
+        android:text="Author"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Comment text" />
+        android:text="Comment text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

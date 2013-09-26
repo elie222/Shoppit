@@ -6,14 +6,12 @@
 
     <stroke
         android:width="1dip"
-        android:color="#4fa5d5" />
+        android:color="#CCCCCC" />
     
    <padding 
        android:right="10dip"
        android:left="10dip"
        android:top="10dip"
        android:bottom="10dip"/>
-  
-   <size android:height="1000dip"/>
 
 </shape>

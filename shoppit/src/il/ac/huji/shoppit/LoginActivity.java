@@ -29,7 +29,7 @@ public class LoginActivity extends ActionBarActivity {
 	protected static final String TAG = "LOGIN_ACTIVITY";
 
 	private Button logInButton;
-	private Button facebookLogInButton;
+	//private Button facebookLogInButton;
 	private Button signUpButton;
 	private Dialog progressDialog;
 
@@ -46,13 +46,13 @@ public class LoginActivity extends ActionBarActivity {
 			}
 		});
 
-		facebookLogInButton = (Button) findViewById(R.id.facebookLoginButton);
-		facebookLogInButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onFacebookLogInButtonClicked();
-			}
-		});
+//		facebookLogInButton = (Button) findViewById(R.id.facebookLoginButton);
+//		facebookLogInButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				onFacebookLogInButtonClicked();
+//			}
+//		});
 
 		signUpButton = (Button) findViewById(R.id.signUpBtn);
 		signUpButton.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +100,9 @@ public class LoginActivity extends ActionBarActivity {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void onFacebookLogInButtonClicked() {
-		// TODO doesn't work. could be a bug with the new FB SDK
+		// TODO doesn't work. could be a bug with the new FB SDK.
 		// TODO - add cancel button?		
 		LoginActivity.this.progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 

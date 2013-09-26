@@ -23,6 +23,8 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 	private TextView nameTextView;
 	private TextView priceTextView;
 	private TextView currencyTextView;
+	private TextView categoryTextView;
+	private TextView likesCountTextView;// TODO implement this. (might decide to just remove it)
 	private ParseImageView imageView;
 
 	public ItemAdapter(Context context, ParseQueryAdapter.QueryFactory<Item> queryFactory) {
@@ -43,11 +45,14 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 		nameTextView = (TextView) v.findViewById(R.id.text1);
 		priceTextView = (TextView) v.findViewById(R.id.priceTextView);
 		currencyTextView = (TextView) v.findViewById(R.id.currencyTextView);
+		categoryTextView = (TextView) v.findViewById(R.id.categoryTextView);
+		likesCountTextView = (TextView) v.findViewById(R.id.likesCountTextView);
 		imageView = (ParseImageView) v.findViewById(R.id.icon);
 		
 		nameTextView.setText(item.getName());		
 		priceTextView.setText(String.valueOf(item.getPrice()));
 		currencyTextView.setText(String.valueOf(item.getCurrency()));
+		categoryTextView.setText(String.valueOf(item.getMainCategory()));
 		
 		imageView.setPlaceholder(mContext.getResources().getDrawable(R.drawable.placeholder));
 		

@@ -45,6 +45,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 	private TextView nameTextView;
 	private TextView priceTextView;
+	private TextView currencyTextView;
 	private TextView categoryTextView;
 	private CheckBox likeCheckBox;
 	private TextView likesCountTextView;
@@ -72,6 +73,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
 		priceTextView = (TextView) findViewById(R.id.priceTextView);
+		currencyTextView = (TextView) findViewById(R.id.currencyTextView);
 		categoryTextView = (TextView) findViewById(R.id.categoryTextView);
 		likeCheckBox = (CheckBox) findViewById(R.id.likeCheckBox);
 		likesCountTextView = (TextView) findViewById(R.id.likesCountTextView);
@@ -132,6 +134,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 		nameTextView.setText(mItem.getName());
 		priceTextView.setText(String.valueOf(mItem.getPrice()));
+		currencyTextView.setText(String.valueOf(mItem.getCurrency()));
 		categoryTextView.setText(mItem.getMainCategory());
 
 		// get the number of users that like the item
