@@ -56,6 +56,14 @@ public class Item extends ParseObject {
 		put("photo", file);
 	}
 	
+	public String getBarcode() {
+		return getString("barcode");
+	}
+
+	public void setBarcode(String barcode) {
+		put("barcode", barcode);
+	}
+	
 	public double getPrice() {
 		return getDouble("price");
 	}

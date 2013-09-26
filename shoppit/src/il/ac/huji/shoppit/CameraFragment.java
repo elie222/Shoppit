@@ -1,14 +1,14 @@
 package il.ac.huji.shoppit;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,14 +16,10 @@ import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -35,12 +31,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.google.zxing.*;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.oned.EAN13Reader;
+import com.parse.ParseQuery;
 
 /**
  * @author Elie2
@@ -59,7 +54,6 @@ public class CameraFragment extends Fragment {
 	private ImageView rectangle;
 	private boolean barcodeMode = false,
 			currentlyScanning = false;
-
 	private int previewW = 0,
 			previewH = 0;
 
@@ -95,29 +89,7 @@ public class CameraFragment extends Fragment {
 		}
 
 
-		//Barcode scanning is allowed only if the camera is of type NV21.
-		//Don't really know what that is, but that's the only option I've seen when scanning
-		//for a barcode. Seems like it's the most probable option though.
-		Parameters parameters = camera.getParameters();
-		int imageFormat = parameters.getPreviewFormat();
-		if (imageFormat != ImageFormat.NV21)
-			barcodeButton.setVisibility(View.INVISIBLE);
-
-		//Set the size of the captured image to be as large as possible.
-		int bestWidth = 0,
-				bestHeight = 0;
-		List<Size> sizes = parameters.getSupportedPictureSizes();
-		for (Size s: sizes) {
-			if (s.width > bestWidth) {
-				bestWidth = s.width;
-				bestHeight = s.height;
-			}
-		}
-		parameters.setPictureSize(bestWidth, bestHeight);
-
-		//Define the focus for the picture taking mode, which is the initial mode
-		parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-		camera.setParameters(parameters);
+		setParams();
 
 
 
@@ -182,11 +154,13 @@ public class CameraFragment extends Fragment {
 					try {
 						EAN13Reader reader = new EAN13Reader();
 						reader.reset();
-						String code = reader.decode(binBmp).getText();
+						String barcode = reader.decode(binBmp).getText();
+						((NewItemActivity) getActivity()).setBarcode(barcode);
 
-						Toast.makeText(getActivity(), code, Toast.LENGTH_LONG).show();
-						Log.d("BARCODE", code);
-						camera.setPreviewCallback(null);
+						//If came here, scanning was successful
+						releaseCamera();
+						rectangle.setVisibility(View.INVISIBLE);
+						searchBarcode(barcode);
 
 					} catch (Exception e) {
 						// barcode not recognized in picture
@@ -218,17 +192,20 @@ public class CameraFragment extends Fragment {
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
 
-						//Crop and rotate the image and get the new data
+						//Stop the preview
+						releaseCamera();
+
+						//Crop, rotate and scale the image and get the new data
 						Bitmap image = rotate(crop(data));
-						
-						// scale the image
-						Bitmap imageScaled = Bitmap.createScaledBitmap(image, IMAGE_WIDTH, IMAGE_WIDTH, false);
-						
+						image = Bitmap.createScaledBitmap(image, IMAGE_WIDTH, IMAGE_WIDTH, false);
+
 						ByteArrayOutputStream bos = new ByteArrayOutputStream();
-						imageScaled.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+						image.compress(Bitmap.CompressFormat.JPEG, 100, bos);
 						data = bos.toByteArray();
 
-						Log.d("SIZE", imageScaled.getWidth()+" "+imageScaled.getHeight());
+						//Set the list of items with similar barcode to null.
+						//This prevents buttons from appearing on the item image when adding.
+						((NewItemActivity) getActivity()).setItemList(null);
 
 						addPhotoToShopAndReturn(data);
 
@@ -327,7 +304,7 @@ public class CameraFragment extends Fragment {
 	//We can erase this code if barcode works.
 
 	//Helper functions for getting the image from the camera in the right format
-	byte [] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
+	/*private static byte [] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
 
 		int [] argb = new int[inputWidth * inputHeight];
 
@@ -341,7 +318,7 @@ public class CameraFragment extends Fragment {
 		return yuv;
 	}
 
-	void encodeYUV420SP(byte[] yuv420sp, int[] argb, int width, int height) {
+	private static void encodeYUV420SP(byte[] yuv420sp, int[] argb, int width, int height) {
 		final int frameSize = width * height;
 
 		int yIndex = 0;
@@ -374,7 +351,7 @@ public class CameraFragment extends Fragment {
 			index ++;
 			}
 		}
-	}
+	}*/
 
 
 	private Bitmap rotate(Bitmap image) {
@@ -392,7 +369,7 @@ public class CameraFragment extends Fragment {
 
 		if (image.getWidth() >= image.getHeight()) {
 			return Bitmap.createBitmap(image, 
-					image.getWidth()/2 - image.getHeight()/2,
+					Math.abs(image.getWidth() - image.getHeight())/2,
 					0,
 					image.getHeight(), 
 					image.getHeight()
@@ -410,59 +387,89 @@ public class CameraFragment extends Fragment {
 	}
 
 
-	/*private Bitmap crop(byte[] data, int x, int y, int width, int height) {
-		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-		return Bitmap.createBitmap(image, x, y, width, height);
-	}*/
+	void setParams() {
+
+		//Barcode scanning is allowed only if the camera is of type NV21.
+		//Don't really know what that is, but that's the only option I've seen when scanning
+		//for a barcode. Seems like it's the most probable option though.
+		Parameters parameters = camera.getParameters();
+		int imageFormat = parameters.getPreviewFormat();
+		if (imageFormat != ImageFormat.NV21)
+			barcodeButton.setVisibility(View.INVISIBLE);
+
+		//Set the size of the captured image to be as large as possible.
+		int bestWidth = 0,
+				bestHeight = 0;
+		List<Size> sizes = parameters.getSupportedPictureSizes();
+		for (Size s: sizes) {
+			if (s.width > bestWidth) {
+				bestWidth = s.width;
+				bestHeight = s.height;
+			}
+		}
+		parameters.setPictureSize(bestWidth, bestHeight);
+
+		//Define the focus for the picture taking mode, which is the initial mode
+		parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+		camera.setParameters(parameters);
+
+	}
 
 
-	/**
-	 * Returns the barcode in the image, or null if not found.
-	 * @param image
-	 * @return
-	 */
-	String decodeBitmap(Bitmap image) {
 
-		int w = image.getWidth();
-		int h = image.getHeight();
-		int [] argb = new int[w * h];
-		image.getPixels(argb, 0, w, 0, 0, w, h);
-		byte [] yuv = new byte[w*h*3/2];
-		encodeYUV420SP(yuv, argb, w, h);
-		//bMap.recycle();
-		LuminanceSource source = new PlanarYUVLuminanceSource(yuv, w, h, 0, 0, w, h, false);
-		BinaryBitmap binBmp = new BinaryBitmap(new HybridBinarizer(source));
+	void searchBarcode(String barcode) {
 
-		EAN13Reader reader = new EAN13Reader();
-		reader.reset();
-		Result result = null;
+		//Get how many products with this barcode exist in our database
+
+		ParseQuery<Item> query = new ParseQuery<Item>("Item");
+		query.whereEqualTo("barcode", barcode);
+		final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Searching for barcode...", true);
 
 		try {
-			result = reader.decode(binBmp);
-			Log.d("BARCODE", result.getText());
-			return result.getText();
+
+			List<Item> items = query.find();
+			progressDialog.dismiss();
+			int numOfItems = items.size();
+
+			//No matching items found, display an error message.
+			//An exception and this case show the same error, so just throw an exception.
+			if (numOfItems == 0) {
+				throw new Exception();
+			}
+
+			else {
+
+				//Save the list of retrieved items and start the item uploading screen.
+				((NewItemActivity) getActivity()).setItemList(items);
+				addPhotoToShopAndReturn(null);
+
+			}
+
 		} catch (Exception e) {
-			//e.printStackTrace();
+
+			//Show a message saying no items exist with this barcode
+			AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+			dlgAlert.setMessage("No matching items have been found, please take the item picture.");
+			dlgAlert.setPositiveButton("OK", null);
+			dlgAlert.setCancelable(false);
+			dlgAlert.create().show();
+
+			//Make the user take an item picture and continue as usual to uploading the item.
+			//Note however that the barcode has been saved and it will be uploaded with the item.
+
+			//Obviously, don't allow the user to scan for barcodes again.
+			//Display the barcode text on the barcode button to imply the user that they should take
+			//the picture of the current item.
+
+			barcodeMode = false;
+			photoButton.setVisibility(View.VISIBLE);
+			barcodeButton.setEnabled(false);
+			barcodeButton.setText("Barcode: " + barcode);
+
 		}
-
-		return null;
-
 	}
 
-	private byte[] scale(byte[] data) {
 
-
-		// Resize photo from camera byte array
-		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-		Bitmap imageScaled = Bitmap.createScaledBitmap(image, IMAGE_WIDTH, IMAGE_WIDTH, false);
-
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		imageScaled.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-
-		byte[] scaledData = bos.toByteArray();
-
-		return scaledData;
-	}
 
 
 	/* we don't actually want this scaling/resizing, since it makes the picture too small,
@@ -517,8 +524,8 @@ public class CameraFragment extends Fragment {
 
 		if (getActivity().getClass() == NewShopActivity.class) {
 			Log.i(TAG, "NewShopActivity");
-			
-//			byte[] scaledData = scale(data);
+
+			//			byte[] scaledData = scale(data);
 
 			((NewShopActivity) getActivity()).setCurrentPhotoData(data);
 
@@ -527,7 +534,9 @@ public class CameraFragment extends Fragment {
 					FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		} else if (getActivity().getClass() == NewItemActivity.class) {
 			Log.i(TAG, "NewItemActivity");
-			((NewItemActivity) getActivity()).setCurrentPhotoData(data);
+
+			if (data != null)
+				((NewItemActivity) getActivity()).setCurrentPhotoData(data);
 
 			Fragment cameraFragment = new NewItemFragment();
 			FragmentTransaction transaction = getActivity().getFragmentManager()
@@ -549,6 +558,7 @@ public class CameraFragment extends Fragment {
 		if (camera == null) {
 			try {
 				camera = Camera.open();
+				setParams();
 				photoButton.setEnabled(true);
 			} catch (Exception e) {
 				Log.i(TAG, "No camera: " + e.getMessage());
@@ -557,17 +567,31 @@ public class CameraFragment extends Fragment {
 						Toast.LENGTH_LONG).show();
 			}
 		}
+
+		//barcode will usually be null, unless came here from the new item fragment after
+		//scanning a barcode and wanting to take own picture.
+
+		final NewItemActivity nia = (NewItemActivity) getActivity();
+		String barcode = nia.getBarcode();
+		if (barcode != null) {
+			barcodeButton.setEnabled(false);
+			barcodeButton.setText("Barcode: " + barcode);
+		}
 	}
 
 	@Override
 	public void onPause() {
+		releaseCamera();
+		super.onPause();
+	}
+
+	private void releaseCamera() {
 		if (camera != null) {
 			camera.setPreviewCallback(null);
 			camera.stopPreview();
 			camera.release();
 			camera = null;
 		}
-		super.onPause();
 	}
 
 	public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {

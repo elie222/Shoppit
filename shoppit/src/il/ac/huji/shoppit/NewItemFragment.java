@@ -1,26 +1,33 @@
 package il.ac.huji.shoppit;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.parse.GetDataCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseImageView;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -37,6 +44,7 @@ import com.parse.SaveCallback;
 public class NewItemFragment extends Fragment {
 
 	private ImageView photoImageView;
+	private ParseImageView parseImageView;
 	private EditText nameEditText;
 	private EditText priceEditText;
 	private Spinner currencySpinner;
@@ -45,6 +53,9 @@ public class NewItemFragment extends Fragment {
 	private Button doneButton;
 
 	private byte[] photoData;
+
+	private List<Item> itemList; //List of items with a similar barcode
+	int selectedItem = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,12 +68,30 @@ public class NewItemFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_new_item, parent, false);
 
 		photoImageView = ((ImageView) v.findViewById(R.id.photoImageView));
+		parseImageView = ((ParseImageView) v.findViewById(R.id.parseImageView));
 		nameEditText = ((EditText) v.findViewById(R.id.nameEditText));
 		priceEditText = ((EditText) v.findViewById(R.id.priceEditText));
 		currencySpinner = ((Spinner) v.findViewById(R.id.currencySpinner));
 		categorySpinner = ((Spinner) v.findViewById(R.id.categorySpinner));
 		keywordsEditText = ((EditText) v.findViewById(R.id.keywordsEditText));
 		doneButton = ((Button) v.findViewById(R.id.doneButton));
+
+		ImageButton prev = (ImageButton) v.findViewById(R.id.prev_pic);
+		ImageButton next = (ImageButton) v.findViewById(R.id.next_pic);
+		ImageButton change = (ImageButton) v.findViewById(R.id.change_pic);
+
+		//If no barcode has been scanned, don't show the buttons over the image
+		itemList = ((NewItemActivity) getActivity()).getItemList();
+		if (itemList == null) {
+			prev.setVisibility(View.GONE);
+			next.setVisibility(View.GONE);
+			change.setVisibility(View.GONE);
+			parseImageView.setVisibility(View.INVISIBLE);
+		}
+		else {
+			photoImageView.setVisibility(View.INVISIBLE);
+		}
+
 
 		// set up currency spinner
 		ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(getActivity(),
@@ -86,6 +115,63 @@ public class NewItemFragment extends Fragment {
 
 		});
 
+		//Listeners for the buttons that appear after scanning a barcode
+
+		prev.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				selectedItem = (--selectedItem < 0 ? itemList.size() - 1 : selectedItem);
+				Item item = itemList.get(selectedItem);
+				parseImageView.setParseFile(item.getPhotoFile());
+				parseImageView.loadInBackground(new GetDataCallback() {
+					public void done(byte[] data, ParseException e) {}
+				});
+				nameEditText.setText(item.getName());
+				selectCategory(item.getMainCategory());
+			}
+
+		});
+
+		next.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				selectedItem = (selectedItem + 1) % itemList.size();
+				Item item = itemList.get(selectedItem);
+				parseImageView.setParseFile(item.getPhotoFile());
+				parseImageView.loadInBackground(new GetDataCallback() {
+					public void done(byte[] data, ParseException e) {}
+				});
+				nameEditText.setText(item.getName());
+				selectCategory(item.getMainCategory());
+			}
+
+		});
+
+		change.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				//Save the info that was filled
+				NewItemActivity nia = (NewItemActivity) getActivity();
+				nia.savedData = true;
+				nia.name = nameEditText.getText().toString();
+				nia.price = priceEditText.getText().toString();
+				nia.currencySelection = currencySpinner.getSelectedItemPosition();
+				nia.categorySelection = categorySpinner.getSelectedItemPosition();
+				nia.categorySelection = categorySpinner.getSelectedItemPosition();
+				nia.keywords = keywordsEditText.getText().toString();
+				
+				//Start the camera again
+				getFragmentManager().popBackStack();
+			}
+
+		});
+
+
+
 		return v;
 	}
 
@@ -105,17 +191,64 @@ public class NewItemFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		//Check if data has been saved previously, restore if so
+		
+		NewItemActivity nia = (NewItemActivity) getActivity();
+		if (nia.savedData) {
+			nameEditText.setText(nia.name);
+			priceEditText.setText(nia.price);
+			currencySpinner.setSelection(nia.currencySelection);
+			categorySpinner.setSelection(nia.categorySelection);
+			keywordsEditText.setText(nia.keywords);
+		}
+		else { //If not, select the "other" category.
+			categorySpinner.setSelection(categorySpinner.getCount() - 1);
+		}
 
+		
 		photoData = ((NewItemActivity) getActivity()).getCurrentPhotoData();
 
 		if (photoData != null) {
 			Bitmap itemImageBitmap = BitmapFactory.decodeByteArray(photoData, 0, photoData.length);
 			photoImageView.setImageBitmap(itemImageBitmap);
 		}
+
+		//If a barcode has been scanned, show the first image and text
+		if (itemList != null) {
+
+			Item item = itemList.get(selectedItem);
+			parseImageView.setParseFile(item.getPhotoFile());
+			parseImageView.loadInBackground(new GetDataCallback() {
+				public void done(byte[] data, ParseException e) {
+					if (e != null)
+						e.printStackTrace();
+				}
+			});
+			nameEditText.setText(item.getName());
+			selectCategory(item.getMainCategory());
+		}
 	}
+	
+	
+	/**
+	 * Select the category that has this text, or "other" if any error rises.
+	 * @param category
+	 */
+	private void selectCategory(String category) {
+		for (int i = 0; i < categorySpinner.getCount(); i++) {
+			String listCateg = categorySpinner.getItemAtPosition(i).toString();
+			if (listCateg.equals(category)) {
+				categorySpinner.setSelection(i);
+				return;
+			}
+		}
+		categorySpinner.setSelection(categorySpinner.getCount() - 1);
+	}
+	
 
 	private void addItem() {
-		
+
 		final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Adding item...", true);
 
 		String name = nameEditText.getText().toString().trim().replaceAll("[ \t]+", " ");
@@ -125,7 +258,7 @@ public class NewItemFragment extends Fragment {
 		String currency = currencySpinner.getSelectedItem().toString();
 		String category = categorySpinner.getSelectedItem().toString();
 
-		String keywordsString = keywordsEditText.getText().toString();
+		String keywordsString = keywordsEditText.getText().toString().toLowerCase();
 		String [] keywords = keywordsString.split("\\s+");
 
 		//Perform sanity checks
@@ -185,7 +318,7 @@ public class NewItemFragment extends Fragment {
 		}
 
 		doneButton.setEnabled(false);
-		
+
 		//Data is OK, upload the item to parse.
 
 		Item newItem = new Item();
@@ -204,14 +337,23 @@ public class NewItemFragment extends Fragment {
 		newItem.setLocation(point);
 
 		// photo
-		ParseFile photoFile = new ParseFile("photo.jpg", photoData);
-		newItem.setPhotoFile(photoFile);
+		if (photoData == null) {
+			ParseFile photoFile = new ParseFile("photo.jpg", photoData);
+			newItem.setPhotoFile(photoFile);
+		}
+		else
+			newItem.setPhotoFile(itemList.get(selectedItem).getPhotoFile());
 
 		// Permissions
 		// everyone can read the item, only user that creates it can edit it.
 		ParseACL itemACL = new ParseACL(ParseUser.getCurrentUser());
 		itemACL.setPublicReadAccess(true);
 		newItem.setACL(itemACL);
+
+		//Barcode
+		String barcode = ((NewItemActivity) getActivity()).getBarcode();
+		if (barcode != null)
+			newItem.setBarcode(barcode);
 
 		newItem.saveInBackground(new SaveCallback() {
 			@Override
