@@ -158,7 +158,7 @@ public class CameraFragment extends Fragment {
 						((NewItemActivity) getActivity()).setBarcode(barcode);
 
 						//If came here, scanning was successful
-						releaseCamera();
+						//releaseCamera();
 						rectangle.setVisibility(View.INVISIBLE);
 						searchBarcode(barcode);
 

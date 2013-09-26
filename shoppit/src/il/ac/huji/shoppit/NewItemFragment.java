@@ -337,7 +337,7 @@ public class NewItemFragment extends Fragment {
 		newItem.setLocation(point);
 
 		// photo
-		if (photoData == null) {
+		if (photoData != null) {
 			ParseFile photoFile = new ParseFile("photo.jpg", photoData);
 			newItem.setPhotoFile(photoFile);
 		}
