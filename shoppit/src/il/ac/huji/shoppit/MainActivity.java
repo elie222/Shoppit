@@ -176,7 +176,6 @@ LocationListener {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		// TODO moved to onResume
 		//		if (savedInstanceState == null) {
 		//			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
 		//		}
@@ -586,32 +585,32 @@ LocationListener {
 //		}
 //	}
 
-	/**
-	 * Show a dialog returned by Google Play services for the
-	 * connection error code
-	 *
-	 * @param errorCode An error code returned from onConnectionFailed
-	 */
-	private void showErrorDialog(int errorCode) {
-
-		// Get the error dialog from Google Play services
-		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-				errorCode,
-				this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-		// If Google Play services can provide an error dialog
-		if (errorDialog != null) {
-
-			// Create a new DialogFragment in which to show the error dialog
-			ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-
-			// Set the dialog in the DialogFragment
-			errorFragment.setDialog(errorDialog);
-
-			// Show the error dialog in the DialogFragment
-			errorFragment.show(getFragmentManager(), "Location Updates");
-		}
-	}
+//	/**
+//	 * Show a dialog returned by Google Play services for the
+//	 * connection error code
+//	 *
+//	 * @param errorCode An error code returned from onConnectionFailed
+//	 */
+//	private void showErrorDialog(int errorCode) {
+//
+//		// Get the error dialog from Google Play services
+//		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+//				errorCode,
+//				this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+//
+//		// If Google Play services can provide an error dialog
+//		if (errorDialog != null) {
+//
+//			// Create a new DialogFragment in which to show the error dialog
+//			ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+//
+//			// Set the dialog in the DialogFragment
+//			errorFragment.setDialog(errorDialog);
+//
+//			// Show the error dialog in the DialogFragment
+//			errorFragment.show(getFragmentManager(), "Location Updates");
+//		}
+//	}
 
 	// Define a DialogFragment that displays the error dialog
 	public static class ErrorDialogFragment extends DialogFragment {

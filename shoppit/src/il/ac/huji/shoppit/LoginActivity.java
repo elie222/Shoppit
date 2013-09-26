@@ -6,11 +6,9 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,14 +61,6 @@ public class LoginActivity extends ActionBarActivity {
 		});
 
 		((EditText)findViewById(R.id.logInUsernameEdt)).requestFocus();
-	}
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login_activity_actions, menu);
-		return true;
 	}
 
 	private void onLogInButtonClicked() {

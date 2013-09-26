@@ -39,6 +39,10 @@ import android.widget.TextView;
 public class ItemActivity extends Activity implements CommentDialogFragment.CommentDialogListener {
 
 	//	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
+	private final static int ADD_COMMENT_REQUEST_CODE = 4000;
+	private final static int LIKE_ITEM_REQUEST_CODE = 4001;
+	private final static int REPORT_ITEM_REQUEST_CODE = 4002;
+
 	private ShareActionProvider mShareActionProvider;
 
 	private Item mItem;
@@ -85,26 +89,12 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 			@Override
 			public void onClick(View v) {
-				if (likeCheckBox.isChecked()) {
-					likesCount++;
+				if (ParseUser.getCurrentUser() != null) {
+					likeItem();
 				} else {
-					likesCount--;
+					Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
+					startActivityForResult(loginIntent, LIKE_ITEM_REQUEST_CODE);
 				}
-				likesCountTextView.setText(likesCount.toString());
-
-				HashMap<String, Object> params = new HashMap<String, Object>();
-				params.put("itemId", mItem.getObjectId());
-				params.put("like", likeCheckBox.isChecked());
-
-				ParseCloud.callFunctionInBackground("likeItem", params, new FunctionCallback<String>() {
-					public void done(String message, ParseException e) {
-						if (e == null) {
-							Log.i("ITEM_ACTIVITY", message);
-						} else {
-							Log.e("ITEM_ACTIVITY", "ERROR MESSAGE: " + e.getMessage());
-						}
-					}
-				});
 			}
 		});
 
@@ -112,10 +102,12 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 			@Override
 			public void onClick(View v) {
-				FragmentManager fm = getFragmentManager();
-				CommentDialogFragment commentDialog = new CommentDialogFragment();
-				commentDialog.setRetainInstance(true);
-				commentDialog.show(fm, "comment_dialog_fragment");
+				if (ParseUser.getCurrentUser() != null) {
+					addComment();
+				} else {
+					Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
+					startActivityForResult(loginIntent, ADD_COMMENT_REQUEST_CODE);
+				}
 			}
 
 		});
@@ -154,7 +146,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 		// check if current user has liked the object
 		ParseUser user = ParseUser.getCurrentUser();
-				
+
 		if (user!= null) {
 
 			ParseQuery<ParseUser> queryUserLikes = mItem.getLikesRelation().getQuery();
@@ -177,25 +169,25 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 			});
 
 			// for debugging. remove afterwards
-//			ParseQuery<ParseUser> debugQueryUserLikes = mItem.getLikesRelation().getQuery();
-//
-//			debugQueryUserLikes.findInBackground(new FindCallback<ParseUser>() {
-//
-//				@Override
-//				public void done(List<ParseUser> users, ParseException e) {
-//					for (int i=0; i<users.size(); i++) {
-//						Log.d("ITEM_ACTIVITY", "Current user's id: " + ParseUser.getCurrentUser().getObjectId() +
-//								". Users that like this object: " + users.get(i).getObjectId());
-//
-//						if (ParseUser.getCurrentUser().getObjectId().equals(users.get(i).getObjectId())) {
-//							Log.d("ITEM_ACTIVITY", "User likes this item.");
-//						} else {
-//							Log.d("ITEM_ACTIVITY", "XXX");
-//						}
-//					}
-//				}
-//			});
-			
+			//			ParseQuery<ParseUser> debugQueryUserLikes = mItem.getLikesRelation().getQuery();
+			//
+			//			debugQueryUserLikes.findInBackground(new FindCallback<ParseUser>() {
+			//
+			//				@Override
+			//				public void done(List<ParseUser> users, ParseException e) {
+			//					for (int i=0; i<users.size(); i++) {
+			//						Log.d("ITEM_ACTIVITY", "Current user's id: " + ParseUser.getCurrentUser().getObjectId() +
+			//								". Users that like this object: " + users.get(i).getObjectId());
+			//
+			//						if (ParseUser.getCurrentUser().getObjectId().equals(users.get(i).getObjectId())) {
+			//							Log.d("ITEM_ACTIVITY", "User likes this item.");
+			//						} else {
+			//							Log.d("ITEM_ACTIVITY", "XXX");
+			//						}
+			//					}
+			//				}
+			//			});
+
 		}
 
 		imageView.setPlaceholder(getResources().getDrawable(R.drawable.placeholder));
@@ -289,15 +281,76 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 			startActivity(intent);
 			return true;
 		case R.id.menu_item_report:
-			FragmentManager fm = getFragmentManager();
-			ReportDialogFragment reportDialog = new ReportDialogFragment();
-			reportDialog.setRetainInstance(true);
-			reportDialog.show(fm, "report_dialog_fragment");
+			if (ParseUser.getCurrentUser() != null) {
+				reportItem();
+			} else {
+				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
+				startActivityForResult(loginIntent, REPORT_ITEM_REQUEST_CODE);
+			}
 
 			return true;
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void addComment() {
+		FragmentManager fm = getFragmentManager();
+		CommentDialogFragment commentDialog = new CommentDialogFragment();
+		commentDialog.setRetainInstance(true);
+		commentDialog.show(fm, "comment_dialog_fragment");
+	}
+
+	private void likeItem() {
+		if (likeCheckBox.isChecked()) {
+			likesCount++;
+		} else {
+			likesCount--;
+		}
+		likesCountTextView.setText(likesCount.toString());
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("itemId", mItem.getObjectId());
+		params.put("like", likeCheckBox.isChecked());
+
+		ParseCloud.callFunctionInBackground("likeItem", params, new FunctionCallback<String>() {
+			public void done(String message, ParseException e) {
+				if (e == null) {
+					Log.i("ITEM_ACTIVITY", message);
+				} else {
+					Log.e("ITEM_ACTIVITY", "ERROR MESSAGE: " + e.getMessage());
+				}
+			}
+		});
+	}
+
+	private void reportItem() {
+		FragmentManager fm = getFragmentManager();
+		ReportDialogFragment reportDialog = new ReportDialogFragment();
+		reportDialog.setRetainInstance(true);
+		reportDialog.show(fm, "report_dialog_fragment");
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case ADD_COMMENT_REQUEST_CODE:
+				addComment();
+				break;
+			case LIKE_ITEM_REQUEST_CODE:
+				likeItem();
+				break;
+			case REPORT_ITEM_REQUEST_CODE:
+				reportItem();
+				break;
+			default:
+				break;
+			}
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public Item getItem() {
