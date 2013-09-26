@@ -40,14 +40,6 @@ public class Item extends ParseObject {
 		put("author", user);
 	}
 
-//	public String getRating() {
-//		return getString("rating");
-//	}
-//
-//	public void setRating(String rating) {
-//		put("rating", rating);
-//	}
-
 	public ParseFile getPhotoFile() {
 		return getParseFile("photo");
 	}
@@ -90,6 +82,10 @@ public class Item extends ParseObject {
 	
 	public ParseRelation<ParseUser> getLikesRelation() {
 		return getRelation("likes");
+	}
+	
+	public int getLikesCount() {
+		return getInt("likesCount");
 	}
 	
 	// use Cloud function to like an Item

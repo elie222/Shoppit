@@ -135,28 +135,30 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		nameTextView.setText(mItem.getName());
 		priceTextView.setText(String.valueOf(mItem.getPrice()));
 		currencyTextView.setText(String.valueOf(mItem.getCurrency()));
-		categoryTextView.setText(mItem.getMainCategory());
+		categoryTextView.setText(String.valueOf(mItem.getMainCategory()));
 
+		likesCount = mItem.getLikesCount();
+		likesCountTextView.setText(String.valueOf(mItem.getLikesCount()));
 		// get the number of users that like the item
-		ParseQuery<ParseUser> queryLikesCount = mItem.getLikesRelation().getQuery();
-		queryLikesCount.countInBackground(new CountCallback() {
-			public void done(int count, ParseException e) {
-				if (e == null) {
-					likesCount = count;
-					likesCountTextView.setText(likesCount.toString());
-				} else {
-					Log.e("LIKE_CHECK_BOX",  "error2 with the likesCount query: " + e.getMessage());
-				}
-			}
-		});
+		//		ParseQuery<ParseUser> queryLikesCount = mItem.getLikesRelation().getQuery();
+		//		queryLikesCount.countInBackground(new CountCallback() {
+		//			public void done(int count, ParseException e) {
+		//				if (e == null) {
+		//					likesCount = count;
+		//					likesCountTextView.setText(likesCount.toString());
+		//				} else {
+		//					Log.e("LIKE_CHECK_BOX",  "error2 with the likesCount query: " + e.getMessage());
+		//				}
+		//			}
+		//		});
 
 		// check if current user has liked the object
 		ParseUser user = ParseUser.getCurrentUser();
-
+				
 		if (user!= null) {
 
 			ParseQuery<ParseUser> queryUserLikes = mItem.getLikesRelation().getQuery();
-			queryUserLikes.whereEqualTo("objectId", user.get("objectId"));
+			queryUserLikes.whereEqualTo("objectId", user.getObjectId());
 
 			queryUserLikes.countInBackground(new CountCallback() {
 				public void done(int count, ParseException e) {
@@ -174,19 +176,26 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 				}
 			});
 
-			// for debugging, but i think everything's fine
-			//			queryUserLikes.findInBackground(new FindCallback<ParseUser>() {
-			//				
-			//				@Override
-			//				public void done(List<ParseUser> objects, ParseException e) {
-			//					// TODO Auto-generated method stub
-			//					for (int i=0; i<objects.size(); i++) {
-			//						Log.i("List of users", objects.get(i).toString());
-			//					}
-			//					
-			//				}
-			//				
-			//			});
+			// for debugging. remove afterwards
+//			ParseQuery<ParseUser> debugQueryUserLikes = mItem.getLikesRelation().getQuery();
+//
+//			debugQueryUserLikes.findInBackground(new FindCallback<ParseUser>() {
+//
+//				@Override
+//				public void done(List<ParseUser> users, ParseException e) {
+//					for (int i=0; i<users.size(); i++) {
+//						Log.d("ITEM_ACTIVITY", "Current user's id: " + ParseUser.getCurrentUser().getObjectId() +
+//								". Users that like this object: " + users.get(i).getObjectId());
+//
+//						if (ParseUser.getCurrentUser().getObjectId().equals(users.get(i).getObjectId())) {
+//							Log.d("ITEM_ACTIVITY", "User likes this item.");
+//						} else {
+//							Log.d("ITEM_ACTIVITY", "XXX");
+//						}
+//					}
+//				}
+//			});
+			
 		}
 
 		ParseFile photoFile = mItem.getPhotoFile();
@@ -283,7 +292,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 			ReportDialogFragment reportDialog = new ReportDialogFragment();
 			reportDialog.setRetainInstance(true);
 			reportDialog.show(fm, "report_dialog_fragment");
-			
+
 			return true;
 		}
 
