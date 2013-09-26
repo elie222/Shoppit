@@ -18,7 +18,6 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
@@ -32,9 +31,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -42,7 +38,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.SearchView;
 import android.support.v4.app.NavUtils;
 
 // TODO - add shops to map instead, or as well?
@@ -65,12 +60,12 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 	private LocationClient mLocationClient;
 
 	//	private static final LatLng SOMEWHERE_IN_JLEM = new LatLng(31.7644, 35.2116);
-	private static final LatLng SOMEWHERE_IN_JLEM = new LatLng(0, 0);
+	// private static final LatLng SOMEWHERE_IN_JLEM = new LatLng(0, 0);
 
 	private Item mItem = null;
 	private LatLng mItemLatLng = null;
 	private Marker mItemMarker = null;
-	
+
 	private String mQueryString = null;
 
 	private boolean movedCameraToInitialPosition = false;
@@ -90,12 +85,12 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		setContentView(R.layout.activity_map);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
+
 		if (getIntent().getBooleanExtra(SHOW_ITEM_EXTRA, false)) {
 			mItem = GeneralInfo.itemHolder;
 			mItemLatLng = new LatLng(mItem.getLocation().getLatitude(), mItem.getLocation().getLongitude());
 		}
-		
+
 		mQueryString = getIntent().getStringExtra(QUERY_EXTRA);
 	}
 
@@ -157,7 +152,11 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 						mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mItemLatLng, 15));
 
 						mItemMarker.showInfoWindow();
-					} else {
+					}
+//					else if (mQueryString != null) { 
+//						mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+//					}
+					else {
 						mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
 					}
 
@@ -177,6 +176,8 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		//		.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 		if (mItem != null) {
 
+			Log.d(TAG, "mItem not null: " + mItem.getName());
+
 			mItemMarker = mMap.addMarker(new MarkerOptions()
 			.position(mItemLatLng)
 			.title(mItem.getName())
@@ -184,11 +185,14 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 			.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 		} else if (mQueryString != null) {
-			
+
+			Log.d(TAG, "mQueryString not null: " + mQueryString);
+
 			ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-			// this is wrong!
-			// ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(LAT, LONG);
-			// query.whereNear("location", userLocation); // TODO why's this line cause a bug here?
+			//ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(mLocationClient.getLastLocation().getLatitude(),
+			//		mLocationClient.getLastLocation().getLongitude());
+
+			//query.whereNear("location", userLocation);
 			query.whereContains("searchString", mQueryString.toLowerCase());
 			query.setLimit(ITEMS_TO_SHOW);
 
@@ -223,9 +227,12 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 			});
 		} else {
+
+			Log.d(TAG, "mItem and mQueryString are both null");
+
 			ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-			// TODO!!! this is wrong!
-			ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(SOMEWHERE_IN_JLEM.latitude, SOMEWHERE_IN_JLEM.longitude);
+			ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(mLocationClient.getLastLocation().getLatitude(),
+					mLocationClient.getLastLocation().getLongitude());
 			query.whereNear("location", userLocation);
 			query.setLimit(ITEMS_TO_SHOW);
 
@@ -288,20 +295,20 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		getMenuInflater().inflate(R.menu.map, menu);
 		return true;
 	}
-	
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		MenuInflater inflater = getMenuInflater();
-//		inflater.inflate(R.menu.map, menu);
-//
-//		// Get the SearchView and set the searchable configuration
-//		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-//		searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
-//		//		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-//
-//		return super.onCreateOptionsMenu(menu);
-//	}
+
+	//	@Override
+	//	public boolean onCreateOptionsMenu(Menu menu) {
+	//		MenuInflater inflater = getMenuInflater();
+	//		inflater.inflate(R.menu.map, menu);
+	//
+	//		// Get the SearchView and set the searchable configuration
+	//		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	//		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+	//		searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
+	//		//		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+	//
+	//		return super.onCreateOptionsMenu(menu);
+	//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -332,9 +339,9 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 	public void onLocationChanged(Location location) {
 
 		if (!movedCameraToInitialPosition && location != null) {
-			
+
 			movedCameraToInitialPosition = true;
-			
+
 			setUpMapIfNeeded();
 		}
 
