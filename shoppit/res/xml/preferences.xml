@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ListPreference
+        android:key="currency_key"
+        android:title="@string/currency"
+        android:entries="@array/pref_currency_entries"
+        android:entryValues="@array/pref_currency_values"
+        android:summary="Choose your currency" />
+
+</PreferenceScreen>

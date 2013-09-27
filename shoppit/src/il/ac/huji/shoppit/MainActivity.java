@@ -1,7 +1,5 @@
 package il.ac.huji.shoppit;
 
-import il.ac.huji.shoppit.CurrencyDialogFragment.CurrencyDialogListener;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
@@ -30,6 +28,7 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -46,7 +45,7 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity
 implements ConnectionCallbacks, OnConnectionFailedListener, 
-LocationListener, CurrencyDialogListener {
+LocationListener {
 
 	private static final String TAG = "MAIN_ACT";
 
@@ -117,7 +116,7 @@ LocationListener, CurrencyDialogListener {
 		//	            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
 		//	            }
 		//	    } catch (NameNotFoundException e) {
-		//
+		// 
 		//	    } catch (NoSuchAlgorithmException e) {
 		//
 		//	    }
@@ -183,21 +182,31 @@ LocationListener, CurrencyDialogListener {
 		//		if (savedInstanceState == null) {
 		//			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
 		//		}
-		
-		
+
+
 		//Check if user has selected currency.
-		SharedPreferences settings = getSharedPreferences("Shoppit", 0);
-		GeneralInfo.currencyName = settings.getString("currencyName", null);
-		if (GeneralInfo.currencyName == null) {
+//		SharedPreferences settings = getSharedPreferences("Shoppit", 0);
+//		GeneralInfo.currencyName = settings.getString("currencyName", null);
+//		if (GeneralInfo.currencyName == null) {
+//			FragmentManager fm = getFragmentManager();
+//			CurrencyDialogFragment currencyDialog = new CurrencyDialogFragment();
+//			currencyDialog.setRetainInstance(true);
+//			currencyDialog.show(fm, "currency_dialog_fragment");
+//		}
+//		else {
+//			GeneralInfo.currencySymbol = settings.getString("currencySymbol", null);
+//		}
+		
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (sharedPrefs.getString("currency_key", null) == null) {
 			FragmentManager fm = getFragmentManager();
 			CurrencyDialogFragment currencyDialog = new CurrencyDialogFragment();
 			currencyDialog.setRetainInstance(true);
 			currencyDialog.show(fm, "currency_dialog_fragment");
 		}
-		else {
-			GeneralInfo.currencySymbol = settings.getString("currencySymbol", null);
-		}
-		
+
+
 	}
 
 	@Override
@@ -320,14 +329,15 @@ LocationListener, CurrencyDialogListener {
 				mDrawerLayout.closeDrawer(mDrawerList);
 
 				selectedCategory = position;
+
 			} else {
-				Toast.makeText(mainActivity, "Error getting device location - location is null",
+				Toast.makeText(mainActivity, "Error getting device location",
 						Toast.LENGTH_LONG).show();
 			}
 
 			return;
 
-		} else if (selectedName.equals(getResources().getString(R.string.add_shop ))) {
+		} else if (selectedName.equals( getResources().getString(R.string.add_shop) )) {
 			// start new activity
 			if (ParseUser.getCurrentUser() != null) {
 				Location lastLocation = getLastLocation();
@@ -350,7 +360,7 @@ LocationListener, CurrencyDialogListener {
 			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
 
-		} else if (selectedName.equals(getResources().getString(R.string.logout))) {
+		} else if (selectedName.equals( getResources().getString(R.string.logout) )) {
 
 			ParseUser.logOut();
 
@@ -358,7 +368,7 @@ LocationListener, CurrencyDialogListener {
 			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
 
-		} else if (selectedName.equals("Shops")) { // ugly again...
+		} else if (selectedName.equals( getResources().getString(R.string.shops) )) {
 			Location lastLocation = getLastLocation();
 
 			if (lastLocation != null) {
@@ -386,7 +396,22 @@ LocationListener, CurrencyDialogListener {
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+		} else if (selectedName.equals( getResources().getString(R.string.settings) )) {
+			// Display the fragment as the main content.
+			Fragment fragment = new SettingsFragment();
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(position, true);
+			setTitle(selectedName);
+			mDrawerLayout.closeDrawer(mDrawerList);
+
+			selectedCategory = position;
+
+			return;
 		}
+
 	}
 
 	@Override
@@ -448,17 +473,17 @@ LocationListener, CurrencyDialogListener {
 		// If Google Play services is available
 		if (ConnectionResult.SUCCESS == resultCode) {
 
-			Toast.makeText(mainActivity, "Google Play services is available.",
-					Toast.LENGTH_LONG).show();
+			//			Toast.makeText(mainActivity, "Google Play services is available.",
+			//					Toast.LENGTH_LONG).show();
 
 			Log.d("Location Updates", "Google Play services is available.");
 			setUpLocationClientIfNeeded();
 			mLocationClient.connect();
 
 		} else {
-			Toast.makeText(mainActivity, "Google Play services is unavailable. Using LR2.",
-					Toast.LENGTH_LONG).show();
-			
+			//			Toast.makeText(mainActivity, "Google Play services is unavailable. Using LR2.",
+			//					Toast.LENGTH_LONG).show();
+
 			startUpFallbackLocationRetriever();
 
 		}
@@ -481,7 +506,7 @@ LocationListener, CurrencyDialogListener {
 						//					Log.d(TAG, (GeneralInfo.location == null)+"");
 						//					Log.d(TAG, (GeneralInfo.location)+"");
 						if (GeneralInfo.location == null) { //In case of error
-							Toast.makeText(mainActivity, "LR2 - Error getting device location.",
+							Toast.makeText(mainActivity, "Error getting device location.",
 									Toast.LENGTH_LONG).show();
 						} else {
 							foundLocationFLR = true;
@@ -496,7 +521,7 @@ LocationListener, CurrencyDialogListener {
 
 		// Get the device location
 		mFallbackLocationRetriever.startGettingUpdates(this, 10000);
-		
+
 	}
 
 	@Override
@@ -521,9 +546,9 @@ LocationListener, CurrencyDialogListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		Toast.makeText(mainActivity, "Location changed: " + location,
-				Toast.LENGTH_LONG).show();
-		
+		//		Toast.makeText(mainActivity, "Location changed: " + location,
+		//				Toast.LENGTH_LONG).show();
+
 		// we only want to do this if no location has been found before. i.e. on app startup
 		if (!foundLocationLC && location != null) {
 			foundLocationLC = true;
@@ -577,59 +602,59 @@ LocationListener, CurrencyDialogListener {
 		// do nothing
 	}
 
-//	/**
-//	 * Verify that Google Play services is available before making a request.
-//	 *
-//	 * @return true if Google Play services is available, otherwise false
-//	 */
-//	private boolean servicesConnected() {
-//		// Check that Google Play services is available
-//		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-//		// If Google Play services is available
-//		if (ConnectionResult.SUCCESS == resultCode) {
-//			// In debug mode, log the status
-//			Log.d("Location Updates", "Google Play services is available.");
-//			// Continue
-//			return true;
-//			// Google Play services was not available for some reason
-//		} else {			
-//			// Display an error dialog
-//			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
-//			if (dialog != null) {
-//				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-//				errorFragment.setDialog(dialog);
-//				errorFragment.show(getFragmentManager(), "Location Updates");
-//			}
-//			return false;
-//		}
-//	}
+	//	/**
+	//	 * Verify that Google Play services is available before making a request.
+	//	 *
+	//	 * @return true if Google Play services is available, otherwise false
+	//	 */
+	//	private boolean servicesConnected() {
+	//		// Check that Google Play services is available
+	//		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+	//		// If Google Play services is available
+	//		if (ConnectionResult.SUCCESS == resultCode) {
+	//			// In debug mode, log the status
+	//			Log.d("Location Updates", "Google Play services is available.");
+	//			// Continue
+	//			return true;
+	//			// Google Play services was not available for some reason
+	//		} else {			
+	//			// Display an error dialog
+	//			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
+	//			if (dialog != null) {
+	//				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+	//				errorFragment.setDialog(dialog);
+	//				errorFragment.show(getFragmentManager(), "Location Updates");
+	//			}
+	//			return false;
+	//		}
+	//	}
 
-//	/**
-//	 * Show a dialog returned by Google Play services for the
-//	 * connection error code
-//	 *
-//	 * @param errorCode An error code returned from onConnectionFailed
-//	 */
-//	private void showErrorDialog(int errorCode) {
-//
-//		// Get the error dialog from Google Play services
-//		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-//				errorCode,
-//				this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-//
-//		// If Google Play services can provide an error dialog
-//		if (errorDialog != null) {
-//
-//			// Create a new DialogFragment in which to show the error dialog
-//			ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-//
-//			// Set the dialog in the DialogFragment
-//			errorFragment.setDialog(errorDialog);
-//
-//			// Show the error dialog in the DialogFragment
-//			errorFragment.show(getFragmentManager(), "Location Updates");
-//		}
-//	}
+	//	/**
+	//	 * Show a dialog returned by Google Play services for the
+	//	 * connection error code
+	//	 *
+	//	 * @param errorCode An error code returned from onConnectionFailed
+	//	 */
+	//	private void showErrorDialog(int errorCode) {
+	//
+	//		// Get the error dialog from Google Play services
+	//		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+	//				errorCode,
+	//				this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+	//
+	//		// If Google Play services can provide an error dialog
+	//		if (errorDialog != null) {
+	//
+	//			// Create a new DialogFragment in which to show the error dialog
+	//			ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+	//
+	//			// Set the dialog in the DialogFragment
+	//			errorFragment.setDialog(errorDialog);
+	//
+	//			// Show the error dialog in the DialogFragment
+	//			errorFragment.show(getFragmentManager(), "Location Updates");
+	//		}
+	//	}
 
 	// Define a DialogFragment that displays the error dialog
 	public static class ErrorDialogFragment extends DialogFragment {
@@ -665,12 +690,6 @@ LocationListener, CurrencyDialogListener {
 		} else {
 			return null;
 		}
-	}
-
-	@Override
-	public void onDialogPositiveClick(DialogFragment dialog) {
-		// TODO Auto-generated method stub
-		
 	}
 
 

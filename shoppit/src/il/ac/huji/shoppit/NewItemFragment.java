@@ -5,11 +5,12 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -186,7 +187,8 @@ public class NewItemFragment extends Fragment {
 		
 		super.onResume();
 		
-		currencyView.setText(GeneralInfo.currencySymbol);
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		currencyView.setText(sharedPrefs.getString("currency_key", null));
 		
 		//Check if data has been saved previously, restore if so
 		
@@ -249,7 +251,6 @@ public class NewItemFragment extends Fragment {
 		String name = nameEditText.getText().toString().trim().replaceAll("[ \t]+", " ");
 		String price = priceEditText.getText().toString();
 
-		// TODO - check everything is okay with category, currency and keywords
 		String category = categorySpinner.getSelectedItem().toString();
 
 		String keywordsString = keywordsEditText.getText().toString().toLowerCase();
@@ -318,7 +319,7 @@ public class NewItemFragment extends Fragment {
 		Item newItem = new Item();
 		newItem.setName(name);
 		newItem.setPrice(Double.parseDouble(price));
-		newItem.setCurrency(GeneralInfo.currencyName);
+		newItem.setCurrency(currencyView.getText().toString());
 		newItem.setAuthor(ParseUser.getCurrentUser());
 		newItem.setMainCategory(category);
 		newItem.setKeywords(keywords);
@@ -349,7 +350,7 @@ public class NewItemFragment extends Fragment {
 		if (barcode != null)
 			newItem.setBarcode(barcode);
 
-		Log.d("HERE", "1" + GeneralInfo.currencyName);
+		//Log.d("HERE", "1" + GeneralInfo.currencyName);
 		newItem.saveInBackground(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {

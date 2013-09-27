@@ -20,8 +20,8 @@ public class GeneralInfo {
 	static Shop shopHolder = null;
 	
 	
-	static String currencyName = null,
-			currencySymbol = null;
+//	static String currencyName = null,
+//			currencySymbol = null;
 
 
 	//Location readers

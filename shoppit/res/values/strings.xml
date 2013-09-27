@@ -50,18 +50,32 @@
     <string name="price">Price</string>
     <string name="category">Category</string>
     <string name="show_results_on_map">Show results on map</string>
+    <string name="currency">Currency</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
         <item>Closest</item>
         <item>Newest</item>
     </string-array>
-    
-    <string-array name="currencies">
+    <!--
+         <string-array name="currencies_array">
         <item>USD ($)</item>
         <item>NIS (₪)</item>
         <item>GBP (£)</item>
         <item>EUR (€)</item>
+    </string-array>
+    -->
+    <string-array name="pref_currency_entries">
+        <item>USD ($)</item>
+        <item>NIS (₪)</item>
+        <item>GBP (£)</item>
+        <item>EUR (€)</item>
+    </string-array>
+    <string-array name="pref_currency_values">
+        <item>$</item>
+        <item>₪</item>
+        <item>£</item>
+        <item>€</item>
     </string-array>
 
     <!-- navbar -->
@@ -91,11 +105,13 @@
         <item>Electronics</item>
         <item>Other</item>
     </string-array>
-    <string-array name="currencies_array">
+    <!--
+         <string-array name="currencies_array">
         <item>NIS</item>
         <item>USD</item>
         <item>GBP</item>
     </string-array>
+    -->
     <string-array name="report_reasons_array">
         <item>Sexual content</item>
         <item>Spam or misleading</item>

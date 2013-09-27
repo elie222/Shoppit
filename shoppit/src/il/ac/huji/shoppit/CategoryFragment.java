@@ -4,7 +4,9 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,8 +78,10 @@ RadioGroup.OnCheckedChangeListener {
 
 				ParseQuery<Item> query = new ParseQuery<Item>("Item");
 
-				if (GeneralInfo.currencyName != null)
-					query.whereEqualTo("currency", GeneralInfo.currencyName);
+				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+				
+				query.whereEqualTo("currency", sharedPrefs.getString("currency_key", null));
+				
 
 				if (!category.equals(getResources().getString(R.string.all))) {
 					query.whereEqualTo(MAIN_CATEGORY, category);

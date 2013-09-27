@@ -60,7 +60,7 @@ public class ReportDialogFragment extends DialogFragment {
 				// User cancelled the dialog
 				// do nothing
 			}
-		});;
+		});
 		return builder.create();
 	}
 }
