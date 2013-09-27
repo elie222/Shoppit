@@ -11,26 +11,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <RadioGroup
-        android:id="@+id/radioGroup1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/radioNearby"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="Nearby" />
-
-        <RadioButton
-            android:id="@+id/radioCheapest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cheapest" />
-    </RadioGroup>
-
     <ListView
         android:id="@+id/shopsListView"
         android:layout_width="match_parent"
