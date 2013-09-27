@@ -391,6 +391,20 @@ LocationListener {
 			selectedCategory = position;
 
 			return;
+		} else if (selectedName.equals( getResources().getString(R.string.profile) )) {
+			// Display the fragment as the main content.
+			Fragment fragment = new ProfileFragment();
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(position, true);
+			setTitle(selectedName);
+			mDrawerLayout.closeDrawer(mDrawerList);
+
+			selectedCategory = position;
+
+			return;
 		}
 
 	}

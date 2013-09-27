@@ -130,6 +130,11 @@
         <item name="cheapest">Cheapest</item>
         <item name="most_liked">Most liked</item>
     </string-array>
+    <string-array name="profile_options_array">
+        <item name="items_posted">Items posted</item>
+        <item name="items_liked">Items liked</item>
+        <item name="items_posted_on">Items commented on</item>
+    </string-array>
 
     <string name="title_activity_main_activity_new">Welcome</string>
     <string name="title_activity_search_results">Search results</string>
