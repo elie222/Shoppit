@@ -72,7 +72,7 @@ LocationListener {
 	final Activity mainActivity = this;
 
 	int selectedCategory = 1;
-	
+
 	private int sortBySelected = 0;
 
 	// -------------
@@ -187,20 +187,20 @@ LocationListener {
 
 
 		//Check if user has selected currency.
-//		SharedPreferences settings = getSharedPreferences("Shoppit", 0);
-//		GeneralInfo.currencyName = settings.getString("currencyName", null);
-//		if (GeneralInfo.currencyName == null) {
-//			FragmentManager fm = getFragmentManager();
-//			CurrencyDialogFragment currencyDialog = new CurrencyDialogFragment();
-//			currencyDialog.setRetainInstance(true);
-//			currencyDialog.show(fm, "currency_dialog_fragment");
-//		}
-//		else {
-//			GeneralInfo.currencySymbol = settings.getString("currencySymbol", null);
-//		}
-		
+		//		SharedPreferences settings = getSharedPreferences("Shoppit", 0);
+		//		GeneralInfo.currencyName = settings.getString("currencyName", null);
+		//		if (GeneralInfo.currencyName == null) {
+		//			FragmentManager fm = getFragmentManager();
+		//			CurrencyDialogFragment currencyDialog = new CurrencyDialogFragment();
+		//			currencyDialog.setRetainInstance(true);
+		//			currencyDialog.show(fm, "currency_dialog_fragment");
+		//		}
+		//		else {
+		//			GeneralInfo.currencySymbol = settings.getString("currencySymbol", null);
+		//		}
+
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		if (sharedPrefs.getString("currency_key", null) == null) {
 			FragmentManager fm = getFragmentManager();
 			CurrencyDialogFragment currencyDialog = new CurrencyDialogFragment();
@@ -268,17 +268,7 @@ LocationListener {
 			return true;
 		case R.id.action_add:
 			if (ParseUser.getCurrentUser() != null) {
-				Location lastLocation = getLastLocation();
-
-				if (lastLocation != null) {
-					Intent newItemIntent = new Intent(getBaseContext(), NewItemActivity.class);
-					newItemIntent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
-					newItemIntent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
-					startActivity(newItemIntent);
-				} else {
-					Toast.makeText(mainActivity, "Error getting device location",
-							Toast.LENGTH_LONG).show();
-				}
+				startNewItemIntent();
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_ITEM_REQUEST_CODE);
@@ -342,18 +332,7 @@ LocationListener {
 		} else if (selectedName.equals( getResources().getString(R.string.add_shop) )) {
 			// start new activity
 			if (ParseUser.getCurrentUser() != null) {
-				Location lastLocation = getLastLocation();
-				if (lastLocation != null) {
-					Intent intent = new Intent(getBaseContext(), NewShopActivity.class);
-					intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
-					intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
-					startActivity(intent);
-				} else {
-					Toast.makeText(mainActivity, "Error getting device location",
-							Toast.LENGTH_LONG).show();
-					return;
-				}
-
+				startNewShopIntent();
 			} else {
 				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
 				startActivityForResult(loginIntent, ADD_SHOP_REQUEST_CODE);
@@ -444,9 +423,9 @@ LocationListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == RESULT_OK){
-			startActivity(new Intent(getBaseContext(), NewItemActivity.class));
+			startNewItemIntent();
 		} else if (requestCode == ADD_SHOP_REQUEST_CODE && resultCode == RESULT_OK){
-			startActivity(new Intent(getBaseContext(), NewShopActivity.class));
+			startNewShopIntent();
 		} else if (requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST) {
 			// TODO this isn't doing anything ATM
 			/*
@@ -693,22 +672,50 @@ LocationListener {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public boolean onSearchRequested() {
-	     Bundle appData = new Bundle();
-	     appData.putDouble(LATITUDE_EXTRA, getLastLocation().getLatitude());
-	     appData.putDouble(LONGITUDE_EXTRA, getLastLocation().getLongitude());
-	     startSearch(null, false, appData, false);
-	     return true;
-	 }
-	
+		Bundle appData = new Bundle();
+		appData.putDouble(LATITUDE_EXTRA, getLastLocation().getLatitude());
+		appData.putDouble(LONGITUDE_EXTRA, getLastLocation().getLongitude());
+		startSearch(null, false, appData, false);
+		return true;
+	}
+
 	public int getSortBy() {
 		return sortBySelected;
 	}
-	
+
 	public void setSortBy(int position) {
 		sortBySelected = position;
+	}
+	
+	private void startNewItemIntent() {
+		Location lastLocation = getLastLocation();
+		if (lastLocation != null) {
+			Intent intent = new Intent(getBaseContext(), NewItemActivity.class);
+			intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+			intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+			startActivity(intent);
+		} else {
+			Toast.makeText(mainActivity, "Error getting device location",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+	}
+	
+	private void startNewShopIntent() {
+		Location lastLocation = getLastLocation();
+		if (lastLocation != null) {
+			Intent intent = new Intent(getBaseContext(), NewShopActivity.class);
+			intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+			intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+			startActivity(intent);
+		} else {
+			Toast.makeText(mainActivity, "Error getting device location",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
 	}
 
 
