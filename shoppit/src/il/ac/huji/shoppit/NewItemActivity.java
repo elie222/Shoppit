@@ -29,7 +29,6 @@ public class NewItemActivity extends Activity {
 	boolean savedData = false;
 	String name;
 	String price;
-	int currencySelection;
 	int categorySelection;
 	String keywords;
 

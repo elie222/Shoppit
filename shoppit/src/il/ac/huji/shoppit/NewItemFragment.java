@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.GetDataCallback;
@@ -47,7 +48,7 @@ public class NewItemFragment extends Fragment {
 	private ParseImageView parseImageView;
 	private EditText nameEditText;
 	private EditText priceEditText;
-	private Spinner currencySpinner;
+	private TextView currencyView;
 	private Spinner categorySpinner;
 	private EditText keywordsEditText;
 	private Button doneButton;
@@ -71,7 +72,7 @@ public class NewItemFragment extends Fragment {
 		parseImageView = ((ParseImageView) v.findViewById(R.id.parseImageView));
 		nameEditText = ((EditText) v.findViewById(R.id.nameEditText));
 		priceEditText = ((EditText) v.findViewById(R.id.priceEditText));
-		currencySpinner = ((Spinner) v.findViewById(R.id.currencySpinner));
+		currencyView = ((TextView) v.findViewById(R.id.currencyView));
 		categorySpinner = ((Spinner) v.findViewById(R.id.categorySpinner));
 		keywordsEditText = ((EditText) v.findViewById(R.id.keywordsEditText));
 		doneButton = ((Button) v.findViewById(R.id.doneButton));
@@ -91,13 +92,6 @@ public class NewItemFragment extends Fragment {
 		else {
 			photoImageView.setVisibility(View.INVISIBLE);
 		}
-
-
-		// set up currency spinner
-		ArrayAdapter<CharSequence> currencyAdapter = ArrayAdapter.createFromResource(getActivity(),
-				R.array.currencies_array, android.R.layout.simple_spinner_item);
-		currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		currencySpinner.setAdapter(currencyAdapter);
 
 		// set up category spinner
 		ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getActivity(),
@@ -159,7 +153,6 @@ public class NewItemFragment extends Fragment {
 				nia.savedData = true;
 				nia.name = nameEditText.getText().toString();
 				nia.price = priceEditText.getText().toString();
-				nia.currencySelection = currencySpinner.getSelectedItemPosition();
 				nia.categorySelection = categorySpinner.getSelectedItemPosition();
 				nia.categorySelection = categorySpinner.getSelectedItemPosition();
 				nia.keywords = keywordsEditText.getText().toString();
@@ -190,7 +183,10 @@ public class NewItemFragment extends Fragment {
 
 	@Override
 	public void onResume() {
+		
 		super.onResume();
+		
+		currencyView.setText(GeneralInfo.currencySymbol);
 		
 		//Check if data has been saved previously, restore if so
 		
@@ -198,7 +194,6 @@ public class NewItemFragment extends Fragment {
 		if (nia.savedData) {
 			nameEditText.setText(nia.name);
 			priceEditText.setText(nia.price);
-			currencySpinner.setSelection(nia.currencySelection);
 			categorySpinner.setSelection(nia.categorySelection);
 			keywordsEditText.setText(nia.keywords);
 		}
@@ -255,7 +250,6 @@ public class NewItemFragment extends Fragment {
 		String price = priceEditText.getText().toString();
 
 		// TODO - check everything is okay with category, currency and keywords
-		String currency = currencySpinner.getSelectedItem().toString();
 		String category = categorySpinner.getSelectedItem().toString();
 
 		String keywordsString = keywordsEditText.getText().toString().toLowerCase();
@@ -324,7 +318,7 @@ public class NewItemFragment extends Fragment {
 		Item newItem = new Item();
 		newItem.setName(name);
 		newItem.setPrice(Double.parseDouble(price));
-		newItem.setCurrency(currency);
+		newItem.setCurrency(GeneralInfo.currencyName);
 		newItem.setAuthor(ParseUser.getCurrentUser());
 		newItem.setMainCategory(category);
 		newItem.setKeywords(keywords);
@@ -355,9 +349,11 @@ public class NewItemFragment extends Fragment {
 		if (barcode != null)
 			newItem.setBarcode(barcode);
 
+		Log.d("HERE", "1" + GeneralInfo.currencyName);
 		newItem.saveInBackground(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
+				Log.d("HERE", "2");
 				progressDialog.dismiss();
 				if (e == null) {
 					Toast.makeText(getActivity(), "Item added successfully",

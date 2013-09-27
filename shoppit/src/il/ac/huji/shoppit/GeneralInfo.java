@@ -18,6 +18,10 @@ public class GeneralInfo {
 	static Location location = null;
 	static Item itemHolder = null;
 	static Shop shopHolder = null;
+	
+	
+	static String currencyName = null,
+			currencySymbol = null;
 
 
 	//Location readers

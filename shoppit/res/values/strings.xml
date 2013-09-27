@@ -61,6 +61,7 @@
         <item>USD ($)</item>
         <item>NIS (₪)</item>
         <item>GBP (£)</item>
+        <item>EUR (€)</item>
     </string-array>
 
     <!-- navbar -->

@@ -181,7 +181,7 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 			mItemMarker = mMap.addMarker(new MarkerOptions()
 			.position(mItemLatLng)
 			.title(mItem.getName())
-			.snippet(mItem.getPrice() + " " + mItem.getCurrency())
+			.snippet(mItem.getPrice() + mItem.getCurrency())
 			.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 		} else if (mQueryString != null) {
@@ -212,7 +212,7 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 							.position(new LatLng(item.getLocation().getLatitude(),
 									item.getLocation().getLongitude()))
 									.title(item.getName())
-									.snippet(item.getPrice() + " " + item.getCurrency())
+									.snippet(item.getPrice() + item.getCurrency())
 									// this gives each marker a different colour
 									// .icon(BitmapDescriptorFactory.defaultMarker(i * 360 / items.size())));
 									.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
@@ -252,7 +252,7 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 							.position(new LatLng(item.getLocation().getLatitude(),
 									item.getLocation().getLongitude()))
 									.title(item.getName())
-									.snippet(item.getPrice() + " " + item.getCurrency())
+									.snippet(item.getPrice() + item.getCurrency())
 									// this gives each marker a different colour
 									// .icon(BitmapDescriptorFactory.defaultMarker(i * 360 / items.size())));
 									.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));

@@ -1,6 +1,7 @@
 package il.ac.huji.shoppit;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 
@@ -19,6 +20,15 @@ import com.parse.ParseUser;
 
 @ParseClassName("Item")
 public class Item extends ParseObject {
+	
+	private static HashMap<String,String> currencies = new HashMap<String,String>();
+	
+	static void fillMap() {
+		currencies.put("USD", "$");
+		currencies.put("NIS", "₪");
+		currencies.put("GBP", "£");
+		currencies.put("EUR", "€");
+	}
 
 	public Item() {
 		// A default constructor is required.
@@ -65,7 +75,9 @@ public class Item extends ParseObject {
 	}
 	
 	public String getCurrency() {
-		return getString("currency");
+		String currencyName = getString("currency");
+		String currencySymbol = currencies.get(currencyName);
+		return currencySymbol == null ? currencyName : currencySymbol;
 	}
 
 	public void setCurrency(String currency) {

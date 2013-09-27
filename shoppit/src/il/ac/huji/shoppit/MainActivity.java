@@ -1,5 +1,7 @@
 package il.ac.huji.shoppit;
 
+import il.ac.huji.shoppit.CurrencyDialogFragment.CurrencyDialogListener;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
@@ -23,6 +25,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Build;
@@ -43,7 +46,7 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity
 implements ConnectionCallbacks, OnConnectionFailedListener, 
-LocationListener {
+LocationListener, CurrencyDialogListener {
 
 	private static final String TAG = "MAIN_ACT";
 
@@ -101,6 +104,7 @@ LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Item.fillMap();
 
 		// Add code to print out the key hash
 		//	    try {
@@ -179,6 +183,21 @@ LocationListener {
 		//		if (savedInstanceState == null) {
 		//			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
 		//		}
+		
+		
+		//Check if user has selected currency.
+		SharedPreferences settings = getSharedPreferences("Shoppit", 0);
+		GeneralInfo.currencyName = settings.getString("currencyName", null);
+		if (GeneralInfo.currencyName == null) {
+			FragmentManager fm = getFragmentManager();
+			CurrencyDialogFragment currencyDialog = new CurrencyDialogFragment();
+			currencyDialog.setRetainInstance(true);
+			currencyDialog.show(fm, "currency_dialog_fragment");
+		}
+		else {
+			GeneralInfo.currencySymbol = settings.getString("currencySymbol", null);
+		}
+		
 	}
 
 	@Override
@@ -646,6 +665,12 @@ LocationListener {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
