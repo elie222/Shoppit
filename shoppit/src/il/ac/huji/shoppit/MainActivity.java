@@ -72,6 +72,8 @@ LocationListener {
 	final Activity mainActivity = this;
 
 	int selectedCategory = 1;
+	
+	private int sortBySelected = 0;
 
 	// -------------
 	// for getting location
@@ -700,6 +702,14 @@ LocationListener {
 	     startSearch(null, false, appData, false);
 	     return true;
 	 }
+	
+	public int getSortBy() {
+		return sortBySelected;
+	}
+	
+	public void setSortBy(int position) {
+		sortBySelected = position;
+	}
 
 
 }

@@ -125,6 +125,11 @@
     <string-array name="location_options_array">
         <item>Current location</item>
     </string-array>
+    <string-array name="sort_by_array">
+        <item name="nearby">Nearby</item>
+        <item name="cheapest">Cheapest</item>
+        <item name="most_liked">Most liked</item>
+    </string-array>
 
     <string name="title_activity_main_activity_new">Welcome</string>
     <string name="title_activity_search_results">Search results</string>

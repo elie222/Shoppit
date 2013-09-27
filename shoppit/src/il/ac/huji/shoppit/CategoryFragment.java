@@ -11,11 +11,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 
-public class CategoryFragment extends Fragment implements
-RadioGroup.OnCheckedChangeListener {
+public class CategoryFragment extends Fragment
+//implements RadioGroup.OnCheckedChangeListener 
+{
 
 	//	public static final String ARG_CATEGORY_NUMBER = "category_number";
 	public static final String ARG_CATEGORY_NAME = "category_name";
@@ -28,7 +33,8 @@ RadioGroup.OnCheckedChangeListener {
 	// FOR DEBUGGING
 	protected static final String TAG = "CAT_FRAG";
 
-	private RadioGroup radioGroupSortBy;
+	private Spinner sortBySpinner;
+	//private RadioGroup radioGroupSortBy;
 	private ListView listView;
 
 	private ItemAdapter adapter;
@@ -39,7 +45,8 @@ RadioGroup.OnCheckedChangeListener {
 
 	private String category;
 
-	private int checkedRadioButtonId;
+	//private int checkedRadioButtonId;
+	private int selectedSortByPosition;
 
 	public CategoryFragment() {
 
@@ -52,7 +59,8 @@ RadioGroup.OnCheckedChangeListener {
 		//		final int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
 		final String categoryName = getArguments().getString(ARG_CATEGORY_NAME);
 
-		radioGroupSortBy = (RadioGroup) rootView.findViewById(R.id.radioGroupSortBy);
+		sortBySpinner = (Spinner) rootView.findViewById(R.id.sortBySpinner);
+		//radioGroupSortBy = (RadioGroup) rootView.findViewById(R.id.radioGroupSortBy);
 		listView = (ListView) rootView.findViewById(R.id.homeListView);
 
 		// get location from MainActivity
@@ -62,9 +70,33 @@ RadioGroup.OnCheckedChangeListener {
 
 		category = categoryName;
 
-		radioGroupSortBy.setOnCheckedChangeListener(this);
+		// set up sort by spinner
+		ArrayAdapter<CharSequence> sortbyAdapter = ArrayAdapter.createFromResource(getActivity(),
+				R.array.sort_by_array, android.R.layout.simple_spinner_item);
+		sortbyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		sortBySpinner.setAdapter(sortbyAdapter);
+		
+		sortBySpinner.setSelection(((MainActivity) getActivity()).getSortBy());
+		
+		sortBySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-		checkedRadioButtonId = radioGroupSortBy.getCheckedRadioButtonId();
+			@Override
+			public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
+					int position, long id) {
+				((MainActivity) getActivity()).setSortBy(position);
+				selectedSortByPosition = position;
+				loadItems();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parentView) {
+				
+			}
+		});
+		
+		//radioGroupSortBy.setOnCheckedChangeListener(this);
+
+		//checkedRadioButtonId = radioGroupSortBy.getCheckedRadioButtonId();
 
 		loadItems();
 
@@ -86,17 +118,17 @@ RadioGroup.OnCheckedChangeListener {
 					query.whereEqualTo(MAIN_CATEGORY, category);
 				}
 
-				switch (checkedRadioButtonId) {
-				case R.id.radioNearby:
+				switch (selectedSortByPosition) {
+				case 0:
 					query.whereNear("location", currentLocation);
 					query.whereWithinMiles("location", currentLocation, 100000);
 					break;
-				case R.id.radioCheapest:
+				case 1:
 					// TODO make sure the item is within a certain distance too, or not?
 					// query.whereWithinMiles("location", currentLocation, 10);
 					query.orderByAscending("price");
 					break;
-				case R.id.radioMostLiked:
+				case 2:
 					query.orderByDescending("likesCount");
 					break;
 				default:
@@ -112,9 +144,9 @@ RadioGroup.OnCheckedChangeListener {
 		getActivity().setTitle(category);
 	}
 
-	@Override
-	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		checkedRadioButtonId = checkedId;
-		loadItems();
-	}
+//	@Override
+//	public void onCheckedChanged(RadioGroup group, int checkedId) {
+//		checkedRadioButtonId = checkedId;
+//		loadItems();
+//	}
 }

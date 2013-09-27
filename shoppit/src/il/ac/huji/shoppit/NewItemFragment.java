@@ -354,7 +354,7 @@ public class NewItemFragment extends Fragment {
 		newItem.saveInBackground(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
-				Log.d("HERE", "2");
+				//Log.d("HERE", "2");
 				progressDialog.dismiss();
 				if (e == null) {
 					Toast.makeText(getActivity(), "Item added successfully",
@@ -362,7 +362,8 @@ public class NewItemFragment extends Fragment {
 					getActivity().setResult(Activity.RESULT_OK);
 					getActivity().finish();
 				} else {
-					Toast.makeText(getActivity(), "Error adding item " + e.getCode() + " " + e.getMessage(),
+					//Log.d("NEW_ITEM_FRAG", e.getLocalizedMessage());
+					Toast.makeText(getActivity(), "Error adding item",
 							Toast.LENGTH_LONG).show();
 				}
 			}

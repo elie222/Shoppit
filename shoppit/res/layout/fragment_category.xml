@@ -11,7 +11,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <RadioGroup
+    <Spinner
+        android:id="@+id/sortBySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- <RadioGroup
         android:id="@+id/radioGroupSortBy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Most Liked" />
-    </RadioGroup>
+    </RadioGroup> -->
 
     <ListView
         android:id="@+id/homeListView"
