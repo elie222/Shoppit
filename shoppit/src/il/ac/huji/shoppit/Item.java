@@ -75,9 +75,10 @@ public class Item extends ParseObject {
 	}
 	
 	public String getCurrency() {
-		String currencyName = getString("currency");
-		String currencySymbol = currencies.get(currencyName);
-		return currencySymbol == null ? currencyName : currencySymbol;
+		return getString("currency");
+		//String currencyName = getString("currency");
+		//String currencySymbol = currencies.get(currencyName);
+		//return currencySymbol == null ? currencyName : currencySymbol;
 	}
 
 	public void setCurrency(String currency) {

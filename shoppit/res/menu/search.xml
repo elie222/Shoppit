@@ -7,5 +7,17 @@
         android:icon="@drawable/location_map"
         android:title="@string/show_results_on_map"
         yourapp:showAsAction="always"/>
+    <item
+        android:id="@+id/action_sortby_distance"
+        android:title="@string/sort_by_distance"
+        yourapp:showAsAction="never"/>
+    <item
+        android:id="@+id/action_sortby_price"
+        android:title="@string/sort_by_price"
+        yourapp:showAsAction="never"/>
+    <item
+        android:id="@+id/action_sortby_likes"
+        android:title="@string/sort_by_likes"
+        yourapp:showAsAction="never"/>
 
 </menu>

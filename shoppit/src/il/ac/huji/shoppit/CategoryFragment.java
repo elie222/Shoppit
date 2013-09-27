@@ -82,7 +82,6 @@ RadioGroup.OnCheckedChangeListener {
 				
 				query.whereEqualTo("currency", sharedPrefs.getString("currency_key", null));
 				
-
 				if (!category.equals(getResources().getString(R.string.all))) {
 					query.whereEqualTo(MAIN_CATEGORY, category);
 				}
@@ -90,7 +89,7 @@ RadioGroup.OnCheckedChangeListener {
 				switch (checkedRadioButtonId) {
 				case R.id.radioNearby:
 					query.whereNear("location", currentLocation);
-					query.whereWithinMiles("location", currentLocation, 40000);
+					query.whereWithinMiles("location", currentLocation, 100000);
 					break;
 				case R.id.radioCheapest:
 					// TODO make sure the item is within a certain distance too, or not?

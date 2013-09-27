@@ -691,6 +691,15 @@ LocationListener {
 			return null;
 		}
 	}
+	
+	@Override
+	public boolean onSearchRequested() {
+	     Bundle appData = new Bundle();
+	     appData.putDouble(LATITUDE_EXTRA, getLastLocation().getLatitude());
+	     appData.putDouble(LONGITUDE_EXTRA, getLastLocation().getLongitude());
+	     startSearch(null, false, appData, false);
+	     return true;
+	 }
 
 
 }

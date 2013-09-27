@@ -51,6 +51,9 @@
     <string name="category">Category</string>
     <string name="show_results_on_map">Show results on map</string>
     <string name="currency">Currency</string>
+    <string name="sort_by_distance">Sort by distance</string>
+    <string name="sort_by_price">Sort by price</string>
+    <string name="sort_by_likes">Sort by likes</string>
 
     <string-array name="sort_options">
         <item>Cheapest</item>
