@@ -42,13 +42,13 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 	private Shop mShop;
 
 	private TextView nameTextView;
-	private ImageView likeButton;
-	private TextView likesCountTextView;
-	private Integer likesCount;
+	//private ImageView likeButton;
+	//private TextView likesCountTextView;
+	//private Integer likesCount;
 	private ParseImageView imageView;
-	private ListView commentsListView;
-	private Button addCommentButton;
-	private boolean liked = false;
+	//private ListView commentsListView;
+	//private Button addCommentButton;
+	//private boolean liked = false;
 
 
 	@Override
@@ -67,52 +67,52 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 		mShop = GeneralInfo.shopHolder;
 
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
-		likeButton = (ImageView) findViewById(R.id.like_button);
-		likesCountTextView = (TextView) findViewById(R.id.likesCountTextView);
+//		likeButton = (ImageView) findViewById(R.id.like_button);
+//		likesCountTextView = (TextView) findViewById(R.id.likesCountTextView);
 		imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
-		commentsListView = (ListView) findViewById(R.id.commentsListView);
-		addCommentButton = (Button) findViewById(R.id.addCommentButton);
+//		commentsListView = (ListView) findViewById(R.id.commentsListView);
+//		addCommentButton = (Button) findViewById(R.id.addCommentButton);
 
-		likeButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				//TODO - disabled liking for now. think i need to change the CloudCode to work with shops too.
-//				if (likeCheckBox.isChecked()) {
-//					likesCount++;
-//				} else {
-//					likesCount--;
-//				}
-//				likesCountTextView.setText(likesCount.toString());
+//		likeButton.setOnClickListener(new View.OnClickListener() {
 //
-//				HashMap<String, Object> params = new HashMap<String, Object>();
-//				params.put("shopId", mShop.getObjectId());
-//				params.put("like", likeCheckBox.isChecked());
+//			@Override
+//			public void onClick(View v) {
+//				//TODO - disabled liking for now. think i need to change the CloudCode to work with shops too.
+////				if (likeCheckBox.isChecked()) {
+////					likesCount++;
+////				} else {
+////					likesCount--;
+////				}
+////				likesCountTextView.setText(likesCount.toString());
+////
+////				HashMap<String, Object> params = new HashMap<String, Object>();
+////				params.put("shopId", mShop.getObjectId());
+////				params.put("like", likeCheckBox.isChecked());
+////
+////				ParseCloud.callFunctionInBackground("likeShop", params, new FunctionCallback<String>() {
+////					public void done(String message, ParseException e) {
+////						if (e == null) {
+////							Log.i("SHOP_ACTIVITY", message);
+////						} else {
+////							Log.e("SHOP_ACTIVITY", "ERROR MESSAGE: " + e.getMessage());
+////						}
+////					}
+////				});
+//			}
+//		});
+
+//		addCommentButton.setOnClickListener(new View.OnClickListener() {
 //
-//				ParseCloud.callFunctionInBackground("likeShop", params, new FunctionCallback<String>() {
-//					public void done(String message, ParseException e) {
-//						if (e == null) {
-//							Log.i("SHOP_ACTIVITY", message);
-//						} else {
-//							Log.e("SHOP_ACTIVITY", "ERROR MESSAGE: " + e.getMessage());
-//						}
-//					}
-//				});
-			}
-		});
-
-		addCommentButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO - commented out for now so as not to get Shop and Item comments mixed up.
-				//				FragmentManager fm = getFragmentManager();
-				//				CommentDialogFragment commentDialog = new CommentDialogFragment();
-				//				commentDialog.setRetainInstance(true);
-				//				commentDialog.show(fm, "comment_dialog_fragment");
-			}
-
-		});
+//			@Override
+//			public void onClick(View v) {
+//				// TODO - commented out for now so as not to get Shop and Item comments mixed up.
+//				//				FragmentManager fm = getFragmentManager();
+//				//				CommentDialogFragment commentDialog = new CommentDialogFragment();
+//				//				commentDialog.setRetainInstance(true);
+//				//				commentDialog.show(fm, "comment_dialog_fragment");
+//			}
+//
+//		});
 
 		setupViewsWithShopData();
 
@@ -128,42 +128,42 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 
 		nameTextView.setText(mShop.getName());
 
-		// get the number of users that like the shop
-		ParseQuery<ParseUser> queryLikesCount = mShop.getLikesRelation().getQuery();
-		queryLikesCount.countInBackground(new CountCallback() {
-			public void done(int count, ParseException e) {
-				if (e == null) {
-					likesCount = count;
-					likesCountTextView.setText(likesCount.toString());
-				} else {
-					Log.e("LIKE_CHECK_BOX",  "error2 with the likesCount query: " + e.getMessage());
-				}
-			}
-		});
+//		// get the number of users that like the shop
+//		ParseQuery<ParseUser> queryLikesCount = mShop.getLikesRelation().getQuery();
+//		queryLikesCount.countInBackground(new CountCallback() {
+//			public void done(int count, ParseException e) {
+//				if (e == null) {
+//					likesCount = count;
+//					likesCountTextView.setText(likesCount.toString());
+//				} else {
+//					Log.e("LIKE_CHECK_BOX",  "error2 with the likesCount query: " + e.getMessage());
+//				}
+//			}
+//		});
 
 		// check if current user has liked the object
-		ParseUser user = ParseUser.getCurrentUser();
+		//ParseUser user = ParseUser.getCurrentUser();
 
-		if (user!= null) {
-			ParseQuery<ParseUser> queryUserLikes = mShop.getLikesRelation().getQuery();
-			queryUserLikes.whereEqualTo("objectId", user.get("objectId"));
-
-			queryUserLikes.countInBackground(new CountCallback() {
-				public void done(int count, ParseException e) {
-					if (e == null) {
-						if (count == 1) {
-							liked = true;
-						} else if (count == 0) {
-							liked = false;
-						} else {
-							Log.e("LIKE_CHECK_BOX", "error1 with the likes query");
-						}
-					} else {
-						Log.e("LIKE_CHECK_BOX",  "error2 with the likes query: " + e.getMessage());
-					}
-				}
-			});
-		}
+//		if (user!= null) {
+//			ParseQuery<ParseUser> queryUserLikes = mShop.getLikesRelation().getQuery();
+//			queryUserLikes.whereEqualTo("objectId", user.get("objectId"));
+//
+//			queryUserLikes.countInBackground(new CountCallback() {
+//				public void done(int count, ParseException e) {
+//					if (e == null) {
+//						if (count == 1) {
+//							liked = true;
+//						} else if (count == 0) {
+//							liked = false;
+//						} else {
+//							Log.e("LIKE_CHECK_BOX", "error1 with the likes query");
+//						}
+//					} else {
+//						Log.e("LIKE_CHECK_BOX",  "error2 with the likes query: " + e.getMessage());
+//					}
+//				}
+//			});
+//		}
 
 		ParseFile photoFile = mShop.getPhotoFile();
 		if (photoFile != null) {
@@ -177,7 +177,7 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 		}
 
 		// show comments
-		reloadCommentsListView();
+		//reloadCommentsListView();
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		reloadCommentsListView();
+		//reloadCommentsListView();
 	}
 
 
@@ -210,22 +210,22 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 
 	// TODO - try avoiding reloading all comments every time... ask question on Parse Forums
 	// TODO - scroll down to bottom of comments list automatically
-	private void reloadCommentsListView() {
-		ParseQueryAdapter.QueryFactory<Comment> queryFactory = new ParseQueryAdapter.QueryFactory<Comment>() {
-			public ParseQuery<Comment> create() {
-				ParseQuery<Comment> query = new ParseQuery<Comment>("Comment");
-				query.whereEqualTo("shop", mShop);
-				query.orderByAscending("createdAt");
-
-				return query;
-			}
-		};
-
-		ParseQueryAdapter<Comment> adapter = new ParseQueryAdapter<Comment>(this, queryFactory);
-		adapter.setTextKey("comment"); // TODO - show comment author too
-
-		commentsListView.setAdapter(adapter);
-	}
+//	private void reloadCommentsListView() {
+//		ParseQueryAdapter.QueryFactory<Comment> queryFactory = new ParseQueryAdapter.QueryFactory<Comment>() {
+//			public ParseQuery<Comment> create() {
+//				ParseQuery<Comment> query = new ParseQuery<Comment>("Comment");
+//				query.whereEqualTo("shop", mShop);
+//				query.orderByAscending("createdAt");
+//
+//				return query;
+//			}
+//		};
+//
+//		ParseQueryAdapter<Comment> adapter = new ParseQueryAdapter<Comment>(this, queryFactory);
+//		adapter.setTextKey("comment"); // TODO - show comment author too
+//
+//		commentsListView.setAdapter(adapter);
+//	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -235,6 +235,7 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 	        NavUtils.navigateUpFromSameTask(this);
 	        return true;
 	    }
+	    // TODO add show on map option
 	    return super.onOptionsItemSelected(item);
 	}
 

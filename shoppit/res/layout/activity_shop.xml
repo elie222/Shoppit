@@ -1,7 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/item_list_bg"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -12,29 +15,28 @@
         android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:text="Twix"
+        android:text="Shop name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <com.parse.ParseImageView
         android:id="@+id/photoParseImageView"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/nameTextView" />
-
+        android:layout_height="180dp" />
+    <!--
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/photoParseImageView" />
+    -->
 
-    <TextView
+
+    <!--
+         <TextView
         android:id="@+id/commentTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/map"
         android:paddingBottom="5dp"
         android:paddingTop="10dp"
         android:text="@string/comments"
@@ -46,21 +48,17 @@
         android:id="@+id/addCommentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/commentTitleTextView"
-        android:layout_alignBottom="@+id/commentTitleTextView"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/map"
         android:text="@string/add_comment" />
 
     <ListView
         android:id="@+id/commentsListView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/commentTitleTextView"
         android:paddingBottom="10dp" >
     </ListView>
-
-    <TextView
+    -->
+    <!--
+         <TextView
         android:id="@+id/likesCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,5 +74,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/rating_good" />
+    -->
 
-</RelativeLayout>
+</LinearLayout>

@@ -52,6 +52,7 @@ public class NewItemFragment extends Fragment {
 	private TextView currencyView;
 	private Spinner categorySpinner;
 	private EditText keywordsEditText;
+	private Spinner locationSpinner;
 	private Button doneButton;
 
 	private byte[] photoData;
@@ -76,6 +77,7 @@ public class NewItemFragment extends Fragment {
 		currencyView = ((TextView) v.findViewById(R.id.currencyView));
 		categorySpinner = ((Spinner) v.findViewById(R.id.categorySpinner));
 		keywordsEditText = ((EditText) v.findViewById(R.id.keywordsEditText));
+		locationSpinner = ((Spinner) v.findViewById(R.id.locationSpinner));
 		doneButton = ((Button) v.findViewById(R.id.doneButton));
 
 		ImageButton prev = (ImageButton) v.findViewById(R.id.prev_pic);
@@ -99,6 +101,15 @@ public class NewItemFragment extends Fragment {
 				R.array.categories_array, android.R.layout.simple_spinner_item);
 		categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		categorySpinner.setAdapter(categoryAdapter);
+
+		// set up location spinner
+		ArrayAdapter<CharSequence> locationAdapter = ArrayAdapter.createFromResource(getActivity(),
+				R.array.location_options_array, android.R.layout.simple_spinner_item);
+		locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		locationSpinner.setAdapter(locationAdapter);
+		// can't change this atm, but still want to be able to tell the user that location
+		// will be set to current location
+		locationSpinner.setEnabled(false); 
 
 		// set up done button
 		doneButton.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +168,7 @@ public class NewItemFragment extends Fragment {
 				nia.categorySelection = categorySpinner.getSelectedItemPosition();
 				nia.categorySelection = categorySpinner.getSelectedItemPosition();
 				nia.keywords = keywordsEditText.getText().toString();
-				
+
 				//Start the camera again
 				getFragmentManager().popBackStack();
 			}
@@ -184,14 +195,14 @@ public class NewItemFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		
+
 		super.onResume();
-		
+
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		currencyView.setText(sharedPrefs.getString("currency_key", null));
-		
+
 		//Check if data has been saved previously, restore if so
-		
+
 		NewItemActivity nia = (NewItemActivity) getActivity();
 		if (nia.savedData) {
 			nameEditText.setText(nia.name);
@@ -203,7 +214,7 @@ public class NewItemFragment extends Fragment {
 			categorySpinner.setSelection(categorySpinner.getCount() - 1);
 		}
 
-		
+
 		photoData = ((NewItemActivity) getActivity()).getCurrentPhotoData();
 
 		if (photoData != null) {
@@ -226,8 +237,8 @@ public class NewItemFragment extends Fragment {
 			selectCategory(item.getMainCategory());
 		}
 	}
-	
-	
+
+
 	/**
 	 * Select the category that has this text, or "other" if any error rises.
 	 * @param category
@@ -242,7 +253,7 @@ public class NewItemFragment extends Fragment {
 		}
 		categorySpinner.setSelection(categorySpinner.getCount() - 1);
 	}
-	
+
 
 	private void addItem() {
 

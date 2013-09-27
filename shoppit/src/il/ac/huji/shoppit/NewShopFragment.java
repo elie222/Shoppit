@@ -76,6 +76,7 @@ public class NewShopFragment extends Fragment {
 				R.array.location_options_array, android.R.layout.simple_spinner_item);
 		locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		locationSpinner.setAdapter(locationAdapter);
+		locationSpinner.setEnabled(false); 
 
 		photoButton.setOnClickListener(new View.OnClickListener() {
 
