@@ -23,26 +23,6 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/nameTextView" />
 
-    <CheckBox
-        android:id="@+id/likeCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/categoryTextView"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp" />
-
-    <TextView
-        android:id="@+id/likesCountTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/categoryTextView"
-        android:layout_alignBaseline="@+id/likeCheckBox"
-        android:layout_marginRight="1dp"
-        android:layout_toLeftOf="@id/likeCheckBox"
-        android:text="5"
-        android:textSize="18sp" />
-
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
@@ -79,5 +59,22 @@
         android:layout_below="@id/commentTitleTextView"
         android:paddingBottom="10dp" >
     </ListView>
+
+    <TextView
+        android:id="@+id/likesCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/photoParseImageView"
+        android:layout_toLeftOf="@+id/imageView1"
+        android:text="5"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/like_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/rating_good" />
 
 </RelativeLayout>

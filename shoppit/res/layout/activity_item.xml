@@ -1,91 +1,3 @@
-<!--
- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ItemActivity" >
-
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/priceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <com.parse.ParseImageView
-        android:id="@+id/photoParseImageView"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/nameTextView" />
-
-    <TextView
-        android:id="@+id/categoryTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/photoParseImageView" />
-
-    <CheckBox
-        android:id="@+id/likeCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/categoryTextView"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp" />
-
-    <TextView
-        android:id="@+id/likesCountTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/categoryTextView"
-        android:layout_alignBaseline="@+id/likeCheckBox"
-        android:layout_marginRight="1dp"
-        android:layout_toLeftOf="@id/likeCheckBox"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/commentTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/categoryTextView"
-        android:paddingBottom="5dp"
-        android:paddingTop="10dp"
-        android:text="@string/comments"
-        android:textAllCaps="true"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <ListView
-        android:id="@+id/commentsListView"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/commentTitleTextView" >
-    </ListView>
-
-    <Button
-        android:id="@+id/addCommentButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/commentTitleTextView"
-        android:layout_alignBottom="@+id/commentTitleTextView"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/categoryTextView"
-        android:text="@string/add_comment" />
-
-</RelativeLayout>
--->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
@@ -139,49 +51,41 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/catTitleTextView"
+            android:id="@+id/likesCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="Category: "
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/like_button"
+            android:text="17"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView
+            android:id="@+id/like_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
 
         <TextView
             android:id="@+id/categoryTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignBaseline="@+id/likesCountTextView"
+            android:layout_alignBottom="@+id/likesCountTextView"
             android:layout_toRightOf="@+id/catTitleTextView"
             android:text="Books"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <CheckBox
-            android:id="@+id/likeCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/catTitleTextView"
-            android:layout_alignParentRight="true" />
-
         <TextView
-            android:id="@+id/likesCountTextView"
+            android:id="@+id/catTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/catTitleTextView"
-            android:layout_marginRight="1dp"
-            android:layout_toLeftOf="@id/likeCheckBox"
-            android:text="17"
+            android:layout_alignBaseline="@+id/likesCountTextView"
+            android:layout_alignBottom="@+id/likesCountTextView"
+            android:layout_alignParentLeft="true"
+            android:text="Category: "
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/catTitleTextView"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/likesCountTextView"
-            android:text="Likes: "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
     <View

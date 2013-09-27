@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -41,12 +42,13 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 	private Shop mShop;
 
 	private TextView nameTextView;
-	private CheckBox likeCheckBox;
+	private ImageView likeButton;
 	private TextView likesCountTextView;
 	private Integer likesCount;
 	private ParseImageView imageView;
 	private ListView commentsListView;
 	private Button addCommentButton;
+	private boolean liked = false;
 
 
 	@Override
@@ -65,13 +67,13 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 		mShop = GeneralInfo.shopHolder;
 
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
-		likeCheckBox = (CheckBox) findViewById(R.id.likeCheckBox);
+		likeButton = (ImageView) findViewById(R.id.like_button);
 		likesCountTextView = (TextView) findViewById(R.id.likesCountTextView);
 		imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
 		commentsListView = (ListView) findViewById(R.id.commentsListView);
 		addCommentButton = (Button) findViewById(R.id.addCommentButton);
 
-		likeCheckBox.setOnClickListener(new View.OnClickListener() {
+		likeButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -150,9 +152,9 @@ public class ShopActivity extends Activity implements CommentDialogFragment.Comm
 				public void done(int count, ParseException e) {
 					if (e == null) {
 						if (count == 1) {
-							likeCheckBox.setChecked(true);
+							liked = true;
 						} else if (count == 0) {
-							likeCheckBox.setChecked(false);
+							liked = false;
 						} else {
 							Log.e("LIKE_CHECK_BOX", "error1 with the likes query");
 						}

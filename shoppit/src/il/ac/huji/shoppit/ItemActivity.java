@@ -26,7 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -51,12 +51,13 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 	private TextView priceTextView;
 	private TextView currencyTextView;
 	private TextView categoryTextView;
-	private CheckBox likeCheckBox;
+	private ImageView likeButton;
 	private TextView likesCountTextView;
 	private Integer likesCount;
 	private ParseImageView imageView;
 	private ListView commentsListView;
 	private Button addCommentButton;
+	private Boolean liked = null; //null means that this info has not yet been received.
 
 
 	@Override
@@ -79,13 +80,13 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		priceTextView = (TextView) findViewById(R.id.priceTextView);
 		currencyTextView = (TextView) findViewById(R.id.currencyTextView);
 		categoryTextView = (TextView) findViewById(R.id.categoryTextView);
-		likeCheckBox = (CheckBox) findViewById(R.id.likeCheckBox);
+		likeButton = (ImageView) findViewById(R.id.like_button);
 		likesCountTextView = (TextView) findViewById(R.id.likesCountTextView);
 		imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
 		commentsListView = (ListView) findViewById(R.id.commentsListView);
 		addCommentButton = (Button) findViewById(R.id.addCommentButton);
 
-		likeCheckBox.setOnClickListener(new View.OnClickListener() {
+		likeButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -130,7 +131,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		categoryTextView.setText(String.valueOf(mItem.getMainCategory()));
 
 		likesCount = mItem.getLikesCount();
-		likesCountTextView.setText(String.valueOf(mItem.getLikesCount()));
+		likesCountTextView.setText("Likes: " + mItem.getLikesCount());
 		// get the number of users that like the item
 		//		ParseQuery<ParseUser> queryLikesCount = mItem.getLikesRelation().getQuery();
 		//		queryLikesCount.countInBackground(new CountCallback() {
@@ -145,50 +146,31 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		//		});
 
 		// check if current user has liked the object
-		ParseUser user = ParseUser.getCurrentUser();
+		checkIfUserLiked(false);
 
-		if (user!= null) {
+		//If user is not logged in, show the thumbs up icon.
+		if (ParseUser.getCurrentUser() == null)
+			likeButton.setImageResource(R.drawable.rating_good);
 
-			ParseQuery<ParseUser> queryUserLikes = mItem.getLikesRelation().getQuery();
-			queryUserLikes.whereEqualTo("objectId", user.getObjectId());
-
-			queryUserLikes.countInBackground(new CountCallback() {
-				public void done(int count, ParseException e) {
-					if (e == null) {
-						if (count == 1) {
-							likeCheckBox.setChecked(true);
-						} else if (count == 0) {
-							likeCheckBox.setChecked(false);
-						} else {
-							Log.e("LIKE_CHECK_BOX", "error1 with the likes query");
-						}
-					} else {
-						Log.e("LIKE_CHECK_BOX",  "error2 with the likes query: " + e.getMessage());
-					}
-				}
-			});
-
-			// for debugging. remove afterwards
-			//			ParseQuery<ParseUser> debugQueryUserLikes = mItem.getLikesRelation().getQuery();
-			//
-			//			debugQueryUserLikes.findInBackground(new FindCallback<ParseUser>() {
-			//
-			//				@Override
-			//				public void done(List<ParseUser> users, ParseException e) {
-			//					for (int i=0; i<users.size(); i++) {
-			//						Log.d("ITEM_ACTIVITY", "Current user's id: " + ParseUser.getCurrentUser().getObjectId() +
-			//								". Users that like this object: " + users.get(i).getObjectId());
-			//
-			//						if (ParseUser.getCurrentUser().getObjectId().equals(users.get(i).getObjectId())) {
-			//							Log.d("ITEM_ACTIVITY", "User likes this item.");
-			//						} else {
-			//							Log.d("ITEM_ACTIVITY", "XXX");
-			//						}
-			//					}
-			//				}
-			//			});
-
-		}
+		// for debugging. remove afterwards
+		//			ParseQuery<ParseUser> debugQueryUserLikes = mItem.getLikesRelation().getQuery();
+		//
+		//			debugQueryUserLikes.findInBackground(new FindCallback<ParseUser>() {
+		//
+		//				@Override
+		//				public void done(List<ParseUser> users, ParseException e) {
+		//					for (int i=0; i<users.size(); i++) {
+		//						Log.d("ITEM_ACTIVITY", "Current user's id: " + ParseUser.getCurrentUser().getObjectId() +
+		//								". Users that like this object: " + users.get(i).getObjectId());
+		//
+		//						if (ParseUser.getCurrentUser().getObjectId().equals(users.get(i).getObjectId())) {
+		//							Log.d("ITEM_ACTIVITY", "User likes this item.");
+		//						} else {
+		//							Log.d("ITEM_ACTIVITY", "XXX");
+		//						}
+		//					}
+		//				}
+		//			});
 
 		imageView.setPlaceholder(getResources().getDrawable(R.drawable.placeholder));
 		ParseFile photoFile = mItem.getPhotoFile();
@@ -205,6 +187,47 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		// show comments
 		reloadCommentsListView();
 	}
+
+
+
+	/**
+	 * Check if this user has already liked this item and set the "liked" variable accordingly.
+	 * @param likeWhenDone whether should simulate a click on the like button when done checking.
+	 */
+	private void checkIfUserLiked(final boolean likeWhenDone) {
+
+		ParseUser user = ParseUser.getCurrentUser();
+		if (user == null)
+			return;
+
+		ParseQuery<ParseUser> queryUserLikes = mItem.getLikesRelation().getQuery();
+		queryUserLikes.whereEqualTo("objectId", user.getObjectId());
+
+		queryUserLikes.countInBackground(new CountCallback() {
+			public void done(int count, ParseException e) {
+				if (e == null) {
+					if (count == 1) {
+						liked = true;
+					} else if (count == 0) {
+						liked = false;
+					} else {
+						Log.e("LIKE_CHECK_BOX", "error1 with the likes query");
+					}
+				} else {
+					Log.e("LIKE_CHECK_BOX",  "error2 with the likes query: " + e.getMessage());
+				}
+				likeButton.setImageResource(liked ? R.drawable.rating_bad : R.drawable.rating_good);
+
+				if (likeWhenDone && !liked) {
+					likeItem();
+				}
+			}
+		});
+
+	}
+
+
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -302,16 +325,19 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 	}
 
 	private void likeItem() {
-		if (likeCheckBox.isChecked()) {
-			likesCount++;
-		} else {
-			likesCount--;
-		}
-		likesCountTextView.setText(likesCount.toString());
+
+		//Not yet known whether the user liked this item already or not.
+		if (liked == null)
+			return;
+
+		liked = !liked;
+		likesCount += (liked ? 1 : -1);
+		likesCountTextView.setText("Likes: " + likesCount);
+		likeButton.setImageResource(liked ? R.drawable.rating_bad : R.drawable.rating_good);
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("itemId", mItem.getObjectId());
-		params.put("like", likeCheckBox.isChecked());
+		params.put("like", liked);
 
 		ParseCloud.callFunctionInBackground("likeItem", params, new FunctionCallback<String>() {
 			public void done(String message, ParseException e) {
@@ -330,7 +356,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		reportDialog.setRetainInstance(true);
 		reportDialog.show(fm, "report_dialog_fragment");
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -340,7 +366,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 				addComment();
 				break;
 			case LIKE_ITEM_REQUEST_CODE:
-				likeItem();
+				checkIfUserLiked(true);
 				break;
 			case REPORT_ITEM_REQUEST_CODE:
 				reportItem();

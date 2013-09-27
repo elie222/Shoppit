@@ -56,6 +56,12 @@
         <item>Closest</item>
         <item>Newest</item>
     </string-array>
+    
+    <string-array name="currencies">
+        <item>USD ($)</item>
+        <item>NIS (₪)</item>
+        <item>GBP (£)</item>
+    </string-array>
 
     <!-- navbar -->
 
