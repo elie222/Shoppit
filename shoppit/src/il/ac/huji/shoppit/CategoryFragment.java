@@ -110,8 +110,9 @@ public class CategoryFragment extends Fragment
 
 				ParseQuery<Item> query = new ParseQuery<Item>("Item");
 
-				//SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-				//query.whereEqualTo("currency", sharedPrefs.getString("currency_key", null));
+				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+				
+				query.whereEqualTo("currency", sharedPrefs.getString("currency_key", null));
 				
 				if (!category.equals(getResources().getString(R.string.all))) {
 					query.whereEqualTo(MAIN_CATEGORY, category);

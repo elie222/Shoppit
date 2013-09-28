@@ -549,7 +549,6 @@ LocationListener {
 			foundLocationLC = true;
 			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
 		}
-		GeneralInfo.location = location;
 	}
 
 	@Override
