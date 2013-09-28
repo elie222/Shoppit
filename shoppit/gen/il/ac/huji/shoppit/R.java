@@ -1317,7 +1317,7 @@ containing a value of this type.
         public static final int com_facebook_list_section_header_background=0x7f02006a;
         public static final int com_facebook_loginbutton_silver=0x7f02006b;
         public static final int com_facebook_logo=0x7f02006c;
-        public static final int com_facebook_picker_default_separator_color=0x7f0200b0;
+        public static final int com_facebook_picker_default_separator_color=0x7f0200af;
         public static final int com_facebook_picker_item_background=0x7f02006d;
         public static final int com_facebook_picker_list_focused=0x7f02006e;
         public static final int com_facebook_picker_list_longpressed=0x7f02006f;
@@ -1376,15 +1376,14 @@ containing a value of this type.
         public static final int placeholder_with_border=0x7f0200a4;
         public static final int prev=0x7f0200a5;
         public static final int rating_bad=0x7f0200a6;
-        public static final int rating_bad_2=0x7f0200a7;
-        public static final int rating_favorite=0x7f0200a8;
-        public static final int rating_good=0x7f0200a9;
-        public static final int rating_good_1=0x7f0200aa;
-        public static final int rating_good_2=0x7f0200ab;
-        public static final int rating_good_3=0x7f0200ac;
-        public static final int search=0x7f0200ad;
-        public static final int splash_screen_bg=0x7f0200ae;
-        public static final int user=0x7f0200af;
+        public static final int rating_favorite=0x7f0200a7;
+        public static final int rating_good=0x7f0200a8;
+        public static final int rating_good_1=0x7f0200a9;
+        public static final int rating_good_2=0x7f0200aa;
+        public static final int rating_good_3=0x7f0200ab;
+        public static final int search=0x7f0200ac;
+        public static final int splash_screen_bg=0x7f0200ad;
+        public static final int user=0x7f0200ae;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f070062;
