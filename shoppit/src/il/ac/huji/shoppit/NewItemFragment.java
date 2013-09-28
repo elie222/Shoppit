@@ -80,6 +80,9 @@ public class NewItemFragment extends Fragment {
 		locationSpinner = ((Spinner) v.findViewById(R.id.locationSpinner));
 		doneButton = ((Button) v.findViewById(R.id.doneButton));
 
+		//The parseImageView is only for loading images from parse, photoImageView displays them.
+		parseImageView.setVisibility(View.GONE);
+
 		ImageButton prev = (ImageButton) v.findViewById(R.id.prev_pic);
 		ImageButton next = (ImageButton) v.findViewById(R.id.next_pic);
 		ImageButton change = (ImageButton) v.findViewById(R.id.change_pic);
@@ -90,10 +93,6 @@ public class NewItemFragment extends Fragment {
 			prev.setVisibility(View.GONE);
 			next.setVisibility(View.GONE);
 			change.setVisibility(View.GONE);
-			parseImageView.setVisibility(View.INVISIBLE);
-		}
-		else {
-			photoImageView.setVisibility(View.INVISIBLE);
 		}
 
 		// set up category spinner
@@ -127,14 +126,24 @@ public class NewItemFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+
+				final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Getting item info...", true);
+				
 				selectedItem = (--selectedItem < 0 ? itemList.size() - 1 : selectedItem);
-				Item item = itemList.get(selectedItem);
+				final Item item = itemList.get(selectedItem);
 				parseImageView.setParseFile(item.getPhotoFile());
+				
 				parseImageView.loadInBackground(new GetDataCallback() {
-					public void done(byte[] data, ParseException e) {}
+					public void done(byte[] data, ParseException e) {
+						progressDialog.dismiss();
+						if (data != null) {
+							Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+							photoImageView.setImageBitmap(image);
+						}
+						nameEditText.setText(item.getName());
+						selectCategory(item.getMainCategory());
+					}
 				});
-				nameEditText.setText(item.getName());
-				selectCategory(item.getMainCategory());
 			}
 
 		});
@@ -143,14 +152,24 @@ public class NewItemFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				
+				final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Getting item info...", true);
+				
 				selectedItem = (selectedItem + 1) % itemList.size();
-				Item item = itemList.get(selectedItem);
+				final Item item = itemList.get(selectedItem);
 				parseImageView.setParseFile(item.getPhotoFile());
 				parseImageView.loadInBackground(new GetDataCallback() {
-					public void done(byte[] data, ParseException e) {}
+					
+					public void done(byte[] data, ParseException e) {
+						progressDialog.dismiss();
+						if (data != null) {
+							Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+							photoImageView.setImageBitmap(image);
+						}
+						nameEditText.setText(item.getName());
+						selectCategory(item.getMainCategory());
+					}
 				});
-				nameEditText.setText(item.getName());
-				selectCategory(item.getMainCategory());
 			}
 
 		});
@@ -225,16 +244,18 @@ public class NewItemFragment extends Fragment {
 		//If a barcode has been scanned, show the first image and text
 		if (itemList != null) {
 
-			Item item = itemList.get(selectedItem);
+			final Item item = itemList.get(selectedItem);
 			parseImageView.setParseFile(item.getPhotoFile());
 			parseImageView.loadInBackground(new GetDataCallback() {
 				public void done(byte[] data, ParseException e) {
-					if (e != null)
-						e.printStackTrace();
+					if (data != null) {
+						Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+						photoImageView.setImageBitmap(image);
+					}
+					nameEditText.setText(item.getName());
+					selectCategory(item.getMainCategory());
 				}
 			});
-			nameEditText.setText(item.getName());
-			selectCategory(item.getMainCategory());
 		}
 	}
 

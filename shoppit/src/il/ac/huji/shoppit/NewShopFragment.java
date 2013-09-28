@@ -198,7 +198,7 @@ public class NewShopFragment extends Fragment {
 		if (photoData != null) {
 			Bitmap shopImageBitmap = BitmapFactory.decodeByteArray(photoData, 0, photoData.length);
 			shopPreview.setImageBitmap(shopImageBitmap);
-			// shopPreview.setVisibility(View.VISIBLE);
+			photoButton.setVisibility(View.INVISIBLE);
 		}
 	}
 

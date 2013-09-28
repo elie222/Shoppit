@@ -205,7 +205,8 @@ public class CameraFragment extends Fragment {
 
 						//Set the list of items with similar barcode to null.
 						//This prevents buttons from appearing on the item image when adding.
-						((NewItemActivity) getActivity()).setItemList(null);
+						if (getActivity() instanceof NewItemActivity)
+							((NewItemActivity) getActivity()).setItemList(null);
 
 						addPhotoToShopAndReturn(data);
 
@@ -571,11 +572,13 @@ public class CameraFragment extends Fragment {
 		//barcode will usually be null, unless came here from the new item fragment after
 		//scanning a barcode and wanting to take own picture.
 
-		final NewItemActivity nia = (NewItemActivity) getActivity();
-		String barcode = nia.getBarcode();
-		if (barcode != null) {
-			barcodeButton.setEnabled(false);
-			barcodeButton.setText("Barcode: " + barcode);
+		if (getActivity() instanceof NewItemActivity) {
+			final NewItemActivity nia = (NewItemActivity) getActivity();
+			String barcode = nia.getBarcode();
+			if (barcode != null) {
+				barcodeButton.setEnabled(false);
+				barcodeButton.setText("Barcode: " + barcode);
+			}
 		}
 	}
 

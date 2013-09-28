@@ -319,7 +319,7 @@ int drawable com_facebook_list_divider 0x7f020069
 int drawable com_facebook_list_section_header_background 0x7f02006a
 int drawable com_facebook_loginbutton_silver 0x7f02006b
 int drawable com_facebook_logo 0x7f02006c
-int drawable com_facebook_picker_default_separator_color 0x7f0200ac
+int drawable com_facebook_picker_default_separator_color 0x7f0200ad
 int drawable com_facebook_picker_item_background 0x7f02006d
 int drawable com_facebook_picker_list_focused 0x7f02006e
 int drawable com_facebook_picker_list_longpressed 0x7f02006f
@@ -378,11 +378,12 @@ int drawable placeholder 0x7f0200a3
 int drawable placeholder_with_border 0x7f0200a4
 int drawable prev 0x7f0200a5
 int drawable rating_bad 0x7f0200a6
-int drawable rating_favorite 0x7f0200a7
-int drawable rating_good 0x7f0200a8
-int drawable search 0x7f0200a9
-int drawable splash_screen_bg 0x7f0200aa
-int drawable user 0x7f0200ab
+int drawable rating_bad_2 0x7f0200a7
+int drawable rating_favorite 0x7f0200a8
+int drawable rating_good 0x7f0200a9
+int drawable search 0x7f0200aa
+int drawable splash_screen_bg 0x7f0200ab
+int drawable user 0x7f0200ac
 int id LinearLayout1 0x7f070062
 int id RelativeLayout1 0x7f0700a6
 int id RelativeLayout2 0x7f0700a7
@@ -421,7 +422,7 @@ int id catTitleTextView 0x7f07005d
 int id categLayout 0x7f070059
 int id categorySpinner 0x7f07004a
 int id categoryTextView 0x7f07005c
-int id change_pic 0x7f070095
+int id change_pic 0x7f070094
 int id checkbox 0x7f070030
 int id collapseActionView 0x7f070013
 int id com_facebook_login_activity_progress_bar 0x7f070070
@@ -452,7 +453,7 @@ int id currencyTextView 0x7f070054
 int id currencyView 0x7f070097
 int id currency_selector 0x7f070090
 int id default_activity_button 0x7f07002b
-int id descriptionEditText 0x7f07009d
+int id descriptionEditText 0x7f07009e
 int id dialog 0x7f070014
 int id disableHome 0x7f07000e
 int id dist 0x7f07005e
@@ -503,9 +504,9 @@ int id normal 0x7f070001
 int id parseImageView 0x7f070092
 int id photoImageView 0x7f070091
 int id photoParseImageView 0x7f070058
-int id photo_button 0x7f07009e
+int id photo_button 0x7f07009c
 int id picker_subtitle 0x7f07007d
-int id prev_pic 0x7f070094
+int id prev_pic 0x7f070095
 int id priceEditText 0x7f07004d
 int id priceTextView 0x7f070056
 int id progress_bar 0x7f0700a5
@@ -528,7 +529,7 @@ int id search_plate 0x7f070041
 int id search_src_text 0x7f070042
 int id search_voice_btn 0x7f070046
 int id separator 0x7f070087
-int id shopNameEditText 0x7f07009c
+int id shopNameEditText 0x7f07009d
 int id shop_preview_image 0x7f07009b
 int id shopsListView 0x7f0700a4
 int id shortcut 0x7f070031

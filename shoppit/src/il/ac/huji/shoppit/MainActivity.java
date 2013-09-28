@@ -392,6 +392,12 @@ LocationListener {
 
 			return;
 		} else if (selectedName.equals( getResources().getString(R.string.profile) )) {
+			
+			if (ParseUser.getCurrentUser() == null) {
+				mDrawerLayout.closeDrawer(mDrawerList);
+				return;
+			}
+			
 			// Display the fragment as the main content.
 			Fragment fragment = new ProfileFragment();
 			FragmentManager fragmentManager = getFragmentManager();

@@ -1317,7 +1317,7 @@ containing a value of this type.
         public static final int com_facebook_list_section_header_background=0x7f02006a;
         public static final int com_facebook_loginbutton_silver=0x7f02006b;
         public static final int com_facebook_logo=0x7f02006c;
-        public static final int com_facebook_picker_default_separator_color=0x7f0200ac;
+        public static final int com_facebook_picker_default_separator_color=0x7f0200ad;
         public static final int com_facebook_picker_item_background=0x7f02006d;
         public static final int com_facebook_picker_list_focused=0x7f02006e;
         public static final int com_facebook_picker_list_longpressed=0x7f02006f;
@@ -1376,11 +1376,12 @@ containing a value of this type.
         public static final int placeholder_with_border=0x7f0200a4;
         public static final int prev=0x7f0200a5;
         public static final int rating_bad=0x7f0200a6;
-        public static final int rating_favorite=0x7f0200a7;
-        public static final int rating_good=0x7f0200a8;
-        public static final int search=0x7f0200a9;
-        public static final int splash_screen_bg=0x7f0200aa;
-        public static final int user=0x7f0200ab;
+        public static final int rating_bad_2=0x7f0200a7;
+        public static final int rating_favorite=0x7f0200a8;
+        public static final int rating_good=0x7f0200a9;
+        public static final int search=0x7f0200aa;
+        public static final int splash_screen_bg=0x7f0200ab;
+        public static final int user=0x7f0200ac;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f070062;
@@ -1421,7 +1422,7 @@ containing a value of this type.
         public static final int categLayout=0x7f070059;
         public static final int categorySpinner=0x7f07004a;
         public static final int categoryTextView=0x7f07005c;
-        public static final int change_pic=0x7f070095;
+        public static final int change_pic=0x7f070094;
         public static final int checkbox=0x7f070030;
         public static final int collapseActionView=0x7f070013;
         public static final int com_facebook_login_activity_progress_bar=0x7f070070;
@@ -1452,7 +1453,7 @@ containing a value of this type.
         public static final int currencyView=0x7f070097;
         public static final int currency_selector=0x7f070090;
         public static final int default_activity_button=0x7f07002b;
-        public static final int descriptionEditText=0x7f07009d;
+        public static final int descriptionEditText=0x7f07009e;
         public static final int dialog=0x7f070014;
         public static final int disableHome=0x7f07000e;
         public static final int dist=0x7f07005e;
@@ -1503,9 +1504,9 @@ containing a value of this type.
         public static final int parseImageView=0x7f070092;
         public static final int photoImageView=0x7f070091;
         public static final int photoParseImageView=0x7f070058;
-        public static final int photo_button=0x7f07009e;
+        public static final int photo_button=0x7f07009c;
         public static final int picker_subtitle=0x7f07007d;
-        public static final int prev_pic=0x7f070094;
+        public static final int prev_pic=0x7f070095;
         public static final int priceEditText=0x7f07004d;
         public static final int priceTextView=0x7f070056;
         public static final int progress_bar=0x7f0700a5;
@@ -1528,7 +1529,7 @@ containing a value of this type.
         public static final int search_src_text=0x7f070042;
         public static final int search_voice_btn=0x7f070046;
         public static final int separator=0x7f070087;
-        public static final int shopNameEditText=0x7f07009c;
+        public static final int shopNameEditText=0x7f07009d;
         public static final int shop_preview_image=0x7f07009b;
         public static final int shopsListView=0x7f0700a4;
         public static final int shortcut=0x7f070031;

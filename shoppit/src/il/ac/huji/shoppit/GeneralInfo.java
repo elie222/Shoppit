@@ -1,5 +1,7 @@
 package il.ac.huji.shoppit;
 
+import java.text.DecimalFormat;
+
 import com.parse.ParseGeoPoint;
 
 import android.content.Context;
@@ -34,14 +36,16 @@ public class GeneralInfo {
 	static void displayDistance(ParseGeoPoint pgp, TextView view) {
 		if (location == null) {
 			view.setVisibility(View.GONE);
-		}
-		else {
+		} else {
 			double distInKM = pgp.distanceInKilometersTo(
 					new ParseGeoPoint(location.getLatitude(), location.getLongitude()));
-			boolean isKM = distInKM >= 1000;
+			DecimalFormat myFormat = new DecimalFormat("#.#");
+			String roundedDistInKM = myFormat.format(distInKM);
+			boolean isKM = distInKM >= 1;
 			long distInMeters = Math.round(distInKM * 1000);
-			view.setText("Distance to item: " +
-					(isKM ? distInKM + " km" : distInMeters + " meters"));
+
+			view.setText("Distance: " +
+					(isKM ? roundedDistInKM + " km" : distInMeters + " m"));
 		}
 	}
 
