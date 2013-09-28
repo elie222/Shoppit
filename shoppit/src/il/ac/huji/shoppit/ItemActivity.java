@@ -1,5 +1,6 @@
 package il.ac.huji.shoppit;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,12 +10,14 @@ import com.parse.FunctionCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -47,6 +50,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 	private Item mItem;
 
+	private TextView uploader;
 	private TextView nameTextView;
 	private TextView priceTextView;
 	private TextView currencyTextView;
@@ -58,6 +62,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 	private ListView commentsListView;
 	private Button addCommentButton;
 	private Boolean liked = null; //null means that this info has not yet been received.
+	private TextView distance;
 
 
 	@Override
@@ -76,6 +81,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 		mItem = GeneralInfo.itemHolder;
 
+		uploader = (TextView) findViewById(R.id.uploader);
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
 		priceTextView = (TextView) findViewById(R.id.priceTextView);
 		currencyTextView = (TextView) findViewById(R.id.currencyTextView);
@@ -85,6 +91,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		imageView = (ParseImageView) findViewById(R.id.photoParseImageView);
 		commentsListView = (ListView) findViewById(R.id.commentsListView);
 		addCommentButton = (Button) findViewById(R.id.addCommentButton);
+		distance = (TextView) findViewById(R.id.dist);
 
 		likeButton.setOnClickListener(new View.OnClickListener() {
 
@@ -125,10 +132,12 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 
 		setTitle(mItem.getName());
 
+		//uploader.setText("Uploaded by: " + mItem.getAuthor().getUsername()); TODO
 		nameTextView.setText(mItem.getName());
-		priceTextView.setText(String.valueOf(mItem.getPrice()));
+		priceTextView.setText(new DecimalFormat("0.00").format(mItem.getPrice()));
 		currencyTextView.setText(String.valueOf(mItem.getCurrency()));
 		categoryTextView.setText(String.valueOf(mItem.getMainCategory()));
+		GeneralInfo.displayDistance(mItem.getLocation(), distance);
 
 		likesCount = mItem.getLikesCount();
 		likesCountTextView.setText("Likes: " + mItem.getLikesCount());
@@ -166,7 +175,7 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		//						if (ParseUser.getCurrentUser().getObjectId().equals(users.get(i).getObjectId())) {
 		//							Log.d("ITEM_ACTIVITY", "User likes this item.");
 		//						} else {
-		//							Log.d("ITEM_ACTIVITY", "XXX");
+		//							Log.d("ITEM_ACTIVITY", "xxx");
 		//						}
 		//					}
 		//				}
