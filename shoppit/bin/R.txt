@@ -380,26 +380,16 @@ int drawable prev 0x7f0200a5
 int drawable rating_bad 0x7f0200a6
 int drawable rating_favorite 0x7f0200a7
 int drawable rating_good 0x7f0200a8
-<<<<<<< HEAD
 int drawable rating_good_1 0x7f0200a9
 int drawable rating_good_2 0x7f0200aa
 int drawable rating_good_3 0x7f0200ab
 int drawable search 0x7f0200ac
 int drawable splash_screen_bg 0x7f0200ad
 int drawable user 0x7f0200ae
-int id LinearLayout1 0x7f07005f
-int id RelativeLayout1 0x7f0700a3
-int id RelativeLayout2 0x7f0700a4
-int id action_add 0x7f0700ac
-=======
-int drawable search 0x7f0200a9
-int drawable splash_screen_bg 0x7f0200aa
-int drawable user 0x7f0200ab
 int id LinearLayout1 0x7f070062
 int id RelativeLayout1 0x7f0700a6
 int id RelativeLayout2 0x7f0700a7
 int id action_add 0x7f0700af
->>>>>>> 5a9bd19d0d3f613d33358adce73c3dbeec6baa76
 int id action_bar 0x7f07001f
 int id action_bar_activity_content 0x7f07001a
 int id action_bar_container 0x7f07001e
