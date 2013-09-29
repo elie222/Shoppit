@@ -38,6 +38,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 
 // TODO - add shops to map instead, or as well?
@@ -181,7 +182,7 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 			mItemMarker = mMap.addMarker(new MarkerOptions()
 			.position(mItemLatLng)
 			.title(mItem.getName())
-			.snippet(mItem.getPrice() + mItem.getCurrency())
+			.snippet(mItem.getCurrency() + mItem.getPrice())
 			.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 		} else if (mQueryString != null) {
@@ -337,7 +338,7 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-
+		
 		if (!movedCameraToInitialPosition && location != null) {
 
 			movedCameraToInitialPosition = true;

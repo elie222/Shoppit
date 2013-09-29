@@ -64,6 +64,8 @@ public class LoginActivity extends ActionBarActivity {
 	}
 
 	private void onLogInButtonClicked() {
+		
+		final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Logging in...", true);
 
 		EditText usernameEdt = (EditText) findViewById(R.id.logInUsernameEdt);
 		EditText passwordEdt = (EditText) findViewById(R.id.logInPasswordEdt);
@@ -78,6 +80,7 @@ public class LoginActivity extends ActionBarActivity {
 
 		ParseUser.logInInBackground(username, password, new LogInCallback() {
 			public void done(ParseUser user, ParseException e) {
+				progressDialog.dismiss();
 				if (user != null) {
 					logInSignUpSuccess();
 				} else {
@@ -123,6 +126,8 @@ public class LoginActivity extends ActionBarActivity {
 
 	private void onSignUpButtonClicked() {
 
+		final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Signing up...", true);
+		
 		EditText usernameEdt = (EditText) findViewById(R.id.signUpUsernameEdt);
 		EditText passwordEdt = (EditText) findViewById(R.id.signUpPasswordEdt);
 
@@ -144,6 +149,7 @@ public class LoginActivity extends ActionBarActivity {
 
 		user.signUpInBackground(new SignUpCallback() {
 			public void done(ParseException e) {
+				progressDialog.dismiss();
 				if (e == null) {
 					logInSignUpSuccess();
 				} else {

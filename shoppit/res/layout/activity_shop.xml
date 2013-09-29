@@ -22,58 +22,11 @@
         android:id="@+id/photoParseImageView"
         android:layout_width="match_parent"
         android:layout_height="180dp" />
-    <!--
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/photoParseImageView" />
-    -->
 
-
-    <!--
-         <TextView
-        android:id="@+id/commentTitleTextView"
+    <TextView
+        android:id="@+id/descriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
-        android:paddingTop="10dp"
-        android:text="@string/comments"
-        android:textAllCaps="true"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/addCommentButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_comment" />
-
-    <ListView
-        android:id="@+id/commentsListView"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:paddingBottom="10dp" >
-    </ListView>
-    -->
-    <!--
-         <TextView
-        android:id="@+id/likesCountTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/photoParseImageView"
-        android:layout_toLeftOf="@+id/imageView1"
-        android:text="5"
-        android:textSize="18sp" />
-
-    <ImageView
-        android:id="@+id/like_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/rating_good" />
-    -->
+        android:text="Description" />
 
 </LinearLayout>

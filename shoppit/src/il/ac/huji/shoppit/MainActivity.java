@@ -57,6 +57,7 @@ LocationListener {
 
 	private static final int ADD_ITEM_REQUEST_CODE = 5000;
 	private static final int ADD_SHOP_REQUEST_CODE = 5001;
+	private static final int PROFILE_REQUEST_CODE = 5002;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -84,9 +85,9 @@ LocationListener {
 	private LocationRetriever2 mFallbackLocationRetriever;
 
 	private static final LocationRequest REQUEST = LocationRequest.create()
-			.setInterval(10 * 1000)		// 10 seconds
-			.setFastestInterval(1 * 1000)	// 1 second
-			.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+			.setInterval(5000)		// 5 seconds
+			.setFastestInterval(1000)	// 1 second
+			.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 	// if mLocationClient has found a location.
 	private boolean foundLocationLC = false;
@@ -149,7 +150,7 @@ LocationListener {
 		mNavDrawerAdapter.addItem(getResources().getString(R.string.add_shop));
 		mNavDrawerAdapter.addItem(getResources().getString(R.string.settings));
 		mNavDrawerAdapter.addItem(getResources().getString(R.string.profile));
-		mNavDrawerAdapter.addItem(getResources().getString(R.string.logout));
+		//mNavDrawerAdapter.addItem(getResources().getString(R.string.logout));
 
 		mDrawerList.setAdapter(mNavDrawerAdapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -287,7 +288,7 @@ LocationListener {
 		}
 	}
 
-	private void selectItem(int position) {
+	void selectItem(int position) {
 		if (mNavDrawerAdapter.isSeparator(position)) {
 			return;
 		}
@@ -341,13 +342,14 @@ LocationListener {
 			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
 
-		} else if (selectedName.equals( getResources().getString(R.string.logout) )) {
-
-			ParseUser.logOut();
-
-			// TODO remove log out option from menu (replace with login option?)
-			mDrawerLayout.closeDrawer(mDrawerList);
-			return;
+			// removed this.
+			//		} else if (selectedName.equals( getResources().getString(R.string.logout) )) {
+			//
+			//			ParseUser.logOut();
+			//
+			//			// need to remove log out option from menu (replace with login option?)
+			//			mDrawerLayout.closeDrawer(mDrawerList);
+			//			return;
 
 		} else if (selectedName.equals( getResources().getString(R.string.shops) )) {
 			Location lastLocation = getLastLocation();
@@ -392,16 +394,16 @@ LocationListener {
 
 			return;
 		} else if (selectedName.equals( getResources().getString(R.string.profile) )) {
-			
+
 			if (ParseUser.getCurrentUser() == null) {
-				mDrawerLayout.closeDrawer(mDrawerList);
-				return;
+				Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
+				startActivityForResult(loginIntent, PROFILE_REQUEST_CODE);
+			} else {
+				// Display the fragment as the main content.
+				Fragment fragment = new ProfileFragment();
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 			}
-			
-			// Display the fragment as the main content.
-			Fragment fragment = new ProfileFragment();
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
 			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
@@ -411,6 +413,7 @@ LocationListener {
 			selectedCategory = position;
 
 			return;
+
 		}
 
 	}
@@ -446,8 +449,13 @@ LocationListener {
 			startNewItemIntent();
 		} else if (requestCode == ADD_SHOP_REQUEST_CODE && resultCode == RESULT_OK){
 			startNewShopIntent();
+		} else if (requestCode == PROFILE_REQUEST_CODE && resultCode == RESULT_OK){
+			// Display the fragment as the main content.
+			Fragment fragment = new ProfileFragment();
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 		} else if (requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST) {
-			// TODO this isn't doing anything ATM
+			// this isn't doing anything ATM
 			/*
 			 * If the result code is Activity.RESULT_OK, try
 			 * to connect again
@@ -710,33 +718,44 @@ LocationListener {
 	public void setSortBy(int position) {
 		sortBySelected = position;
 	}
-	
+
 	private void startNewItemIntent() {
-		Location lastLocation = getLastLocation();
-		if (lastLocation != null) {
-			Intent intent = new Intent(getBaseContext(), NewItemActivity.class);
-			intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
-			intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
-			startActivity(intent);
-		} else {
-			Toast.makeText(mainActivity, "Error getting device location",
-					Toast.LENGTH_LONG).show();
-			return;
+		try {
+			Location lastLocation = getLastLocation();
+			if (lastLocation != null) {
+				Intent intent = new Intent(getBaseContext(), NewItemActivity.class);
+				intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+				intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+				startActivity(intent);
+			} else {
+				Toast.makeText(mainActivity, "Error getting device location",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		} catch (Exception e) {
+
 		}
+
 	}
-	
+
 	private void startNewShopIntent() {
-		Location lastLocation = getLastLocation();
-		if (lastLocation != null) {
-			Intent intent = new Intent(getBaseContext(), NewShopActivity.class);
-			intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
-			intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
-			startActivity(intent);
-		} else {
-			Toast.makeText(mainActivity, "Error getting device location",
-					Toast.LENGTH_LONG).show();
+		try {
+			Location lastLocation = getLastLocation();
+			if (lastLocation != null) {
+				Intent intent = new Intent(getBaseContext(), NewShopActivity.class);
+				intent.putExtra(LATITUDE_EXTRA, lastLocation.getLatitude());
+				intent.putExtra(LONGITUDE_EXTRA, lastLocation.getLongitude());
+				startActivity(intent);
+			} else {
+				Toast.makeText(mainActivity, "Error getting device location",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		} catch (Exception e) {
 			return;
 		}
+
+
 	}
 
 
