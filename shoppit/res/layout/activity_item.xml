@@ -39,13 +39,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/uploader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="uploader"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <com.parse.ParseImageView
         android:id="@+id/photoParseImageView"
         android:layout_width="fill_parent"
@@ -62,26 +55,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/like_button"
+            android:layout_toLeftOf="@+id/likeCheckBox"
             android:text="17"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <!--
-             <ImageView
-            android:id="@+id/like_button"
+        <TextView
+            android:id="@+id/likesTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />-->
+            android:layout_alignBaseline="@+id/likesCountTextView"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/likesCountTextView"
+            android:text="Likes: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <CheckBox
-            android:id="@+id/like_button"
+            android:id="@+id/likeCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/likesCountTextView"
             android:layout_alignBottom="@+id/likesCountTextView"
             android:layout_alignParentRight="true"
-            android:button="@android:drawable/btn_star" />
+            android:button="@drawable/btn_thumb" />
 
         <TextView
             android:id="@+id/categoryTextView"
@@ -104,12 +99,37 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/dist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="dist"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <RelativeLayout
+        android:id="@+id/categLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/usernameTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Posted by: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/usernameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/usernameTitleTextView"
+            android:layout_toRightOf="@+id/usernameTitleTextView"
+            android:text="elie"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/dist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/usernameTitleTextView"
+            android:layout_alignParentRight="true"
+            android:text="Distance: 3.3 km"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
 
     <View
         android:layout_width="fill_parent"

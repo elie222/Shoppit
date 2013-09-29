@@ -47,7 +47,7 @@ public class NewShopFragment extends Fragment {
 	private Button cancelButton;
 	private Button saveButton;
 
-	private byte[] photoData;
+	private byte[] photoData = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,19 +111,29 @@ public class NewShopFragment extends Fragment {
 				String description = descriptionEditText.getText().toString();
 				
 				if (name.length() == 0) {
+					progressDialog.dismiss();
 					Toast.makeText(getActivity(), "Please enter the shop's name",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
 
 				if (name.length() < 3) {
+					progressDialog.dismiss();
 					Toast.makeText(getActivity(), "Shop name is too short",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
 
 				if (name.length() > 30) {
+					progressDialog.dismiss();
 					Toast.makeText(getActivity(), "Shop name is too long",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+				if (photoData == null) {
+					progressDialog.dismiss();
+					Toast.makeText(getActivity(), "Please add a photo",
 							Toast.LENGTH_LONG).show();
 					return;
 				}

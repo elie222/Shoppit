@@ -291,30 +291,35 @@ public class NewItemFragment extends Fragment {
 		//Perform sanity checks
 
 		if (name.length() == 0) {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "Please enter the item's name",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		if (name.length() < 3) {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "Item name is too short",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		if (name.length() > 30) {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "Item name is too long",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		if (price.length() == 0) {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "Please enter the item's price",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		if (price.length() > 6) {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "Item price is too long",
 					Toast.LENGTH_LONG).show();
 			return;
@@ -323,6 +328,7 @@ public class NewItemFragment extends Fragment {
 		//Check there are no more than two digits after the decimal point.
 		int decimalPos = price.indexOf(".");
 		if (decimalPos >= 0 && price.substring(decimalPos + 1).length() > 2) {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "Item price is invalid",
 					Toast.LENGTH_LONG).show();
 			return;
@@ -333,12 +339,14 @@ public class NewItemFragment extends Fragment {
 		try {
 			priceVal = Float.parseFloat(price);
 		} catch (Exception e) {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "Item price is invalid",
 					Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		if (priceVal == 0) {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "Item price cannot be zero",
 					Toast.LENGTH_LONG).show();
 			return;

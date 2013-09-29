@@ -31,13 +31,13 @@
 
             <ImageButton
                 android:id="@+id/photo_button"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
                 android:contentDescription="@string/add_photo"
+                android:gravity="center"
                 android:src="@drawable/camera" />
-
         </RelativeLayout>
 
         <TextView

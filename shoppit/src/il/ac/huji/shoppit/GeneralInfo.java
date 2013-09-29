@@ -45,7 +45,7 @@ public class GeneralInfo {
 			long distInMeters = Math.round(distInKM * 1000);
 
 			view.setText("Distance: " +
-					(isKM ? roundedDistInKM + " km" : distInMeters + " m"));
+					(isKM ? roundedDistInKM + " km" : distInMeters + "m"));
 		}
 	}
 
