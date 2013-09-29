@@ -18,12 +18,27 @@
             android:text="@string/add_shop"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <ImageView
-            android:id="@+id/shop_preview_image"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/image"
-            android:src="@drawable/placeholder_with_border" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/shop_preview_image"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/image"
+                android:src="@drawable/placeholder_with_border" />
+
+            <ImageButton
+                android:id="@+id/photo_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/add_photo"
+                android:src="@drawable/camera" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/textView1"
@@ -71,13 +86,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/photo_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/add_photo"
-            android:src="@drawable/camera" />
 
         <LinearLayout
             android:layout_width="match_parent"

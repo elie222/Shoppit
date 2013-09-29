@@ -19,30 +19,22 @@
 
         <ImageView
             android:id="@+id/photoImageView"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/item_image_preview" />
+            android:contentDescription="@string/image"
+            android:src="@drawable/placeholder_with_border" />
 
         <com.parse.ParseImageView
             android:id="@+id/parseImageView"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/item_image_preview" />
+            android:contentDescription="@string/image"
+            android:src="@drawable/placeholder_with_border" />
 
         <RelativeLayout
             android:id="@+id/buttons_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
-
-            <ImageButton
-                android:id="@+id/prev_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/prev" />
 
             <ImageButton
                 android:id="@+id/change_pic"
@@ -53,11 +45,19 @@
                 android:src="@drawable/camera" />
 
             <ImageButton
+                android:id="@+id/prev_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/prev" />
+
+            <ImageButton
                 android:id="@+id/next_pic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/next" />
         </RelativeLayout>
 

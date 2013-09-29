@@ -1,5 +1,7 @@
 package il.ac.huji.shoppit;
 
+import java.text.DecimalFormat;
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -48,12 +50,14 @@ public class ItemAdapter extends ParseQueryAdapter<Item> {
 		categoryTextView = (TextView) v.findViewById(R.id.categoryTextView);
 		likesCountTextView = (TextView) v.findViewById(R.id.likesCountTextView);
 		imageView = (ParseImageView) v.findViewById(R.id.icon);
+		TextView distance = (TextView) v.findViewById(R.id.dist);
 		
 		nameTextView.setText(item.getName());		
-		priceTextView.setText(String.valueOf(item.getPrice()));
+		priceTextView.setText(new DecimalFormat("0.00").format(item.getPrice()));
 		currencyTextView.setText(String.valueOf(item.getCurrency()));
 		categoryTextView.setText(String.valueOf(item.getMainCategory()));
 		likesCountTextView.setText(String.valueOf(item.getLikesCount()));
+		GeneralInfo.displayDistance(item.getLocation(), distance);
 		
 		imageView.setPlaceholder(mContext.getResources().getDrawable(R.drawable.placeholder));
 		
