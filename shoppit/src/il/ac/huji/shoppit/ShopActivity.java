@@ -70,8 +70,6 @@ public class ShopActivity extends Activity {
 			});
 		}
 
-		// show comments
-		//reloadCommentsListView();
 	}
 
 	@Override

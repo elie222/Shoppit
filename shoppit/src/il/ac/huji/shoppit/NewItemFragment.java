@@ -200,13 +200,6 @@ public class NewItemFragment extends Fragment {
 	}
 
 	public void startCamera() {
-		//		Fragment cameraFragment = new CameraFragment();
-		//		FragmentTransaction transaction = getActivity().getFragmentManager()
-		//				.beginTransaction();
-		//		transaction.replace(R.id.fragmentContainer, cameraFragment);
-		//		transaction.addToBackStack("NewItemFragment");
-		//		transaction.commit();
-
 		FragmentManager fm = getActivity().getFragmentManager();
 		fm.popBackStack("NewCameraFragment",
 				FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -390,11 +383,9 @@ public class NewItemFragment extends Fragment {
 		if (barcode != null)
 			newItem.setBarcode(barcode);
 
-		//Log.d("HERE", "1" + GeneralInfo.currencyName);
 		newItem.saveInBackground(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
-				//Log.d("HERE", "2");
 				progressDialog.dismiss();
 				if (e == null) {
 					Toast.makeText(getActivity(), "Item added successfully",
@@ -402,7 +393,6 @@ public class NewItemFragment extends Fragment {
 					getActivity().setResult(Activity.RESULT_OK);
 					getActivity().finish();
 				} else {
-					//Log.d("NEW_ITEM_FRAG", e.getLocalizedMessage());
 					Toast.makeText(getActivity(), "Error adding item",
 							Toast.LENGTH_LONG).show();
 				}

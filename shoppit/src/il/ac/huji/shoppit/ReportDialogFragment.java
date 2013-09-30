@@ -39,8 +39,6 @@ public class ReportDialogFragment extends DialogFragment {
 							Log.i("REPORT_DIALOG", "Report added successfully");
 							//							Toast.makeText(getActivity(), "Report submitted successfully",
 							//									Toast.LENGTH_LONG).show();
-							// TODO call cloud code function that adds report to item. probs do this in onBeforeSave
-							//							mListener.onDialogPositiveClick(CReportDialogFragment.this);
 						} else {
 							Log.e("REPORT_DIALOG", "Error adding report. CODE: " + e.getCode() + ". MESSAGE: " + e.getMessage());
 							//							Toast.makeText(getActivity(), "Error submitting report",

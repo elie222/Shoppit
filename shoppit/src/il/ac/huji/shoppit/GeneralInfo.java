@@ -50,88 +50,8 @@ public class GeneralInfo {
 	}
 
 
-	//	static String currencyName = null,
-	//			currencySymbol = null;
-
-
 	//Location readers
-	//	static LocationRetriever1 lr1; //This is always null. Not null only when connected to Google Play.
 	static LocationRetriever2 lr2 = new LocationRetriever2(null);
-
-
-	//	/**
-	//	 * 
-	//	 * @param context
-	//	 * @param waitTime How much to wait before stopping to listen for updates, in milliseconds.
-	//	 * Set this variable to 0 to stop only manually.
-	//	 * @return
-	//	 */
-	//	static boolean startGettingLocation(Context context, long waitTime) {
-	//
-	//		GeneralInfo.location = null;
-	//
-	//		lr1 = LocationRetriever1.connect(context, waitTime);
-	//		if (lr1 != null) {
-	//			lr1.startGettingUpdates();
-	//		}
-	//
-	//		if (lr1 == null) {
-	//			if (!lr2.startGettingUpdates(context, waitTime)) {
-	//				return false;
-	//			}
-	//		}
-	//
-	//		return true;
-	//	}
-	//
-	//
-	//	static void stopGettingLocation() {
-	//
-	//		try {
-	//			lr1.stopGettingUpdates();
-	//			lr1 = null;
-	//		} catch (Exception e) {}
-	//		lr2.stopGettingUpdates();
-	//
-	//		//Save the last location update.
-	//		try {
-	//			GeneralInfo.lr1.getLastLocation();
-	//		} catch (Exception e) {
-	//			GeneralInfo.lr2.getLastLocation();
-	//		}
-	//
-	//	}
-
-
-	// stuff like this should be in res/values/strings.xml
-
-	//	static String[] categories = new String[] { "Clothes", "Cosmetics", "Electronics",
-	//		"Food", "Furniture", "Jewelry", "(Other)"};
-	//
-	//	static String[][] subCateg = new String[][] {
-	//
-	//		//Clothes
-	//		{"Hats", "Shirts", "Shoes", "Pants", "(Other)"},
-	//
-	//		//Cosmetics
-	//		{"Eyes", "Face", "Lips", "Nails", "(Other)"},
-	//
-	//		//Electronics
-	//		{"Appliances", "Computers", "DVDs", "Headphones", "Music Players", "Telephony", "TVs", "Watches", "(Other)"},
-	//
-	//		//Food
-	//		{"Baked", "Beverages", "Dairy", "Liquor", "Meat", "Produce", "Snacks", "(Other)"},
-	//
-	//		//Furniture
-	//		{"Beds", "Bookcases", "Chairs", "Closets", "Sofas", "Tables", "(Other)"},
-	//
-	//		//Jewelry
-	//		{"Bracelets", "Earrings", "Necklaces", "Rings", "(Other)"},
-	//
-	//		//Other
-	//		{""}
-	//
-	//	};
 
 
 

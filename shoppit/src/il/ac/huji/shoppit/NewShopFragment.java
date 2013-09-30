@@ -68,9 +68,6 @@ public class NewShopFragment extends Fragment {
 		cancelButton = ((Button) v.findViewById(R.id.cancel_button));
 		saveButton = ((Button) v.findViewById(R.id.save_button));
 
-		// Until the user has taken a photo, hide the preview
-		//		shopPreview.setVisibility(View.INVISIBLE);
-
 		// set up location spinner - has only one option atm ("Current location").
 		ArrayAdapter<CharSequence> locationAdapter = ArrayAdapter.createFromResource(getActivity(),
 				R.array.location_options_array, android.R.layout.simple_spinner_item);
@@ -103,7 +100,7 @@ public class NewShopFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO check data is valid
+				// check data is valid
 
 				final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Adding shop...", true);
 				

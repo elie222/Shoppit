@@ -37,7 +37,6 @@ import android.widget.TextView;
  */
 public class ItemActivity extends Activity implements CommentDialogFragment.CommentDialogListener {
 
-	//	public final static String EXTRA_ITEM_ID = "il.ac.huji.shoppit.ITEM_ID";
 	private final static int ADD_COMMENT_REQUEST_CODE = 4000;
 	private final static int LIKE_ITEM_REQUEST_CODE = 4001;
 	private final static int REPORT_ITEM_REQUEST_CODE = 4002;
@@ -200,13 +199,6 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 		return true;
 	}
 
-	// Call to update the share intent
-	//	private void setShareIntent(Intent shareIntent) {
-	//	    if (mShareActionProvider != null) {
-	//	        mShareActionProvider.setShareIntent(shareIntent);
-	//	    }
-	//	}
-
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		reloadCommentsListView();
@@ -248,8 +240,6 @@ public class ItemActivity extends Activity implements CommentDialogFragment.Comm
 			if (mItem.getLocation() != null) {
 				GeneralInfo.itemHolder = mItem;
 				intent.putExtra(MapActivity.SHOW_ITEM_EXTRA, true);
-				//				intent.putExtra(MapActivity.LAT_EXTRA, mItem.getLocation().getLatitude());
-				//				intent.putExtra(MapActivity.LON_EXTRA, mItem.getLocation().getLongitude());
 			}
 
 			startActivity(intent);

@@ -264,31 +264,6 @@ public class CameraFragment extends Fragment {
 
 				previewW = width;
 				previewH = height;
-				// If your preview can change or rotate, take care of those events here.
-				// Make sure to stop the preview before resizing or reformatting it.
-
-				/*if (surfaceView.getHolder().getSurface() == null) {
-					// preview surface does not exist
-					return;
-				}
-				Log.d(TAG, "Here");
-				// stop preview before making changes
-				try {
-					camera.stopPreview();
-				} catch (Exception e) {
-					// ignore: tried to stop a non-existent preview
-				}
-				// set preview size and make any resize, rotate or
-				// reformatting changes here
-				// start preview with new settings
-				try {
-					setCameraDisplayOrientation(getActivity(), 0, camera);
-					camera.setPreviewDisplay(holder);
-					camera.startPreview();
-
-				} catch (Exception e) {
-					Log.d(TAG, "Error starting camera preview: " + e.getMessage());
-				}*/
 			}
 
 			public void surfaceDestroyed(SurfaceHolder holder) {
@@ -299,61 +274,6 @@ public class CameraFragment extends Fragment {
 
 		return v;
 	}
-
-
-
-	//We can erase this code if barcode works.
-
-	//Helper functions for getting the image from the camera in the right format
-	/*private static byte [] getNV21(int inputWidth, int inputHeight, Bitmap scaled) {
-
-		int [] argb = new int[inputWidth * inputHeight];
-
-		scaled.getPixels(argb, 0, inputWidth, 0, 0, inputWidth, inputHeight);
-
-		byte [] yuv = new byte[inputWidth*inputHeight*3/2];
-		encodeYUV420SP(yuv, argb, inputWidth, inputHeight);
-
-		scaled.recycle();
-
-		return yuv;
-	}
-
-	private static void encodeYUV420SP(byte[] yuv420sp, int[] argb, int width, int height) {
-		final int frameSize = width * height;
-
-		int yIndex = 0;
-		int uvIndex = frameSize;
-
-		int a, R, G, B, Y, U, V;
-		int index = 0;
-		for (int j = 0; j < height; j++) {
-			for (int i = 0; i < width; i++) {
-
-				a = (argb[index] & 0xff000000) >> 24; // a is not used obviously
-			R = (argb[index] & 0xff0000) >> 16;
-			G = (argb[index] & 0xff00) >> 8;
-			B = (argb[index] & 0xff) >> 0;
-
-			// well known RGB to YUV algorithm
-			Y = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
-			U = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
-			V = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
-
-			// NV21 has a plane of Y and interleaved planes of VU each sampled by a factor of 2
-			//    meaning for every 4 Y pixels there are 1 V and 1 U.  Note the sampling is every other
-			//    pixel AND every other scanline.
-			yuv420sp[yIndex++] = (byte) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
-			if (j % 2 == 0 && index % 2 == 0) { 
-				yuv420sp[uvIndex++] = (byte)((V<0) ? 0 : ((V > 255) ? 255 : V));
-				yuv420sp[uvIndex++] = (byte)((U<0) ? 0 : ((U > 255) ? 255 : U));
-			}
-
-			index ++;
-			}
-		}
-	}*/
-
 
 	private Bitmap rotate(Bitmap image) {
 		Matrix matrix = new Matrix();
@@ -503,30 +423,11 @@ public class CameraFragment extends Fragment {
 		addPhotoToShopAndReturn(scaledData);
 	}
 
-	//		private void saveScaledPhoto(byte[] data) {
-	//	
-	//			Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-	//	
-	//			Matrix matrix = new Matrix();
-	//			matrix.postRotate(90);
-	//			Bitmap rotatedShopImage = Bitmap.createBitmap(image, 0,
-	//					0, image.getWidth(), image.getHeight(),
-	//					matrix, true);
-	//	
-	//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	//			rotatedShopImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-	//	
-	//			byte[] scaledData = bos.toByteArray();
-	//	
-	//			addPhotoToShopAndReturn(scaledData);
-	//		}
 
 	private void addPhotoToShopAndReturn(byte[] data) {
 
 		if (getActivity().getClass() == NewShopActivity.class) {
 			Log.i(TAG, "NewShopActivity");
-
-			//			byte[] scaledData = scale(data);
 
 			((NewShopActivity) getActivity()).setCurrentPhotoData(data);
 
@@ -620,26 +521,5 @@ public class CameraFragment extends Fragment {
 		camera.setDisplayOrientation(result);
 	}
 
-	//	private void create43RatioSurface() {
-	//		DisplayMetrics metrics = getResources().getDisplayMetrics();
-	//		int height = 0;
-	//		int width = 0;
-	//
-	//		if(metrics.widthPixels < metrics.heightPixels){
-	//			width = metrics.widthPixels;
-	//			height = width;
-	//			//	        height= (metrics.widthPixels/4) * 3 ;
-	//		} else {
-	//			height = metrics.heightPixels;
-	//			width = height;
-	//			//	        width= (metrics.heightPixels/4) * 3 ;
-	//		}
-	//
-	//		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
-	//		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-	//		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-	//
-	//		surfaceView.setLayoutParams(layoutParams);        
-	//	}
 
 }

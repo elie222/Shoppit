@@ -41,7 +41,6 @@ public class CommentAdapter extends ParseQueryAdapter<Comment> {
 		try {
 			authorTextView.setText(comment.getAuthor().fetchIfNeeded().getUsername());
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 

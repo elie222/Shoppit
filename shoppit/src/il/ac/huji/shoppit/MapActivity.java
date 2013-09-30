@@ -50,8 +50,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 	private final static String TAG = "MAP_ACTIVITY";
 
-	//	public final static String LAT_EXTRA = "LAT_EXTRA";
-	//	public final static String LON_EXTRA = "LON_EXTRA";
 	public final static String SHOW_ITEM_EXTRA = "SHOW_ITEM_EXTRA";
 	public final static String QUERY_EXTRA = "QUERY_EXTRA";
 
@@ -59,9 +57,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 	private GoogleMap mMap;
 	private LocationClient mLocationClient;
-
-	//	private static final LatLng SOMEWHERE_IN_JLEM = new LatLng(31.7644, 35.2116);
-	// private static final LatLng SOMEWHERE_IN_JLEM = new LatLng(0, 0);
 
 	private Item mItem = null;
 	private LatLng mItemLatLng = null;
@@ -98,7 +93,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// setUpMapIfNeeded();
 		setUpLocationClientIfNeeded();
 		mLocationClient.connect();
 	}
@@ -153,11 +147,7 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 						mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mItemLatLng, 15));
 
 						mItemMarker.showInfoWindow();
-					}
-//					else if (mQueryString != null) { 
-//						mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
-//					}
-					else {
+					} else {
 						mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
 					}
 
@@ -169,12 +159,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 	private void addMarkersToMap() {
 		// TODO add photos to markers. see here: https://developers.google.com/maps/documentation/android/marker#info_windows
 
-		// Uses a colored icon.
-		//		mSomewhereInJlem = mMap.addMarker(new MarkerOptions()
-		//		.position(SOMEWHERE_IN_JLEM)
-		//		.title("Jerusalem")
-		//		.snippet("Population: 804,400")
-		//		.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 		if (mItem != null) {
 
 			Log.d(TAG, "mItem not null: " + mItem.getName());
@@ -190,10 +174,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 			Log.d(TAG, "mQueryString not null: " + mQueryString);
 
 			ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-			//ParseGeoPoint userLocation = (ParseGeoPoint) new ParseGeoPoint(mLocationClient.getLastLocation().getLatitude(),
-			//		mLocationClient.getLastLocation().getLongitude());
-
-			//query.whereNear("location", userLocation);
 			query.whereContains("searchString", mQueryString.toLowerCase());
 			query.setLimit(ITEMS_TO_SHOW);
 
@@ -214,8 +194,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 									item.getLocation().getLongitude()))
 									.title(item.getName())
 									.snippet(item.getPrice() + item.getCurrency())
-									// this gives each marker a different colour
-									// .icon(BitmapDescriptorFactory.defaultMarker(i * 360 / items.size())));
 									.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 							mMarkerItemMap.put(marker, item);
@@ -254,8 +232,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 									item.getLocation().getLongitude()))
 									.title(item.getName())
 									.snippet(item.getPrice() + item.getCurrency())
-									// this gives each marker a different colour
-									// .icon(BitmapDescriptorFactory.defaultMarker(i * 360 / items.size())));
 									.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 							mMarkerItemMap.put(marker, item);
@@ -297,20 +273,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 		return true;
 	}
 
-	//	@Override
-	//	public boolean onCreateOptionsMenu(Menu menu) {
-	//		MenuInflater inflater = getMenuInflater();
-	//		inflater.inflate(R.menu.map, menu);
-	//
-	//		// Get the SearchView and set the searchable configuration
-	//		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	//		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-	//		searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
-	//		//		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-	//
-	//		return super.onCreateOptionsMenu(menu);
-	//	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -330,7 +292,6 @@ OnMarkerClickListener, OnInfoWindowClickListener, OnMarkerDragListener {
 
 	@Override
 	public boolean onMyLocationButtonClick() {
-		//		Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
 		// Return false so that we don't consume the event and the default behavior still occurs
 		// (the camera animates to the user's current position).
 		return false;

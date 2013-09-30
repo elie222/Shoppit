@@ -18,34 +18,24 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-public class CategoryFragment extends Fragment
-//implements RadioGroup.OnCheckedChangeListener 
-{
+public class CategoryFragment extends Fragment {
 
-	//	public static final String ARG_CATEGORY_NUMBER = "category_number";
 	public static final String ARG_CATEGORY_NAME = "category_name";
 
-	//	public static final String ARG_LATITUDE = "latitude";
-	//	public static final String ARG_LONGITUDE = "longitude";
 	public static final String MAIN_CATEGORY = "mainCategory";
-	//	public static final String ALL = "All";
 
 	// FOR DEBUGGING
 	protected static final String TAG = "CAT_FRAG";
 
 	private Spinner sortBySpinner;
-	//private RadioGroup radioGroupSortBy;
 	private ListView listView;
 
 	private ItemAdapter adapter;
 
-	//	private double latitude;
-	//	private double longitude;
 	private ParseGeoPoint currentLocation;
 
 	private String category;
 
-	//private int checkedRadioButtonId;
 	private int selectedSortByPosition;
 
 	public CategoryFragment() {
@@ -56,11 +46,11 @@ public class CategoryFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		final View rootView = inflater.inflate(R.layout.fragment_category, container, false);
-		//		final int i = getArguments().getInt(ARG_CATEGORY_NUMBER);
+
 		final String categoryName = getArguments().getString(ARG_CATEGORY_NAME);
 
 		sortBySpinner = (Spinner) rootView.findViewById(R.id.sortBySpinner);
-		//radioGroupSortBy = (RadioGroup) rootView.findViewById(R.id.radioGroupSortBy);
+
 		listView = (ListView) rootView.findViewById(R.id.homeListView);
 
 		// get location from MainActivity
@@ -93,10 +83,6 @@ public class CategoryFragment extends Fragment
 				
 			}
 		});
-		
-		//radioGroupSortBy.setOnCheckedChangeListener(this);
-
-		//checkedRadioButtonId = radioGroupSortBy.getCheckedRadioButtonId();
 
 		loadItems();
 
@@ -110,9 +96,6 @@ public class CategoryFragment extends Fragment
 
 				ParseQuery<Item> query = new ParseQuery<Item>("Item");
 
-				//SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-				//query.whereEqualTo("currency", sharedPrefs.getString("currency_key", null));
-				
 				if (!category.equals(getResources().getString(R.string.all))) {
 					query.whereEqualTo(MAIN_CATEGORY, category);
 				}
@@ -143,9 +126,4 @@ public class CategoryFragment extends Fragment
 		getActivity().setTitle(category);
 	}
 
-//	@Override
-//	public void onCheckedChanged(RadioGroup group, int checkedId) {
-//		checkedRadioButtonId = checkedId;
-//		loadItems();
-//	}
 }

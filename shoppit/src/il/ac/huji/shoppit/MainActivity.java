@@ -66,7 +66,6 @@ LocationListener {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	private String[] mCategoryTitles;
-	//	private String[] mGeneralNavBarTitles;
 
 	private NavDrawerAdapter mNavDrawerAdapter;
 
@@ -108,22 +107,6 @@ LocationListener {
 		setContentView(R.layout.activity_main);
 		Item.fillMap();
 
-		// Add code to print out the key hash
-		//	    try {
-		//	        PackageInfo info = getPackageManager().getPackageInfo(
-		//	                "il.ac.huji.shoppit", 
-		//	                PackageManager.GET_SIGNATURES);
-		//	        for (Signature signature : info.signatures) {
-		//	            MessageDigest md = MessageDigest.getInstance("SHA");
-		//	            md.update(signature.toByteArray());
-		//	            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-		//	            }
-		//	    } catch (NameNotFoundException e) {
-		// 
-		//	    } catch (NoSuchAlgorithmException e) {
-		//
-		//	    }
-
 		ParseObject.registerSubclass(Item.class);
 		ParseObject.registerSubclass(Shop.class);
 		ParseObject.registerSubclass(Comment.class);
@@ -139,8 +122,7 @@ LocationListener {
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		// set up the drawer's list view with items and click listener
-		//		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mCategoryTitles));
+
 		mNavDrawerAdapter = new NavDrawerAdapter(getBaseContext());
 		mNavDrawerAdapter.addSeparatorItem(CATEGORY_SEPARATOR);
 		mNavDrawerAdapter.addItem(getResources().getString(R.string.all));
@@ -150,7 +132,6 @@ LocationListener {
 		mNavDrawerAdapter.addItem(getResources().getString(R.string.add_shop));
 		mNavDrawerAdapter.addItem(getResources().getString(R.string.settings));
 		mNavDrawerAdapter.addItem(getResources().getString(R.string.profile));
-		//mNavDrawerAdapter.addItem(getResources().getString(R.string.logout));
 
 		mDrawerList.setAdapter(mNavDrawerAdapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -181,24 +162,6 @@ LocationListener {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		//		if (savedInstanceState == null) {
-		//			selectItem(mNavDrawerAdapter.getPosition(CATEGORY_SEPARATOR)+1);
-		//		}
-
-
-		//Check if user has selected currency.
-		//		SharedPreferences settings = getSharedPreferences("Shoppit", 0);
-		//		GeneralInfo.currencyName = settings.getString("currencyName", null);
-		//		if (GeneralInfo.currencyName == null) {
-		//			FragmentManager fm = getFragmentManager();
-		//			CurrencyDialogFragment currencyDialog = new CurrencyDialogFragment();
-		//			currencyDialog.setRetainInstance(true);
-		//			currencyDialog.show(fm, "currency_dialog_fragment");
-		//		}
-		//		else {
-		//			GeneralInfo.currencySymbol = settings.getString("currencySymbol", null);
-		//		}
 
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -243,25 +206,8 @@ LocationListener {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+		
 		// Handle action buttons
-
-		// DEMO CODE
-		//		switch(item.getItemId()) {
-		//		case R.id.action_websearch:
-		//			// create intent to perform web search for this planet
-		//			Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-		//			intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-		//			// catch event that there's no activity to handle intent
-		//			if (intent.resolveActivity(getPackageManager()) != null) {
-		//				startActivity(intent);
-		//			} else {
-		//				Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-		//			}
-		//			return true;
-		//		default:
-		//			return super.onOptionsItemSelected(item);
-		//		}
-
 		switch (item.getItemId()) {
 		case R.id.action_map:
 			Intent intent = new Intent(getBaseContext(), MapActivity.class);
@@ -295,8 +241,6 @@ LocationListener {
 
 		String sectionName = mNavDrawerAdapter.getSectionName(position);
 		String selectedName = mNavDrawerAdapter.getItemName(position);
-		//Log.i("MAIN ACT", selectedName);
-		//		int positionInSection = mNavDrawerAdapter.getPositionInSection(position);
 
 		if (sectionName == CATEGORY_SEPARATOR) {
 
@@ -307,7 +251,6 @@ LocationListener {
 				Fragment fragment = new CategoryFragment();
 				Bundle args = new Bundle();
 
-				//				args.putInt(CategoryFragment.ARG_CATEGORY_NUMBER, positionInSection);
 				args.putString(CategoryFragment.ARG_CATEGORY_NAME, selectedName);
 				args.putDouble(MainActivity.LATITUDE_EXTRA, lastLocation.getLatitude());
 				args.putDouble(MainActivity.LONGITUDE_EXTRA, lastLocation.getLongitude());
@@ -341,15 +284,6 @@ LocationListener {
 
 			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
-
-			// removed this.
-			//		} else if (selectedName.equals( getResources().getString(R.string.logout) )) {
-			//
-			//			ParseUser.logOut();
-			//
-			//			// need to remove log out option from menu (replace with login option?)
-			//			mDrawerLayout.closeDrawer(mDrawerList);
-			//			return;
 
 		} else if (selectedName.equals( getResources().getString(R.string.shops) )) {
 			Location lastLocation = getLastLocation();
@@ -555,9 +489,6 @@ LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		//		Toast.makeText(mainActivity, "Location changed: " + location,
-		//				Toast.LENGTH_LONG).show();
-
 		// we only want to do this if no location has been found before. i.e. on app startup
 		if (!foundLocationLC && location != null) {
 			foundLocationLC = true;
@@ -594,8 +525,6 @@ LocationListener {
 			 * user with the error.
 			 */
 			startUpFallbackLocationRetriever();
-
-			//showErrorDialog(connectionResult.getErrorCode());
 		}
 
 	}
@@ -611,60 +540,6 @@ LocationListener {
 	public void onDisconnected() {
 		// do nothing
 	}
-
-	//	/**
-	//	 * Verify that Google Play services is available before making a request.
-	//	 *
-	//	 * @return true if Google Play services is available, otherwise false
-	//	 */
-	//	private boolean servicesConnected() {
-	//		// Check that Google Play services is available
-	//		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-	//		// If Google Play services is available
-	//		if (ConnectionResult.SUCCESS == resultCode) {
-	//			// In debug mode, log the status
-	//			Log.d("Location Updates", "Google Play services is available.");
-	//			// Continue
-	//			return true;
-	//			// Google Play services was not available for some reason
-	//		} else {			
-	//			// Display an error dialog
-	//			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
-	//			if (dialog != null) {
-	//				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-	//				errorFragment.setDialog(dialog);
-	//				errorFragment.show(getFragmentManager(), "Location Updates");
-	//			}
-	//			return false;
-	//		}
-	//	}
-
-	//	/**
-	//	 * Show a dialog returned by Google Play services for the
-	//	 * connection error code
-	//	 *
-	//	 * @param errorCode An error code returned from onConnectionFailed
-	//	 */
-	//	private void showErrorDialog(int errorCode) {
-	//
-	//		// Get the error dialog from Google Play services
-	//		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-	//				errorCode,
-	//				this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-	//
-	//		// If Google Play services can provide an error dialog
-	//		if (errorDialog != null) {
-	//
-	//			// Create a new DialogFragment in which to show the error dialog
-	//			ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-	//
-	//			// Set the dialog in the DialogFragment
-	//			errorFragment.setDialog(errorDialog);
-	//
-	//			// Show the error dialog in the DialogFragment
-	//			errorFragment.show(getFragmentManager(), "Location Updates");
-	//		}
-	//	}
 
 	// Define a DialogFragment that displays the error dialog
 	public static class ErrorDialogFragment extends DialogFragment {

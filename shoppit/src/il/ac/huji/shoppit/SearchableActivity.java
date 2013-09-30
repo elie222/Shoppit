@@ -92,9 +92,6 @@ public class SearchableActivity extends ListActivity {
 				ParseQuery<Item> query = new ParseQuery<Item>("Item");
 				query.whereContains("searchString", mQueryString.toLowerCase());
 
-				//SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-				// query.whereEqualTo("currency", sharedPrefs.getString("currency_key", null));
-
 				switch (sortBy) {
 				case R.id.action_sortby_distance:
 					query.whereNear("location", mCurrentLocation);

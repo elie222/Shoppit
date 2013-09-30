@@ -11,14 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-// TODO deal with adding shop
 public class ShopListFragment extends Fragment {
 
 	// FOR DEBUGGING
 	protected static final String TAG = "SHOP_LIST_FRAG";
 
-	//	public static final String ARG_LATITUDE = "latitude";
-	//	public static final String ARG_LONGITUDE = "longitude";
 
 	private ShopAdapter adapter;
 
@@ -40,12 +37,6 @@ public class ShopListFragment extends Fragment {
 			public ParseQuery<Shop> create() {				
 
 				ParseQuery<Shop> query = new ParseQuery<Shop>("Shop");
-
-				//				if (GeneralInfo.location != null) {
-				//					ParseGeoPoint userLocation = new ParseGeoPoint(GeneralInfo.location.getLatitude(),
-				//							GeneralInfo.location.getLongitude());
-				//					query.whereNear("location", userLocation);
-				//				}
 
 				query.whereNear("location", currentLocation);
 

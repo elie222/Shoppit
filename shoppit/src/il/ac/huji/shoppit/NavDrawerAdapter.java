@@ -107,8 +107,6 @@ class NavDrawerAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 		int type = getItemViewType(position);
 
-		//		Log.i("navdrawer", "getView " + position + " " + convertView + " type = " + type);
-
 		if (convertView == null) {
 			holder = new ViewHolder();
 			switch (type) {

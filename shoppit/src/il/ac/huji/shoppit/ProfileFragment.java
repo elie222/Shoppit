@@ -104,16 +104,6 @@ public class ProfileFragment extends Fragment {
 				case 1:
 					query.whereEqualTo("likes", ParseUser.getCurrentUser());
 					break;
-					//				case 2:
-					//					// removed this bit...
-					//					// i'll probs just remove this option... slightly difficult query to do
-					//					// TODO query - where item has a comment from this author
-					//					query.whereEqualTo("author", ParseUser.getCurrentUser()); // this isn't the right query
-					//					
-					//					//ParseQuery<Comment> commentQuery = new ParseQuery<Comment>("Comment");
-					//					//commentQuery.whereEqualTo("author", ParseUser.getCurrentUser());
-					//					
-					//					break;
 				default:
 					break;
 				}
